@@ -650,7 +650,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 6 "snazzle.l"
+#line 7 "snazzle.l"
 
 #line 656 "lex.yy.c"
 
@@ -738,27 +738,27 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 7 "snazzle.l"
+#line 8 "snazzle.l"
 ;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 8 "snazzle.l"
+#line 9 "snazzle.l"
 { cout << "Found a floating-point number:" << yytext << endl; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 9 "snazzle.l"
+#line 10 "snazzle.l"
 { cout << "Found an integer:" << yytext << endl; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 10 "snazzle.l"
+#line 11 "snazzle.l"
 { cout << "Found a string: " << yytext << endl; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 11 "snazzle.l"
+#line 12 "snazzle.l"
 ECHO;
 	YY_BREAK
 #line 765 "lex.yy.c"
@@ -1759,10 +1759,20 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 11 "snazzle.l"
+#line 12 "snazzle.l"
+
 
 
 int main(int, char**) {
 	// lex through the input:
+	FILE *myFile = fopen("test.snazzle","r");
+
+	if(!myFile){
+		printf("Cannot open file!");
+		return -1;
+	}
+
+	yyin = myFile;
+
 	yylex();
 }
