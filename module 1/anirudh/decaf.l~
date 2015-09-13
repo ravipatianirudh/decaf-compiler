@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstdio>
 #define YY_DECL extern "C" int yylex()
-#include decaf_flex.h
+
 using namespace std;
 
 %}

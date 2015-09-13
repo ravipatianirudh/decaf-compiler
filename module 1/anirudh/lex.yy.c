@@ -1961,5 +1961,15 @@ void yyfree (void * ptr )
 
 
 int main(int,char**){
+	// open a file handle to a particular file:
+	FILE *myfile = fopen("prog.file", "r");
+	// make sure it's valid:
+	if (!myfile) {
+		cout << "I can't open a.snazzle.file!" << endl;
+		return -1;
+	}
+	// set lex to read from it instead of defaulting to STDIN:
+	yyin = myfile;
 	yylex();
 }
+
