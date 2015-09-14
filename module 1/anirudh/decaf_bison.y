@@ -62,18 +62,18 @@ int main(int argc, char **argv) {
 	// open a file handle to a particular file:
 	if(argc>1)
 	{
-	++argv;
-	FILE *myfile = fopen(argv[0], "r");
-	// make sure it is valid:
-	if (!myfile) {
-		cout << "unsuccessful" << endl;
-		return -1;
-	}
-	// set flex to read from it instead of defaulting to STDIN:
-	yyin = myfile;
+		++argv;
+		FILE *myfile = fopen(argv[0], "r");
+		// make sure it is valid:
+		if (!myfile) {
+			cout << "unsuccessful" << endl;
+			return -1;
+		}
+		// set flex to read from it instead of defaulting to STDIN:
+		yyin = myfile;
 	}
 	else
-	yyin=stdin;
+		yyin=stdin;
 	// parse through the input until there is no more:
 		yyparse();
 	

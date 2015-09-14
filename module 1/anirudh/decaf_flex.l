@@ -10,7 +10,6 @@ using namespace std;
 %%
 [\t\n]							;
 class								{return CLASS;}
-Program								{return PROGRAM;}
 void								{return VOID;}
 int								{return INT_TYPE;}
 boolean								{return BOOL_TYPE}
