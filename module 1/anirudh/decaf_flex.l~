@@ -51,7 +51,7 @@ for								{return FOR;}
 return								{return RETURN;}
 break								{return BREAK;}
 continue							{return CONTINUE;}
-callout								{return CALLOUT;}
+callout								{return CALLOUT_FUNCTION;}
 true								|
 false								{cout<<"BOOL_CONSTANT"<<endl;}
 
