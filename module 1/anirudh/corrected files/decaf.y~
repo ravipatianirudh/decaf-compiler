@@ -18,6 +18,7 @@ extern void yyerrror(const char* s);
 	char *string_literal;
 	char char_literal;
 	int hex_literal;
+<<<<<<< HEAD
 	int decimal_literal;
 	char *relational_operator_val;
 	char *conditional_operator_val;
@@ -26,6 +27,10 @@ extern void yyerrror(const char* s);
 	char *equality_operator_val;
 }
 
+=======
+	int decimal_literal;	
+}
+>>>>>>> 5b5e7a9edddfd460b36dcfe49992bde008c1231c
 %token <identifier_val> ID
 %token <type_val> TYPE
 %token <boolean_val> BOOLEAN_LITERAL
@@ -34,6 +39,7 @@ extern void yyerrror(const char* s);
 %token <hex_literal> HEX_LITERAL
 %token <decimal_literal> DECIMAL_LITERAL
 
+<<<<<<< HEAD
 %token <relational_operator_val> RELATIONAL_OP
 %token <conditional_operator_val> CONDITIONAL_OP
 %token <arithmetic_operator_val> ARITHMETIC_OP
@@ -75,3 +81,6 @@ OP_UNARY: OP_MINUS | NOT_OP
 
 CALLOUT_ARGS: EXPR | STRING_LITERAL
 %%
+=======
+%token CLASS SEMI_COLON COMMA CALLOUT IF ELSE FOR BREAK CONTINUE RETURN VOID ID START_BLOCK CLOSE_BLOCK OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET OPEN_PARANTHESIS CLOSE_PARANTHESIS  EQ_OP NOT_OP OP_ARITH_ASSIGN OP_MINUS REL_OP EQ_OP COND_OP
+>>>>>>> 5b5e7a9edddfd460b36dcfe49992bde008c1231c
