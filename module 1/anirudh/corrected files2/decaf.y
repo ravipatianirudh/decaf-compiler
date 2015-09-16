@@ -80,10 +80,10 @@ field_element_list:	Field_Element COMMA field_element_list
 					| Field_Element
 
 Field_Element: 	IDENTIFIER																					{fputs("ID=",bison_output);fputs($1,bison_output);fputs("\n",bison_output);}
-				| IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET						{fputs("ID=",bison_output);fputs($1,bison_output);fputs(" SIZE=",bison_output);fputs(itoa($3),bison_output);fputs("\n",bison_output);}
+				| IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET						{fputs("ID=",bison_output);fputs($1,bison_output);fputs(" SIZE=",bison_output);fprintf(bison_output,"%d",$3);fputs("\n",bison_output);}
 
 statement_decl:	location  ASSIGNMENT_OP expr SEMI_COLON 													{fputs("ASSIGNMENT OPERATION ENCOUNTERED\n",bison_output);}
-				|CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON 	{fputs("CALLOUT TO ",bison_output);fputs($3,bison_output);,fputs(" ENCOUNTERED\n",bison_output);}
+				|CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON 	{fputs("CALLOUT TO ",bison_output);fputs($3,bison_output);fputs(" ENCOUNTERED\n",bison_output);}
 
 location :	IDENTIFIER													{fputs("LOCATION ENCOUNTERED",bison_output);fputs($1,bison_output);fputs("\n",bison_output);}
 			|IDENTIFIER OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET	{fputs("LOCATION ENCOUNTERED",bison_output);fputs($1,bison_output);fputs("\n",bison_output);}
@@ -98,9 +98,9 @@ common_expr :	location
 				| literal
 				| OPEN_PARENTHESIS expr CLOSE_PARENTHESIS
 
-literal :	DECIMAL_LITERAL									{fputs(strcat("INT ENCOUNTERD=",$1);fputs("\n",bison_output);}
-			| CHAR_LITERAL									{fputs(strcat("CHAR ENCOUNTERED=",$1);fputs("\n",bison_output);}
-			| BOOLEAN_LITERAL								{fputs(strcat("BOOLEAN ENCOUNTERED=",$1);fputs("\n",bison_output);}
+literal :	DECIMAL_LITERAL									{fputs("INT ENCOUNTERD=",bison_output);fprintf(bison_output,"%d",$1);fputs("\n",bison_output);}
+			| CHAR_LITERAL									{fputs("CHAR ENCOUNTERED=",bison_output);fputs($1,bison_output);fputs("\n",bison_output);}
+			| BOOLEAN_LITERAL								{fputs("BOOLEAN ENCOUNTERED=",bison_output);fprintf(bison_output,"%d",$1);fputs("\n",bison_output);}
 			| STRING_LITERAL 								//{fputs("STRING ENCOUNTERED="<<$1<<endl;}
 
 binary_op:	OP_MINUS										{fputs("SUBTRACTION ENCOUNTERED\n",bison_output);}

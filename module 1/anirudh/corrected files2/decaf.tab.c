@@ -1336,7 +1336,7 @@ yyreduce:
 
   case 13:
 #line 83 "decaf.y" /* yacc.c:1646  */
-    {fputs("ID=",bison_output);fputs((yyvsp[-3].identifier_val),bison_output);fputs(" SIZE=",bison_output);fputs(itoa((yyvsp[-1].decimal_literal)),bison_output);fputs("\n",bison_output);}
+    {fputs("ID=",bison_output);fputs((yyvsp[-3].identifier_val),bison_output);fputs(" SIZE=",bison_output);fprintf(bison_output,"%d",(yyvsp[-1].decimal_literal));fputs("\n",bison_output);}
 #line 1341 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1348,7 +1348,7 @@ yyreduce:
 
   case 15:
 #line 86 "decaf.y" /* yacc.c:1646  */
-    {fputs("CALLOUT TO ",bison_output);fputs((yyvsp[-4].string_literal),bison_output);,fputs(" ENCOUNTERED\n",bison_output);}
+    {fputs("CALLOUT TO ",bison_output);fputs((yyvsp[-4].string_literal),bison_output);fputs(" ENCOUNTERED\n",bison_output);}
 #line 1353 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1366,19 +1366,19 @@ yyreduce:
 
   case 25:
 #line 101 "decaf.y" /* yacc.c:1646  */
-    {fputs(strcat("INT ENCOUNTERD=",(yyvsp[0].decimal_literal));fputs("\n",bison_output);}
+    {fputs("INT ENCOUNTERD=",bison_output);fprintf(bison_output,"%d",(yyvsp[0].decimal_literal));fputs("\n",bison_output);}
 #line 1371 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
 #line 102 "decaf.y" /* yacc.c:1646  */
-    {fputs(strcat("CHAR ENCOUNTERED=",(yyvsp[0].char_literal));fputs("\n",bison_output);}
+    {fputs("CHAR ENCOUNTERED=",bison_output);fputs((yyvsp[0].char_literal),bison_output);fputs("\n",bison_output);}
 #line 1377 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
 #line 103 "decaf.y" /* yacc.c:1646  */
-    {fputs(strcat("BOOLEAN ENCOUNTERED=",(yyvsp[0].boolean_val));fputs("\n",bison_output);}
+    {fputs("BOOLEAN ENCOUNTERED=",bison_output);fprintf(bison_output,"%d",(yyvsp[0].boolean_val));fputs("\n",bison_output);}
 #line 1383 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
