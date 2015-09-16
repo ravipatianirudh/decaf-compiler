@@ -37,8 +37,8 @@ using namespace std;
 
 class									{return CLASS;}
 callout									{return CALLOUT;}
-if									{return IF;}
-for									{return FOR;}
+if										{return IF;}
+for										{return FOR;}
 return									{return RETURN;}
 break									{return BREAK;}
 continue								{return CONTINUE;}
@@ -51,14 +51,14 @@ false									{yylval.boolean_val = 0;return BOOLEAN_LITERAL;}
 
 "//".*"\n" { }
 
-[0-9][0-9]*							{yylval.decimal_literal = atoi(yytext);return DECIMAL_LITERAL;}
+[0-9][0-9]*								{yylval.decimal_literal = atoi(yytext);return DECIMAL_LITERAL;}
 
-0x[0-9a-fA-F][0-9a-fA-F]*			{yylval.hex_literal = atoi(yytext);return HEX_LITERAL;}
+0x[0-9a-fA-F][0-9a-fA-F]*				{yylval.hex_literal = atoi(yytext);return HEX_LITERAL;}
 
-[a-zA-Z][0-9a-zA-Z]*				{yylval.identifier_val = strdup(yytext);return IDENTIFIER;}
-\"(\\.|[^\\"])*\" 				{  return STRING_LITERAL;}
+[a-zA-Z][0-9a-zA-Z]*					{yylval.identifier_val = strdup(yytext);return IDENTIFIER;}
+\"(\\.|[^\\"])*\" 						{ yylval.string_literal = strdup(yytext);return STRING_LITERAL;}
 
-"\'\\n\'"|"\'\\t\'"|"\'\\\\\'"|"\'\\\'\'"|"\'\\\"\'"|"\'"."\'"      {  return CHAR_LITERAL; }
+"\'\\n\'"|"\'\\t\'"|"\'\\\\\'"|"\'\\\'\'"|"\'\\\"\'"|"\'"."\'"      { yylval.char_literal = strdup(yytext);return CHAR_LITERAL; }
 
 \;									{return SEMI_COLON;}
 \,									{return COMMA;}

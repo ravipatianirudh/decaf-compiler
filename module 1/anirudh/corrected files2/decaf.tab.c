@@ -489,9 +489,9 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    62,    62,    64,    64,    66,    66,    68,    70,    72,
-      72,    74,    74,    76,    76,    78,    78,    80,    80,    82,
-      82,    84,    84,    84,    86,    86,    86,    86,    88,    88,
-      88,    88,    88,    88,    90,    90,    92,    92
+      73,    75,    76,    78,    79,    81,    82,    84,    85,    87,
+      88,    90,    91,    92,    94,    95,    96,    97,    99,   100,
+     101,   102,   103,   104,   106,   107,   109,   109
 };
 #endif
 
@@ -1306,97 +1306,97 @@ yyreduce:
     {
         case 2:
 #line 62 "decaf.y" /* yacc.c:1646  */
-    {printf("Success");cout<<endl;fputs("PROGRAM\n",bison_output);}
+    {cout<<"PROGRAM ENCOUNTERED\t"<<(yyvsp[-3].identifier_val)<<endl;}
 #line 1311 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 4:
-#line 64 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful declarations");cout<<endl;fputs("DECLARATIONS\n",bison_output);}
-#line 1317 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 6:
-#line 66 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful decl");cout<<endl;fputs("DECL\n",bison_output);}
-#line 1323 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 7:
-#line 68 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful field_decl");cout<<endl;fputs("FIELD DECL\n",bison_output);}
-#line 1329 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 70 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful type");cout<<(yyvsp[0].type_val)<<endl;fputs("TYPE\n",bison_output);}
-#line 1335 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 10:
-#line 72 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful field_element_list");cout<<endl;fputs("FIELD ELEMENT LIST\n",bison_output);}
-#line 1341 "decaf.tab.c" /* yacc.c:1646  */
+    {cout<<"TYPE ENCOUNTERED\t"<<(yyvsp[0].type_val)<<endl;}
+#line 1317 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 74 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful Field_Element");cout<<(yyvsp[-3].identifier_val)<<endl;fputs("FIELD ELEMENT\n",bison_output);}
-#line 1347 "decaf.tab.c" /* yacc.c:1646  */
+#line 76 "decaf.y" /* yacc.c:1646  */
+    {cout<<"IDENTIFIER FOR ARRAY\t"<<(yyvsp[-3].identifier_val)<<endl<<"INT LITERAL\t"<<(yyvsp[-1].decimal_literal)<<endl;}
+#line 1323 "decaf.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 13:
+#line 78 "decaf.y" /* yacc.c:1646  */
+    {cout<<"STATEMENT DECLARATION\n";}
+#line 1329 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 76 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful statement_decl");cout<<endl;fputs("STATEMENT DECL\n",bison_output);}
+#line 79 "decaf.y" /* yacc.c:1646  */
+    {cout<<"CALLOUT ENCOUNTERED of\t"<<(yyvsp[-4].string_literal)<<endl;}
+#line 1335 "decaf.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 24:
+#line 94 "decaf.y" /* yacc.c:1646  */
+    {cout<<"INT LITERAL\t"<<(yyvsp[0].decimal_literal)<<endl;}
+#line 1341 "decaf.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 25:
+#line 95 "decaf.y" /* yacc.c:1646  */
+    {cout<<"CHAR LITERAL\t"<<(yyvsp[0].char_literal)<<endl;}
+#line 1347 "decaf.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 26:
+#line 96 "decaf.y" /* yacc.c:1646  */
+    {cout<<"BOOLEAN LITERAL\t"<<(yyvsp[0].boolean_val)<<endl;}
 #line 1353 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 16:
-#line 78 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful location");cout<<(yyvsp[-3].identifier_val)<<endl;fputs("LOCATION\n",bison_output);}
+  case 27:
+#line 97 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ENCOUNTERED STRING LITERAL\t"<<(yyvsp[0].string_literal)<<endl;}
 #line 1359 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 18:
-#line 80 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful expr");cout<<endl;fputs("EXPR\n",bison_output);}
+  case 29:
+#line 100 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ENCOUNTERED PLUS OP\t"<<(yyvsp[0].op_plus_val)<<endl;}
 #line 1365 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 20:
-#line 82 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful binary_exp");cout<<endl;fputs("BINARY EXP\n",bison_output);}
+  case 30:
+#line 101 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ENCOUNTERED ARITHMETIC OP\t"<<(yyvsp[0].arithmetic_operator_val)<<endl;}
 #line 1371 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 23:
-#line 84 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful common_expr");cout<<endl;fputs("COMMON EXPR\n",bison_output);}
+  case 31:
+#line 102 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ENCOUNTERED RELATIONAL OP\t"<<(yyvsp[0].relational_operator_val)<<endl;}
 #line 1377 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 27:
-#line 86 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful literal");cout<<(yyvsp[0].string_literal)<<endl;fputs("LITERAL\n",bison_output);}
+  case 32:
+#line 103 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ENCOUNTERED EQUALITY OP\t"<<(yyvsp[0].equality_operator_val)<<endl;}
 #line 1383 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 88 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful binary_op");cout<<(yyvsp[0].conditional_operator_val)<<endl;fputs("BINARY OP\n",bison_output);}
+#line 104 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ENCOUNTERED CONDITIONAL OP\t"<<(yyvsp[0].conditional_operator_val)<<endl;}
 #line 1389 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 35:
-#line 90 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful unary_op");cout<<(yyvsp[0].op_minus_val)<<endl;fputs("UNARY OP\n",bison_output);}
+  case 34:
+#line 106 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ENCOUNTERED NEGATION"<<endl;}
 #line 1395 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 37:
-#line 92 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful callout_arg");cout<<endl;fputs("CALLOUT ARG\n",bison_output);}
+  case 35:
+#line 107 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ENCOUTNERED UNARY MINUS"<<endl;}
 #line 1401 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1629,7 +1629,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 94 "decaf.y" /* yacc.c:1906  */
+#line 111 "decaf.y" /* yacc.c:1906  */
 
 
 int main(int argc,char** argv){

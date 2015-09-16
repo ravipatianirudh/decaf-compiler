@@ -962,12 +962,12 @@ case 35:
 /* rule 35 can match eol */
 YY_RULE_SETUP
 #line 59 "decaf.l"
-{  return STRING_LITERAL;}
+{ yylval.string_literal = strdup(yytext);return STRING_LITERAL;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 61 "decaf.l"
-{  return CHAR_LITERAL; }
+{ yylval.char_literal = strdup(yytext);return CHAR_LITERAL; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
