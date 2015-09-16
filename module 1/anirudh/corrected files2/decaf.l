@@ -15,7 +15,7 @@ using namespace std;
 \-									{yylval.op_minus_val = strdup(yytext);return OP_MINUS;}
 !									{yylval.negation_val = strdup(yytext);return NEGATION;}
 
-\+									|
+\+									{yylval.op_plus_val = strdup(yytext);return OP_PLUS;}
 \*									|
 \/									|
 %									{yylval.arithmetic_operator_val = strdup(yytext);return ARITHMETIC_OP;}

@@ -64,7 +64,7 @@ field_element_list: Field_Element COMMA field_element_list | Field_Element {prin
 
 Field_Element: IDENTIFIER | IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET {printf("Successful Field_Element");cout<<$1<<endl;}
 
-statement_decl: location  ASSIGNMENT_OP expr | CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET COMMA callout_arg COMMA CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS {printf("Successful statement_decl");cout<<endl;}
+statement_decl: location  ASSIGNMENT_OP expr SEMI_COLON| CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON {printf("Successful statement_decl");cout<<endl;}
 
 location : IDENTIFIER | IDENTIFIER 	OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET {printf("Successful location");cout<<$1<<endl;}
 
@@ -76,11 +76,11 @@ common_expr : location  | literal  | OPEN_PARENTHESIS expr CLOSE_PARENTHESIS {pr
 
 literal : DECIMAL_LITERAL | CHAR_LITERAL | BOOLEAN_LITERAL | STRING_LITERAL {printf("Successful literal");cout<<$1<<endl;}
 
-binary_op: OP_MINUS | ARITHMETIC_OP | RELATIONAL_OP | EQUALITY_OP | CONDITIONAL_OP {printf("Successful binary_op");cout<<$1<<endl;}
+binary_op: OP_MINUS | ARITHMETIC_OP | RELATIONAL_OP | EQUALITY_OP | CONDITIONAL_OP | ASSIGNMENT_OP {printf("Successful binary_op");cout<<$1<<endl;}
 
 unary_op : OP_MINUS | NEGATION {printf("Successful unary_op");cout<<$1<<endl;}
 
-callout_arg: expr {printf("Successful callout_arg");cout<<endl;}
+callout_arg: expr | expr COMMA callout_arg {printf("Successful callout_arg");cout<<endl;}
 %%
 
 int main(int argc,char** argv){

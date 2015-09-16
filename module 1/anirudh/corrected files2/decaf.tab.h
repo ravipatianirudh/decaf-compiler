@@ -45,38 +45,40 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    IDENTIFIER = 258,
-    TYPE = 259,
-    BOOLEAN_LITERAL = 260,
-    STRING_LITERAL = 261,
-    CHAR_LITERAL = 262,
-    HEX_LITERAL = 263,
-    DECIMAL_LITERAL = 264,
-    ERROR = 265,
-    RELATIONAL_OP = 266,
-    CONDITIONAL_OP = 267,
-    ARITHMETIC_OP = 268,
-    ASSIGNMENT_OP = 269,
-    EQUALITY_OP = 270,
-    OP_MINUS = 271,
-    NEGATION = 272,
-    CLASS = 273,
-    SEMI_COLON = 274,
-    COMMA = 275,
-    CALLOUT = 276,
-    IF = 277,
-    ELSE = 278,
-    FOR = 279,
-    BREAK = 280,
-    CONTINUE = 281,
-    RETURN = 282,
-    VOID = 283,
-    START_BLOCK = 284,
-    CLOSE_BLOCK = 285,
-    OPEN_SQUARE_BRACKET = 286,
-    CLOSE_SQUARE_BRACKET = 287,
-    OPEN_PARENTHESIS = 288,
-    CLOSE_PARENTHESIS = 289
+    OP_PLUS = 258,
+    IDENTIFIER = 259,
+    TYPE = 260,
+    BOOLEAN_LITERAL = 261,
+    STRING_LITERAL = 262,
+    CHAR_LITERAL = 263,
+    HEX_LITERAL = 264,
+    DECIMAL_LITERAL = 265,
+    ERROR = 266,
+    RELATIONAL_OP = 267,
+    CONDITIONAL_OP = 268,
+    ARITHMETIC_OP = 269,
+    ASSIGNMENT_OP = 270,
+    EQUALITY_OP = 271,
+    OP_MINUS = 272,
+    NEGATION = 273,
+    CLASS = 274,
+    SEMI_COLON = 275,
+    COMMA = 276,
+    CALLOUT = 277,
+    IF = 278,
+    ELSE = 279,
+    FOR = 280,
+    BREAK = 281,
+    CONTINUE = 282,
+    RETURN = 283,
+    VOID = 284,
+    START_BLOCK = 285,
+    CLOSE_BLOCK = 286,
+    OPEN_SQUARE_BRACKET = 287,
+    CLOSE_SQUARE_BRACKET = 288,
+    OPEN_PARENTHESIS = 289,
+    CLOSE_PARENTHESIS = 290,
+    UNARY_MINUS = 291
   };
 #endif
 
@@ -85,7 +87,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 14 "decaf.y" /* yacc.c:1909  */
+#line 15 "decaf.y" /* yacc.c:1909  */
 
 	char *identifier_val;
 	char *type_val;
@@ -102,8 +104,9 @@ union YYSTYPE
 	char *negation_val;
 	char *op_minus_val;
 	char *error;
+	char *op_plus_val;
 
-#line 107 "decaf.tab.h" /* yacc.c:1909  */
+#line 110 "decaf.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
