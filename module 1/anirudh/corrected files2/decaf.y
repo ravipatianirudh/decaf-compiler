@@ -9,12 +9,14 @@ extern "C" int yyparse();
 extern "C" FILE* yyin;
 
 FILE *bison_output;
+FILE *flex_output;
 void yyerror(const char *s);
 %}
 
 %union{
 	char *identifier_val;
-	char *type_val;
+	char *type_int;
+	char *type_bool;
 	int boolean_val;
 	char *string_literal;
 	char *char_literal;
@@ -33,7 +35,8 @@ void yyerror(const char *s);
 
 %token <op_plus_val> OP_PLUS
 %token <identifier_val> IDENTIFIER
-%token <type_val> TYPE
+%token <type_int> INT
+%token <type_bool> BOOLEAN
 %token <boolean_val> BOOLEAN_LITERAL
 %token <string_literal> STRING_LITERAL
 %token <char_literal> CHAR_LITERAL
@@ -67,7 +70,7 @@ decl : field_decl|statement_decl	{printf("Successful decl");cout<<endl;fputs("DE
 
 field_decl: type field_element_list SEMI_COLON	{printf("Successful field_decl");cout<<endl;fputs("FIELD DECL\n",bison_output);}
 
-type : TYPE {printf("Successful type");cout<<$1<<endl;fputs("TYPE\n",bison_output);}
+type : INT|BOOLEAN {printf("Successful type");cout<<$1<<endl;fputs("TYPE\n",bison_output);}
 
 field_element_list: Field_Element COMMA field_element_list | Field_Element {printf("Successful field_element_list");cout<<endl;fputs("FIELD ELEMENT LIST\n",bison_output);}
 
@@ -95,6 +98,7 @@ callout_arg: expr | expr COMMA callout_arg {printf("Successful callout_arg");cou
 
 int main(int argc,char** argv){
 	bison_output = fopen("bison_output.txt","w+");
+	flex_output  = fopen("flex_output.txt","w+");
 
 	if(argc>1)
 	{

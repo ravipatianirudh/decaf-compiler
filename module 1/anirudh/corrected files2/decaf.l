@@ -3,9 +3,8 @@
 #include <cstdio>
 #include "decaf.tab.h"
 #define YY_DECL extern "C" int yylex()
-
 using namespace std;
-
+extern FILE *flex_output;
 %}
 
 %%
@@ -26,7 +25,7 @@ using namespace std;
 >=									{yylval.relational_operator_val = strdup(yytext);return RELATIONAL_OP;}
 
 &&									|
-\|\|								{yylval.conditional_operator_val  = strdup(yytext);return CONDITIONAL_OP;}
+\|\|									{yylval.conditional_operator_val  = strdup(yytext);return CONDITIONAL_OP;}
 
 \=									|
 \+=									|
@@ -35,30 +34,30 @@ using namespace std;
 \=\=									|
 !=									{yylval.equality_operator_val = strdup(yytext);return EQUALITY_OP;}
 
-class									{return CLASS;}
-callout									{return CALLOUT;}
-if									{return IF;}
-for									{return FOR;}
+class									{fputs("CLASS\n",flex_output);return CLASS;}
+callout									{fputs("CALLOUT\n",flex_output);return CALLOUT;}
+if									{fputs("IF",flex_output);return IF;}
+for									{fputs("FALSE",flex_output);return FOR;}
 return									{return RETURN;}
-break									{return BREAK;}
-continue								{return CONTINUE;}
+break									{fputs("BREAK",flex_output);return BREAK;}
+continue								{fputs("CONTINUE",flex_output);return CONTINUE;}
 void									{return VOID;}
-int									|
-boolean									{ yylval.type_val = strdup(yytext);return TYPE;}
+int									{fputs("INT_DECLARATION\n",flex_output);yylval.type_int = strdup(yytext);return INT;}
+boolean									{fputs("BOOLEAN_DECLARATION\n",flex_output);yylval.type_bool = strdup(yytext);return BOOLEAN;}
 
-true									{yylval.boolean_val = 1;return BOOLEAN_LITERAL;}
-false									{yylval.boolean_val = 0;return BOOLEAN_LITERAL;}
+true									{fputs("BOOLEAN: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.boolean_val = 1;return BOOLEAN_LITERAL;}
+false									{fputs("BOOLEAN: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.boolean_val = 0;return BOOLEAN_LITERAL;}
 
 "//".*"\n" { }
 
-[0-9][0-9]*							{yylval.decimal_literal = atoi(yytext);return DECIMAL_LITERAL;}
+[0-9][0-9]*								{fputs("INT: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.decimal_literal = atoi(yytext);return DECIMAL_LITERAL;}
 
-0x[0-9a-fA-F][0-9a-fA-F]*			{yylval.hex_literal = atoi(yytext);return HEX_LITERAL;}
+0x[0-9a-fA-F][0-9a-fA-F]*						{fputs("HEX: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.hex_literal = atoi(yytext);return HEX_LITERAL;}
 
-[a-zA-Z][0-9a-zA-Z]*				{yylval.identifier_val = strdup(yytext);return IDENTIFIER;}
-\"(\\.|[^\\"])*\" 				{  return STRING_LITERAL;}
+[a-zA-Z][0-9a-zA-Z]*							{fputs("ID: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.identifier_val = strdup(yytext);return IDENTIFIER;}
+\"(\\.|[^\\"])*\" 							{fputs("STRING: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output); return STRING_LITERAL;}
 
-"\'\\n\'"|"\'\\t\'"|"\'\\\\\'"|"\'\\\'\'"|"\'\\\"\'"|"\'"."\'"      {  return CHAR_LITERAL; }
+"\'\\n\'"|"\'\\t\'"|"\'\\\\\'"|"\'\\\'\'"|"\'\\\"\'"|"\'"."\'"      	{  return CHAR_LITERAL; }
 
 \;									{return SEMI_COLON;}
 \,									{return COMMA;}
