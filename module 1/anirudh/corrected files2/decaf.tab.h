@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_DECAF_BISON_TAB_H_INCLUDED
-# define YY_YY_DECAF_BISON_TAB_H_INCLUDED
+#ifndef YY_YY_DECAF_TAB_H_INCLUDED
+# define YY_YY_DECAF_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -45,38 +45,38 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    CLASS = 258,
-    PROGRAM = 259,
-    SEMI_COLON = 260,
-    COMMA = 261,
-    CALLOUT = 262,
-    INT_TYPE = 263,
-    BOOL_TYPE = 264,
-    IF = 265,
-    ELSE = 266,
-    FOR = 267,
-    BREAK = 268,
-    CONTINUE = 269,
-    RETURN = 270,
-    VOID = 271,
-    INT_LITERAL = 272,
-    CHAR_LITERAL = 273,
-    BOOL_LITERAL = 274,
-    IDENTIFIER = 275,
-    START_BLOCK = 276,
-    CLOSE_BLOCK = 277,
-    START_SQUARE_BRACKET = 278,
-    CLOSE_SQUARE_BRACKET = 279,
-    START_PARANTHESIS = 280,
-    CLOSE_PARANTHESIS = 281,
-    EQ_OP = 282,
-    NOT_OP = 283,
-    ASSIGN_OP = 284,
-    OP_MINUS = 285,
-    REL_OP = 286,
-    COND_OP = 287,
-    ARITH_OP = 288,
-    STRING_LITERAL = 289
+    IDENTIFIER = 258,
+    TYPE = 259,
+    BOOLEAN_LITERAL = 260,
+    STRING_LITERAL = 261,
+    CHAR_LITERAL = 262,
+    HEX_LITERAL = 263,
+    DECIMAL_LITERAL = 264,
+    ERROR = 265,
+    RELATIONAL_OP = 266,
+    CONDITIONAL_OP = 267,
+    ARITHMETIC_OP = 268,
+    ASSIGNMENT_OP = 269,
+    EQUALITY_OP = 270,
+    OP_MINUS = 271,
+    NEGATION = 272,
+    CLASS = 273,
+    SEMI_COLON = 274,
+    COMMA = 275,
+    CALLOUT = 276,
+    IF = 277,
+    ELSE = 278,
+    FOR = 279,
+    BREAK = 280,
+    CONTINUE = 281,
+    RETURN = 282,
+    VOID = 283,
+    START_BLOCK = 284,
+    CLOSE_BLOCK = 285,
+    OPEN_SQUARE_BRACKET = 286,
+    CLOSE_SQUARE_BRACKET = 287,
+    OPEN_PARENTHESIS = 288,
+    CLOSE_PARENTHESIS = 289
   };
 #endif
 
@@ -85,11 +85,25 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 19 "decaf_bison.y" /* yacc.c:1909  */
+#line 14 "decaf.y" /* yacc.c:1909  */
 
-	char *stringLiteral;
+	char *identifier_val;
+	char *type_val;
+	int boolean_val;
+	char *string_literal;
+	char *char_literal;
+	int hex_literal;
+	int decimal_literal;
+	char *relational_operator_val;
+	char *conditional_operator_val;
+	char *arithmetic_operator_val;
+	char *assignment_operator_val;
+	char *equality_operator_val;
+	char *negation_val;
+	char *op_minus_val;
+	char *error;
 
-#line 93 "decaf_bison.tab.h" /* yacc.c:1909  */
+#line 107 "decaf.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -100,4 +114,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_DECAF_BISON_TAB_H_INCLUDED  */
+#endif /* !YY_YY_DECAF_TAB_H_INCLUDED  */

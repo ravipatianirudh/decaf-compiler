@@ -1,7 +1,14 @@
 %{
-#include "decaf_flex.h" // for yylex
-#include <stdio.h>
-extern FILE* yyin;
+#include <cstdio>
+#include <iostream>
+using namespace std;
+
+// stuff from flex that bison needs to know about:
+extern "C" int yylex();
+extern "C" int yyparse();
+extern "C" FILE *yyin;
+void yyerror(const char *s);
+
 %}
 
 // Bison fundamentally works by asking flex to get the next token, which it
@@ -53,7 +60,7 @@ CALLOUT_ARGS: EXPR
 %%
 int main(int argc, char **argv) {
 	// open a file handle to a particular file:
-	if(argc>1)
+	/*if(argc>1)
 	{
 		++argv;
 		FILE *myfile = fopen(argv[0], "r");
@@ -65,15 +72,17 @@ int main(int argc, char **argv) {
 		// set flex to read from it instead of defaulting to STDIN:
 		yyin = myfile;
 	}
-	else
+	else*/
 		yyin=stdin;
 	// parse through the input until there is no more:
+		do {
 		yyparse();
+	} while (!feof(yyin));
 	
 }
 
 void yyerror(const char *s) {
-	cout << "unsuccessful" << s << endl;
+	cout << "unsucce" << s << endl;
 	// might as well halt now:
 	exit(-1);
 }

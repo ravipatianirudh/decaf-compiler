@@ -13,8 +13,6 @@ ALPHA [a-zA-Z]
 
 %%
 [\t\n]							;
-
-
 "-"								{return OP_MINUS;}
 
 \!								{return NOT_OP;}
@@ -51,7 +49,7 @@ for								{return FOR;}
 return								{return RETURN;}
 break								{return BREAK;}
 continue							{return CONTINUE;}
-callout								{return CALLOUT_FUNCTION;}
+callout								{return CALLOUT;}
 true								|
 false								{cout<<"BOOL_CONSTANT"<<endl;}
 
@@ -71,20 +69,6 @@ DIGIT+								{return INT_LITERAL;}
 \}								{return CLOSE_BLOCK;}
 \(								{return START_PARANTHESIS;}
 \)								{return CLOSE_PARANTHESIS;}
-. 								{ printf("unsuccessful\n");}
+. 								{printf("unsuccessful\n");}
 %%
-int main(int, char**) {
-	
-	// open a file handle to a particular file:
-	FILE *myfile = fopen("test_program", "r");
-	// make sure it's valid:
-	if (!myfile) {
-		cout << "I can't open a.snazzle.file!" << endl;
-		return -1;
-	}
-	// set lex to read from it instead of defaulting to STDIN:
-	yyin = myfile;
-	
-	// lex through the input:
-	yylex();
-}
+
