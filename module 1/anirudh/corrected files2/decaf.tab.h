@@ -47,38 +47,39 @@ extern int yydebug;
   {
     OP_PLUS = 258,
     IDENTIFIER = 259,
-    TYPE = 260,
-    BOOLEAN_LITERAL = 261,
-    STRING_LITERAL = 262,
-    CHAR_LITERAL = 263,
-    HEX_LITERAL = 264,
-    DECIMAL_LITERAL = 265,
-    ERROR = 266,
-    RELATIONAL_OP = 267,
-    CONDITIONAL_OP = 268,
-    ARITHMETIC_OP = 269,
-    ASSIGNMENT_OP = 270,
-    EQUALITY_OP = 271,
-    OP_MINUS = 272,
-    NEGATION = 273,
-    CLASS = 274,
-    SEMI_COLON = 275,
-    COMMA = 276,
-    CALLOUT = 277,
-    IF = 278,
-    ELSE = 279,
-    FOR = 280,
-    BREAK = 281,
-    CONTINUE = 282,
-    RETURN = 283,
-    VOID = 284,
-    START_BLOCK = 285,
-    CLOSE_BLOCK = 286,
-    OPEN_SQUARE_BRACKET = 287,
-    CLOSE_SQUARE_BRACKET = 288,
-    OPEN_PARENTHESIS = 289,
-    CLOSE_PARENTHESIS = 290,
-    UNARY_MINUS = 291
+    INT = 260,
+    BOOLEAN = 261,
+    BOOLEAN_LITERAL = 262,
+    STRING_LITERAL = 263,
+    CHAR_LITERAL = 264,
+    HEX_LITERAL = 265,
+    DECIMAL_LITERAL = 266,
+    ERROR = 267,
+    RELATIONAL_OP = 268,
+    CONDITIONAL_OP = 269,
+    ARITHMETIC_OP = 270,
+    ASSIGNMENT_OP = 271,
+    EQUALITY_OP = 272,
+    OP_MINUS = 273,
+    NEGATION = 274,
+    CLASS = 275,
+    SEMI_COLON = 276,
+    COMMA = 277,
+    CALLOUT = 278,
+    IF = 279,
+    ELSE = 280,
+    FOR = 281,
+    BREAK = 282,
+    CONTINUE = 283,
+    RETURN = 284,
+    VOID = 285,
+    START_BLOCK = 286,
+    CLOSE_BLOCK = 287,
+    OPEN_SQUARE_BRACKET = 288,
+    CLOSE_SQUARE_BRACKET = 289,
+    OPEN_PARENTHESIS = 290,
+    CLOSE_PARENTHESIS = 291,
+    UNARY_MINUS = 292
   };
 #endif
 
@@ -87,10 +88,11 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 15 "decaf.y" /* yacc.c:1909  */
+#line 16 "decaf.y" /* yacc.c:1909  */
 
 	char *identifier_val;
-	char *type_val;
+	char *type_int;
+	char *type_bool;
 	int boolean_val;
 	char *string_literal;
 	char *char_literal;
@@ -106,7 +108,7 @@ union YYSTYPE
 	char *error;
 	char *op_plus_val;
 
-#line 110 "decaf.tab.h" /* yacc.c:1909  */
+#line 112 "decaf.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
