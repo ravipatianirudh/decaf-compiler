@@ -66,6 +66,7 @@
 
 #include <cstdio>
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
@@ -77,7 +78,7 @@ FILE *bison_output;
 FILE *flex_output;
 void yyerror(const char *s);
 
-#line 81 "decaf.tab.c" /* yacc.c:339  */
+#line 82 "decaf.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -155,11 +156,11 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 16 "decaf.y" /* yacc.c:355  */
+#line 17 "decaf.y" /* yacc.c:355  */
 
 	char *identifier_val;
-	char *type_int;
-	char *type_bool;
+	const char *type_int;
+	const char *type_bool;
 	int boolean_val;
 	char *string_literal;
 	char *char_literal;
@@ -175,7 +176,7 @@ union YYSTYPE
 	char *error;
 	char *op_plus_val;
 
-#line 179 "decaf.tab.c" /* yacc.c:355  */
+#line 180 "decaf.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -190,7 +191,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 194 "decaf.tab.c" /* yacc.c:358  */
+#line 195 "decaf.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -491,17 +492,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-<<<<<<< HEAD
-       0,    65,    65,    67,    67,    69,    69,    71,    73,    73,
-      75,    75,    77,    77,    79,    79,    81,    81,    83,    83,
-      85,    85,    87,    87,    87,    89,    89,    89,    89,    91,
-      91,    91,    91,    91,    91,    93,    93,    95,    95
-=======
-       0,    62,    62,    64,    64,    66,    66,    68,    70,    72,
-      73,    75,    76,    78,    79,    81,    82,    84,    85,    87,
-      88,    90,    91,    92,    94,    95,    96,    97,    99,   100,
-     101,   102,   103,   104,   106,   107,   109,   109
->>>>>>> 30a8ace9a440980794bec30ac049b0c3b2fc29de
+       0,    66,    66,    68,    68,    70,    70,    72,    74,    75,
+      78,    79,    81,    82,    84,    85,    87,    88,    90,    91,
+      93,    94,    96,    97,    98,   100,   101,   102,   103,   105,
+     106,   107,   113,   114,   115,   117,   118,   120,   120
 };
 #endif
 
@@ -1316,199 +1310,132 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-<<<<<<< HEAD
-#line 65 "decaf.y" /* yacc.c:1646  */
-    {printf("Success");cout<<endl;fputs("PROGRAM\n",bison_output);}
-#line 1315 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 4:
-#line 67 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful declarations");cout<<endl;fputs("DECLARATIONS\n",bison_output);}
-#line 1321 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 6:
-#line 69 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful decl");cout<<endl;fputs("DECL\n",bison_output);}
-#line 1327 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 7:
-#line 71 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful field_decl");cout<<endl;fputs("FIELD DECL\n",bison_output);}
-#line 1333 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 9:
-#line 73 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful type");cout<<(yyvsp[0].type_bool)<<endl;fputs("TYPE\n",bison_output);}
-#line 1339 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 11:
-#line 75 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful field_element_list");cout<<endl;fputs("FIELD ELEMENT LIST\n",bison_output);}
-#line 1345 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 13:
-#line 77 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful Field_Element");cout<<(yyvsp[-3].identifier_val)<<endl;fputs("FIELD ELEMENT\n",bison_output);}
-#line 1351 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 15:
-#line 79 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful statement_decl");cout<<endl;fputs("STATEMENT DECL\n",bison_output);}
-#line 1357 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 17:
-#line 81 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful location");cout<<(yyvsp[-3].identifier_val)<<endl;fputs("LOCATION\n",bison_output);}
-#line 1363 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 19:
-#line 83 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful expr");cout<<endl;fputs("EXPR\n",bison_output);}
-#line 1369 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 21:
-#line 85 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful binary_exp");cout<<endl;fputs("BINARY EXP\n",bison_output);}
-#line 1375 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 24:
-#line 87 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful common_expr");cout<<endl;fputs("COMMON EXPR\n",bison_output);}
-#line 1381 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 28:
-#line 89 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful literal");cout<<(yyvsp[0].string_literal)<<endl;fputs("LITERAL\n",bison_output);}
-#line 1387 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 34:
-#line 91 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful binary_op");cout<<(yyvsp[0].conditional_operator_val)<<endl;fputs("BINARY OP\n",bison_output);}
-#line 1393 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 36:
-#line 93 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful unary_op");cout<<(yyvsp[0].op_minus_val)<<endl;fputs("UNARY OP\n",bison_output);}
-#line 1399 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 38:
-#line 95 "decaf.y" /* yacc.c:1646  */
-    {printf("Successful callout_arg");cout<<endl;fputs("CALLOUT ARG\n",bison_output);}
-#line 1405 "decaf.tab.c" /* yacc.c:1646  */
-=======
-#line 62 "decaf.y" /* yacc.c:1646  */
-    {cout<<"PROGRAM ENCOUNTERED\t"<<(yyvsp[-3].identifier_val)<<endl;}
-#line 1311 "decaf.tab.c" /* yacc.c:1646  */
+#line 66 "decaf.y" /* yacc.c:1646  */
+    {cout<<"PROGRAM ENCOUNTERED"<<endl;}
+#line 1316 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 70 "decaf.y" /* yacc.c:1646  */
-    {cout<<"TYPE ENCOUNTERED\t"<<(yyvsp[0].type_val)<<endl;}
-#line 1317 "decaf.tab.c" /* yacc.c:1646  */
+#line 74 "decaf.y" /* yacc.c:1646  */
+    {cout<<(yyvsp[0].type_int)<<" DECLARATION ENCOUNTERED. ";}
+#line 1322 "decaf.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 9:
+#line 75 "decaf.y" /* yacc.c:1646  */
+    {cout<<(yyvsp[0].type_bool)<<" DECLARATION ENCOUNTERED. ";}
+#line 1328 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 76 "decaf.y" /* yacc.c:1646  */
-    {cout<<"IDENTIFIER FOR ARRAY\t"<<(yyvsp[-3].identifier_val)<<endl<<"INT LITERAL\t"<<(yyvsp[-1].decimal_literal)<<endl;}
-#line 1323 "decaf.tab.c" /* yacc.c:1646  */
+#line 81 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ID="<<(yyvsp[0].identifier_val)<<endl;}
+#line 1334 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 78 "decaf.y" /* yacc.c:1646  */
-    {cout<<"STATEMENT DECLARATION\n";}
-#line 1329 "decaf.tab.c" /* yacc.c:1646  */
+#line 82 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ID="<<(yyvsp[-3].identifier_val)<<" "<<"SIZE="<<(yyvsp[-1].decimal_literal)<<endl;}
+#line 1340 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 79 "decaf.y" /* yacc.c:1646  */
-    {cout<<"CALLOUT ENCOUNTERED of\t"<<(yyvsp[-4].string_literal)<<endl;}
-#line 1335 "decaf.tab.c" /* yacc.c:1646  */
+#line 84 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ASSIGNMENT OPERATION ENCOUNTERED\n";}
+#line 1346 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 24:
-#line 94 "decaf.y" /* yacc.c:1646  */
-    {cout<<"INT LITERAL\t"<<(yyvsp[0].decimal_literal)<<endl;}
-#line 1341 "decaf.tab.c" /* yacc.c:1646  */
+  case 15:
+#line 85 "decaf.y" /* yacc.c:1646  */
+    {cout<<"CALLOUT TO "<<(yyvsp[-4].string_literal)<<" ECOUNTERED\n";}
+#line 1352 "decaf.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 16:
+#line 87 "decaf.y" /* yacc.c:1646  */
+    {cout<<"LOCATION ENCOUNTERED="<<(yyvsp[0].identifier_val)<<endl;}
+#line 1358 "decaf.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 17:
+#line 88 "decaf.y" /* yacc.c:1646  */
+    {cout<<"LOCATION ENCOUNTERED="<<(yyvsp[-3].identifier_val)<<endl;}
+#line 1364 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 95 "decaf.y" /* yacc.c:1646  */
-    {cout<<"CHAR LITERAL\t"<<(yyvsp[0].char_literal)<<endl;}
-#line 1347 "decaf.tab.c" /* yacc.c:1646  */
+#line 100 "decaf.y" /* yacc.c:1646  */
+    {cout<<"INT ENCOUNTERD="<<(yyvsp[0].decimal_literal)<<endl;}
+#line 1370 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 96 "decaf.y" /* yacc.c:1646  */
-    {cout<<"BOOLEAN LITERAL\t"<<(yyvsp[0].boolean_val)<<endl;}
-#line 1353 "decaf.tab.c" /* yacc.c:1646  */
+#line 101 "decaf.y" /* yacc.c:1646  */
+    {cout<<"CHAR ENCOUNTERED="<<(yyvsp[0].char_literal)<<endl;}
+#line 1376 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 97 "decaf.y" /* yacc.c:1646  */
-    {cout<<"ENCOUNTERED STRING LITERAL\t"<<(yyvsp[0].string_literal)<<endl;}
-#line 1359 "decaf.tab.c" /* yacc.c:1646  */
+#line 102 "decaf.y" /* yacc.c:1646  */
+    {cout<<"BOOLEAN ENCOUNTERED="<<(yyvsp[0].boolean_val)<<endl;}
+#line 1382 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 100 "decaf.y" /* yacc.c:1646  */
-    {cout<<"ENCOUNTERED PLUS OP\t"<<(yyvsp[0].op_plus_val)<<endl;}
-#line 1365 "decaf.tab.c" /* yacc.c:1646  */
+#line 105 "decaf.y" /* yacc.c:1646  */
+    {cout<<"SUBTRACTION ENCOUNTERED"<<endl;}
+#line 1388 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 101 "decaf.y" /* yacc.c:1646  */
-    {cout<<"ENCOUNTERED ARITHMETIC OP\t"<<(yyvsp[0].arithmetic_operator_val)<<endl;}
-#line 1371 "decaf.tab.c" /* yacc.c:1646  */
+#line 106 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ADDITION ENCOUNTERED"<<endl;}
+#line 1394 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 102 "decaf.y" /* yacc.c:1646  */
-    {cout<<"ENCOUNTERED RELATIONAL OP\t"<<(yyvsp[0].relational_operator_val)<<endl;}
-#line 1377 "decaf.tab.c" /* yacc.c:1646  */
+#line 107 "decaf.y" /* yacc.c:1646  */
+    {
+																if(strcmp((yyvsp[0].arithmetic_operator_val),"/"))
+																	cout<<"DIVISION ENCOUNTERED"<<endl;
+																else
+																	cout<<"MULTIPLICATION ENCOUNTERED"<<endl;
+															}
+#line 1405 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 103 "decaf.y" /* yacc.c:1646  */
-    {cout<<"ENCOUNTERED EQUALITY OP\t"<<(yyvsp[0].equality_operator_val)<<endl;}
-#line 1383 "decaf.tab.c" /* yacc.c:1646  */
+#line 113 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ENCOUNTERED RELATIONAL OP\t"<<(yyvsp[0].relational_operator_val)<<endl;}
+#line 1411 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 104 "decaf.y" /* yacc.c:1646  */
-    {cout<<"ENCOUNTERED CONDITIONAL OP\t"<<(yyvsp[0].conditional_operator_val)<<endl;}
-#line 1389 "decaf.tab.c" /* yacc.c:1646  */
+#line 114 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ENCOUNTERED EQUALITY OP\t"<<(yyvsp[0].equality_operator_val)<<endl;}
+#line 1417 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 106 "decaf.y" /* yacc.c:1646  */
-    {cout<<"ENCOUNTERED NEGATION"<<endl;}
-#line 1395 "decaf.tab.c" /* yacc.c:1646  */
+#line 115 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ENCOUNTERED CONDITIONAL OP\t"<<(yyvsp[0].conditional_operator_val)<<endl;}
+#line 1423 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 107 "decaf.y" /* yacc.c:1646  */
+#line 117 "decaf.y" /* yacc.c:1646  */
+    {cout<<"ENCOUNTERED NEGATION"<<endl;}
+#line 1429 "decaf.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 36:
+#line 118 "decaf.y" /* yacc.c:1646  */
     {cout<<"ENCOUTNERED UNARY MINUS"<<endl;}
-#line 1401 "decaf.tab.c" /* yacc.c:1646  */
->>>>>>> 30a8ace9a440980794bec30ac049b0c3b2fc29de
+#line 1435 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1409 "decaf.tab.c" /* yacc.c:1646  */
+#line 1439 "decaf.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1736,11 +1663,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-<<<<<<< HEAD
-#line 97 "decaf.y" /* yacc.c:1906  */
-=======
-#line 111 "decaf.y" /* yacc.c:1906  */
->>>>>>> 30a8ace9a440980794bec30ac049b0c3b2fc29de
+#line 122 "decaf.y" /* yacc.c:1906  */
 
 
 int main(int argc,char** argv){

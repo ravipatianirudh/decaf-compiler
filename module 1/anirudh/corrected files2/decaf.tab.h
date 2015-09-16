@@ -88,11 +88,11 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 16 "decaf.y" /* yacc.c:1909  */
+#line 17 "decaf.y" /* yacc.c:1909  */
 
 	char *identifier_val;
-	char *type_int;
-	char *type_bool;
+	const char *type_int;
+	const char *type_bool;
 	int boolean_val;
 	char *string_literal;
 	char *char_literal;

@@ -1,6 +1,7 @@
 %{
 #include <cstdio>
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
@@ -15,8 +16,8 @@ void yyerror(const char *s);
 
 %union{
 	char *identifier_val;
-	char *type_int;
-	char *type_bool;
+	const char *type_int;
+	const char *type_bool;
 	int boolean_val;
 	char *string_literal;
 	char *char_literal;
@@ -70,27 +71,21 @@ decl : field_decl|statement_decl
 
 field_decl: type field_element_list SEMI_COLON
 
-<<<<<<< HEAD
-type : TYPE 														{cout<<$1<<" DECLARATION ENCOUNTERED. "<<;}
-=======
-<<<<<<< HEAD
-type : INT|BOOLEAN {printf("Successful type");cout<<$1<<endl;fputs("TYPE\n",bison_output);}
-=======
-type : TYPE 														{cout<<"TYPE ENCOUNTERED\t"<<$1<<endl;}
->>>>>>> 30a8ace9a440980794bec30ac049b0c3b2fc29de
->>>>>>> be27b6e446c3e2d536bd116a11e6102b293c1d0e
+type : 	INT		{cout<<$1<<" DECLARATION ENCOUNTERED. ";}
+		|BOOLEAN 	{cout<<$1<<" DECLARATION ENCOUNTERED. ";}
+
 
 field_element_list:	Field_Element COMMA field_element_list
 					| Field_Element
 
-Field_Element: 	IDENTIFIER																					{cout<<"ID="<<$1;}
+Field_Element: 	IDENTIFIER																					{cout<<"ID="<<$1<<endl;}
 				| IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET						{cout<<"ID="<<$1<<" "<<"SIZE="<<$3<<endl;}
 
 statement_decl:	location  ASSIGNMENT_OP expr SEMI_COLON 													{cout<<"ASSIGNMENT OPERATION ENCOUNTERED\n";}
 				|CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON 	{cout<<"CALLOUT TO "<<$3<<" ECOUNTERED\n";}
 
-location :	IDENTIFIER													{cout<<"LOCATION ENCOUNTERED";}
-			|IDENTIFIER OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET	{cout<<"LOCATION ENCOUNTERED";}
+location :	IDENTIFIER													{cout<<"LOCATION ENCOUNTERED="<<$1<<endl;}
+			|IDENTIFIER OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET	{cout<<"LOCATION ENCOUNTERED="<<$1<<endl;}
 
 expr :	binary_exp
 		| unary_op  binary_exp	
@@ -109,7 +104,12 @@ literal :	DECIMAL_LITERAL									{cout<<"INT ENCOUNTERD="<<$1<<endl;}
 
 binary_op:	OP_MINUS										{cout<<"SUBTRACTION ENCOUNTERED"<<endl;}
 			| OP_PLUS										{cout<<"ADDITION ENCOUNTERED"<<endl;}
-			| ARITHMETIC_OP									{cout<<"ENCOUNTERED ARITHMETIC OP\t"<<$1<<endl;}
+			| ARITHMETIC_OP									{
+																if(strcmp($1,"/"))
+																	cout<<"DIVISION ENCOUNTERED"<<endl;
+																else
+																	cout<<"MULTIPLICATION ENCOUNTERED"<<endl;
+															}
 			| RELATIONAL_OP									{cout<<"ENCOUNTERED RELATIONAL OP\t"<<$1<<endl;}
 			| EQUALITY_OP									{cout<<"ENCOUNTERED EQUALITY OP\t"<<$1<<endl;}
 			| CONDITIONAL_OP 								{cout<<"ENCOUNTERED CONDITIONAL OP\t"<<$1<<endl;}
