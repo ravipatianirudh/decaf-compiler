@@ -59,7 +59,7 @@ void yyerror(const char *s);
 %left UNARY_MINUS
 
 %%
-Program : CLASS IDENTIFIER START_BLOCK declarations CLOSE_BLOCK 	{cout<<"PROGRAM ENCOUNTERED\t"<<$2<<endl;}
+Program : CLASS IDENTIFIER START_BLOCK declarations CLOSE_BLOCK 	{cout<<"PROGRAM ENCOUNTERED"<<endl;}
 
 declarations: | decl declarations
 
@@ -67,19 +67,19 @@ decl : field_decl|statement_decl
 
 field_decl: type field_element_list SEMI_COLON
 
-type : TYPE 														{cout<<"TYPE ENCOUNTERED\t"<<$1<<endl;}
+type : TYPE 														{cout<<$1<<" DECLARATION ENCOUNTERED. "<<;}
 
 field_element_list:	Field_Element COMMA field_element_list
 					| Field_Element
 
-Field_Element: 	IDENTIFIER
-				| IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET						{cout<<"IDENTIFIER FOR ARRAY\t"<<$1<<endl<<"INT LITERAL\t"<<$3<<endl;}
+Field_Element: 	IDENTIFIER																					{cout<<"ID="<<$1;}
+				| IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET						{cout<<"ID="<<$1<<" "<<"SIZE="<<$3<<endl;}
 
-statement_decl:	location  ASSIGNMENT_OP expr SEMI_COLON 													{cout<<"STATEMENT DECLARATION\n";}
-				|CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON 	{cout<<"CALLOUT ENCOUNTERED of\t"<<$3<<endl;}
+statement_decl:	location  ASSIGNMENT_OP expr SEMI_COLON 													{cout<<"ASSIGNMENT OPERATION ENCOUNTERED\n";}
+				|CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON 	{cout<<"CALLOUT TO "<<$3<<" ECOUNTERED\n";}
 
-location :	IDENTIFIER													
-			|IDENTIFIER OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET
+location :	IDENTIFIER													{cout<<"LOCATION ENCOUNTERED";}
+			|IDENTIFIER OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET	{cout<<"LOCATION ENCOUNTERED";}
 
 expr :	binary_exp
 		| unary_op  binary_exp	
@@ -91,13 +91,13 @@ common_expr :	location
 				| literal
 				| OPEN_PARENTHESIS expr CLOSE_PARENTHESIS
 
-literal :	DECIMAL_LITERAL									{cout<<"INT LITERAL\t"<<$1<<endl;}
-			| CHAR_LITERAL									{cout<<"CHAR LITERAL\t"<<$1<<endl;}
-			| BOOLEAN_LITERAL								{cout<<"BOOLEAN LITERAL\t"<<$1<<endl;}
-			| STRING_LITERAL 								{cout<<"ENCOUNTERED STRING LITERAL\t"<<$1<<endl;}
+literal :	DECIMAL_LITERAL									{cout<<"INT ENCOUNTERD="<<$1<<endl;}
+			| CHAR_LITERAL									{cout<<"CHAR ENCOUNTERED="<<$1<<endl;}
+			| BOOLEAN_LITERAL								{cout<<"BOOLEAN ENCOUNTERED="<<$1<<endl;}
+			| STRING_LITERAL 								//{cout<<"STRING ENCOUNTERED="<<$1<<endl;}
 
-binary_op:	OP_MINUS
-			| OP_PLUS										{cout<<"ENCOUNTERED PLUS OP\t"<<$1<<endl;}
+binary_op:	OP_MINUS										{cout<<"SUBTRACTION ENCOUNTERED"<<endl;}
+			| OP_PLUS										{cout<<"ADDITION ENCOUNTERED"<<endl;}
 			| ARITHMETIC_OP									{cout<<"ENCOUNTERED ARITHMETIC OP\t"<<$1<<endl;}
 			| RELATIONAL_OP									{cout<<"ENCOUNTERED RELATIONAL OP\t"<<$1<<endl;}
 			| EQUALITY_OP									{cout<<"ENCOUNTERED EQUALITY OP\t"<<$1<<endl;}
