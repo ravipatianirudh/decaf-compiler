@@ -963,6 +963,7 @@ YY_RULE_SETUP
 case 35:
 /* rule 35 can match eol */
 YY_RULE_SETUP
+<<<<<<< HEAD
 #line 58 "decaf.l"
 {fputs("STRING: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output); return STRING_LITERAL;}
 	YY_BREAK
@@ -970,6 +971,15 @@ case 36:
 YY_RULE_SETUP
 #line 60 "decaf.l"
 {  return CHAR_LITERAL; }
+=======
+#line 59 "decaf.l"
+{ yylval.string_literal = strdup(yytext);return STRING_LITERAL;}
+	YY_BREAK
+case 36:
+YY_RULE_SETUP
+#line 61 "decaf.l"
+{ yylval.char_literal = strdup(yytext);return CHAR_LITERAL; }
+>>>>>>> 30a8ace9a440980794bec30ac049b0c3b2fc29de
 	YY_BREAK
 case 37:
 YY_RULE_SETUP

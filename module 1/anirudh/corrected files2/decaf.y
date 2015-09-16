@@ -62,37 +62,58 @@ void yyerror(const char *s);
 %left UNARY_MINUS
 
 %%
-Program : CLASS IDENTIFIER START_BLOCK declarations CLOSE_BLOCK {printf("Success");cout<<endl;fputs("PROGRAM\n",bison_output);}
+Program : CLASS IDENTIFIER START_BLOCK declarations CLOSE_BLOCK 	{cout<<"PROGRAM ENCOUNTERED\t"<<$2<<endl;}
 
-declarations: | decl declarations	{printf("Successful declarations");cout<<endl;fputs("DECLARATIONS\n",bison_output);}
+declarations: | decl declarations
 
-decl : field_decl|statement_decl	{printf("Successful decl");cout<<endl;fputs("DECL\n",bison_output);}
+decl : field_decl|statement_decl
 
-field_decl: type field_element_list SEMI_COLON	{printf("Successful field_decl");cout<<endl;fputs("FIELD DECL\n",bison_output);}
+field_decl: type field_element_list SEMI_COLON
 
+<<<<<<< HEAD
 type : INT|BOOLEAN {printf("Successful type");cout<<$1<<endl;fputs("TYPE\n",bison_output);}
+=======
+type : TYPE 														{cout<<"TYPE ENCOUNTERED\t"<<$1<<endl;}
+>>>>>>> 30a8ace9a440980794bec30ac049b0c3b2fc29de
 
-field_element_list: Field_Element COMMA field_element_list | Field_Element {printf("Successful field_element_list");cout<<endl;fputs("FIELD ELEMENT LIST\n",bison_output);}
+field_element_list:	Field_Element COMMA field_element_list
+					| Field_Element
 
-Field_Element: IDENTIFIER | IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET {printf("Successful Field_Element");cout<<$1<<endl;fputs("FIELD ELEMENT\n",bison_output);}
+Field_Element: 	IDENTIFIER
+				| IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET						{cout<<"IDENTIFIER FOR ARRAY\t"<<$1<<endl<<"INT LITERAL\t"<<$3<<endl;}
 
-statement_decl: location  ASSIGNMENT_OP expr SEMI_COLON | CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON {printf("Successful statement_decl");cout<<endl;fputs("STATEMENT DECL\n",bison_output);}
+statement_decl:	location  ASSIGNMENT_OP expr SEMI_COLON 													{cout<<"STATEMENT DECLARATION\n";}
+				|CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON 	{cout<<"CALLOUT ENCOUNTERED of\t"<<$3<<endl;}
 
-location : IDENTIFIER | IDENTIFIER OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET {printf("Successful location");cout<<$1<<endl;fputs("LOCATION\n",bison_output);}
+location :	IDENTIFIER													
+			|IDENTIFIER OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET
 
-expr : binary_exp | unary_op  binary_exp {printf("Successful expr");cout<<endl;fputs("EXPR\n",bison_output);}
+expr :	binary_exp
+		| unary_op  binary_exp	
 
-binary_exp: common_expr | binary_exp binary_op binary_exp {printf("Successful binary_exp");cout<<endl;fputs("BINARY EXP\n",bison_output);}
+binary_exp:	common_expr 
+			| binary_exp binary_op binary_exp
 
-common_expr : location  | literal  | OPEN_PARENTHESIS expr CLOSE_PARENTHESIS {printf("Successful common_expr");cout<<endl;fputs("COMMON EXPR\n",bison_output);}
+common_expr :	location 
+				| literal
+				| OPEN_PARENTHESIS expr CLOSE_PARENTHESIS
 
-literal : DECIMAL_LITERAL | CHAR_LITERAL | BOOLEAN_LITERAL | STRING_LITERAL {printf("Successful literal");cout<<$1<<endl;fputs("LITERAL\n",bison_output);}
+literal :	DECIMAL_LITERAL									{cout<<"INT LITERAL\t"<<$1<<endl;}
+			| CHAR_LITERAL									{cout<<"CHAR LITERAL\t"<<$1<<endl;}
+			| BOOLEAN_LITERAL								{cout<<"BOOLEAN LITERAL\t"<<$1<<endl;}
+			| STRING_LITERAL 								{cout<<"ENCOUNTERED STRING LITERAL\t"<<$1<<endl;}
 
-binary_op: OP_MINUS | OP_PLUS | ARITHMETIC_OP | RELATIONAL_OP | EQUALITY_OP | CONDITIONAL_OP {printf("Successful binary_op");cout<<$1<<endl;fputs("BINARY OP\n",bison_output);}
+binary_op:	OP_MINUS
+			| OP_PLUS										{cout<<"ENCOUNTERED PLUS OP\t"<<$1<<endl;}
+			| ARITHMETIC_OP									{cout<<"ENCOUNTERED ARITHMETIC OP\t"<<$1<<endl;}
+			| RELATIONAL_OP									{cout<<"ENCOUNTERED RELATIONAL OP\t"<<$1<<endl;}
+			| EQUALITY_OP									{cout<<"ENCOUNTERED EQUALITY OP\t"<<$1<<endl;}
+			| CONDITIONAL_OP 								{cout<<"ENCOUNTERED CONDITIONAL OP\t"<<$1<<endl;}
 
-unary_op : NEGATION | OP_MINUS %prec UNARY_MINUS {printf("Successful unary_op");cout<<$1<<endl;fputs("UNARY OP\n",bison_output);}
+unary_op :	NEGATION										{cout<<"ENCOUNTERED NEGATION"<<endl;}
+			| OP_MINUS %prec UNARY_MINUS 					{cout<<"ENCOUTNERED UNARY MINUS"<<endl;}
 
-callout_arg: expr | expr COMMA callout_arg {printf("Successful callout_arg");cout<<endl;fputs("CALLOUT ARG\n",bison_output);}
+callout_arg: expr | expr COMMA callout_arg
 
 %%
 

@@ -34,10 +34,17 @@ extern FILE *flex_output;
 \=\=									|
 !=									{yylval.equality_operator_val = strdup(yytext);return EQUALITY_OP;}
 
+<<<<<<< HEAD
 class									{fputs("CLASS\n",flex_output);return CLASS;}
 callout									{fputs("CALLOUT\n",flex_output);return CALLOUT;}
 if									{fputs("IF",flex_output);return IF;}
 for									{fputs("FALSE",flex_output);return FOR;}
+=======
+class									{return CLASS;}
+callout									{return CALLOUT;}
+if										{return IF;}
+for										{return FOR;}
+>>>>>>> 30a8ace9a440980794bec30ac049b0c3b2fc29de
 return									{return RETURN;}
 break									{fputs("BREAK",flex_output);return BREAK;}
 continue								{fputs("CONTINUE",flex_output);return CONTINUE;}
@@ -50,6 +57,7 @@ false									{fputs("BOOLEAN: ",flex_output);fputs(strdup(yytext),flex_output);
 
 "//".*"\n" { }
 
+<<<<<<< HEAD
 [0-9][0-9]*								{fputs("INT: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.decimal_literal = atoi(yytext);return DECIMAL_LITERAL;}
 
 0x[0-9a-fA-F][0-9a-fA-F]*						{fputs("HEX: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.hex_literal = atoi(yytext);return HEX_LITERAL;}
@@ -58,6 +66,16 @@ false									{fputs("BOOLEAN: ",flex_output);fputs(strdup(yytext),flex_output);
 \"(\\.|[^\\"])*\" 							{fputs("STRING: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output); return STRING_LITERAL;}
 
 "\'\\n\'"|"\'\\t\'"|"\'\\\\\'"|"\'\\\'\'"|"\'\\\"\'"|"\'"."\'"      	{  return CHAR_LITERAL; }
+=======
+[0-9][0-9]*								{yylval.decimal_literal = atoi(yytext);return DECIMAL_LITERAL;}
+
+0x[0-9a-fA-F][0-9a-fA-F]*				{yylval.hex_literal = atoi(yytext);return HEX_LITERAL;}
+
+[a-zA-Z][0-9a-zA-Z]*					{yylval.identifier_val = strdup(yytext);return IDENTIFIER;}
+\"(\\.|[^\\"])*\" 						{ yylval.string_literal = strdup(yytext);return STRING_LITERAL;}
+
+"\'\\n\'"|"\'\\t\'"|"\'\\\\\'"|"\'\\\'\'"|"\'\\\"\'"|"\'"."\'"      { yylval.char_literal = strdup(yytext);return CHAR_LITERAL; }
+>>>>>>> 30a8ace9a440980794bec30ac049b0c3b2fc29de
 
 \;									{return SEMI_COLON;}
 \,									{return COMMA;}
