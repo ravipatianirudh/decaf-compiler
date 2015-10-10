@@ -1,4 +1,0 @@
-#ifndef filepointer_H_INCLUDED
-#define filepointer_H_INCLUDED
-FILE *flex_output
-#endif
