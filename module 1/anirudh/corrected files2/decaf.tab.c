@@ -1354,13 +1354,13 @@ yyreduce:
 
   case 16:
 #line 88 "decaf.y" /* yacc.c:1646  */
-    {fputs("LOCATION ENCOUNTERED",bison_output);fputs((yyvsp[0].identifier_val),bison_output);fputs("\n",bison_output);}
+    {fputs("LOCATION ENCOUNTERED=",bison_output);fputs((yyvsp[0].identifier_val),bison_output);fputs("\n",bison_output);}
 #line 1359 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
 #line 89 "decaf.y" /* yacc.c:1646  */
-    {fputs("LOCATION ENCOUNTERED",bison_output);fputs((yyvsp[-3].identifier_val),bison_output);fputs("\n",bison_output);}
+    {fputs("LOCATION ENCOUNTERED=",bison_output);fputs((yyvsp[-3].identifier_val),bison_output);fputs("\n",bison_output);}
 #line 1365 "decaf.tab.c" /* yacc.c:1646  */
     break;
 

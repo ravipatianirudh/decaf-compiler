@@ -425,14 +425,14 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  4
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   60
+#define YYLAST   55
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  35
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  17
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  36
+#define YYNRULES  37
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  64
 
@@ -486,7 +486,7 @@ static const yytype_uint8 yyrline[] =
        0,    53,    53,    55,    55,    57,    57,    59,    61,    63,
       63,    65,    65,    67,    67,    69,    69,    71,    71,    73,
       73,    75,    75,    75,    77,    77,    77,    77,    79,    79,
-      79,    79,    79,    79,    81,    81,    83
+      79,    79,    79,    79,    81,    81,    83,    83
 };
 #endif
 
@@ -521,10 +521,10 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -25
+#define YYPACT_NINF -24
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-25)))
+  (!!((Yystate) == (-24)))
 
 #define YYTABLE_NINF -1
 
@@ -535,13 +535,13 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-     -17,     0,    12,   -15,   -25,     6,    -9,   -25,    -7,    -6,
-       6,   -25,    26,   -25,    16,    -1,    22,   -25,   -25,     2,
-      15,    11,    -1,   -25,   -25,   -25,   -25,   -25,   -25,    -1,
-     -25,    10,    25,   -25,   -25,    14,    13,    34,   -25,    26,
-      27,    17,   -25,   -25,   -25,   -25,   -25,   -25,   -25,    14,
-      25,    28,    18,   -25,   -25,   -25,    25,    -1,   -25,   -25,
-      29,    20,    19,   -25
+     -17,    25,    29,    -4,   -24,    12,     0,   -24,     1,     6,
+      12,   -24,    34,   -24,    24,    -3,    33,   -24,   -24,     9,
+      23,    21,    -3,   -24,   -24,   -24,   -24,   -24,   -24,    -3,
+     -24,    11,     7,   -24,   -24,     2,    26,    35,   -24,    34,
+      28,    14,   -24,   -24,   -24,   -24,   -24,   -24,   -24,     2,
+       7,    -3,    13,   -24,   -24,   -24,     7,    30,    15,   -24,
+      -3,    32,   -24,   -24
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -554,22 +554,22 @@ static const yytype_uint8 yydefact[] =
        0,    10,     0,    26,    27,    25,    24,    34,    35,     0,
       21,     0,    17,    19,    22,     0,     0,     0,     7,     0,
        0,     0,    16,    30,    32,    29,    33,    31,    28,     0,
-      18,     0,     0,     9,    13,    23,    20,     0,    12,    36,
-       0,     0,     0,    14
+      18,     0,     0,     9,    13,    23,    20,    36,     0,    12,
+       0,     0,    37,    14
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -25,   -25,    35,   -25,   -25,   -25,    21,   -25,   -25,     8,
-     -22,   -24,   -25,   -25,   -25,   -25,   -25
+     -24,   -24,    42,   -24,   -24,   -24,    16,   -24,   -24,    22,
+      -5,   -23,   -24,   -24,   -24,   -24,    -7
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
       -1,     2,     9,    10,    11,    12,    20,    21,    13,    30,
-      31,    32,    33,    34,    49,    35,    60
+      57,    32,    33,    34,    49,    35,    58
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -577,24 +577,22 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      40,     1,     6,     3,    23,    24,    25,    41,    26,     6,
-       7,    50,     4,    14,     5,    27,    28,     6,    14,    23,
-      24,    25,    15,    26,    17,    56,    16,     8,    36,    19,
-      22,    39,    29,    37,    38,    59,    43,    44,    45,    46,
-      47,    48,    42,    52,    51,    18,    54,    29,    57,    61,
-      58,    55,    62,    63,     0,     0,     0,     0,     0,     0,
-      53
+       6,     1,    23,    24,    25,     6,    26,    23,    24,    25,
+      31,    26,    50,    27,    28,     6,     7,    40,    43,    44,
+      45,    46,    47,    48,    41,     5,    56,    14,     3,     4,
+      29,    15,    14,     8,    16,    29,    17,    19,    22,    36,
+      37,    39,    38,    42,    52,    59,    51,    54,    55,    61,
+      60,    63,    18,    62,     0,    53
 };
 
 static const yytype_int8 yycheck[] =
 {
-      22,    18,     3,     3,     5,     6,     7,    29,     9,     3,
-       4,    35,     0,     5,    29,    16,    17,     3,    10,     5,
-       6,     7,    31,     9,    30,    49,    33,    21,     6,     3,
-      14,    20,    33,    31,    19,    57,    11,    12,    13,    14,
-      15,    16,    32,     9,    31,    10,    19,    33,    20,    20,
-      32,    34,    32,    34,    -1,    -1,    -1,    -1,    -1,    -1,
-      39
+       3,    18,     5,     6,     7,     3,     9,     5,     6,     7,
+      15,     9,    35,    16,    17,     3,     4,    22,    11,    12,
+      13,    14,    15,    16,    29,    29,    49,     5,     3,     0,
+      33,    31,    10,    21,    33,    33,    30,     3,    14,     6,
+      31,    20,    19,    32,     9,    32,    20,    19,    34,    34,
+      20,    19,    10,    60,    -1,    39
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -606,8 +604,8 @@ static const yytype_uint8 yystos[] =
       41,    42,    14,     5,     6,     7,     9,    16,    17,    33,
       44,    45,    46,    47,    48,    50,     6,    31,    19,    20,
       45,    45,    32,    11,    12,    13,    14,    15,    16,    49,
-      46,    31,     9,    41,    19,    34,    46,    20,    32,    45,
-      51,    20,    32,    34
+      46,    20,     9,    41,    19,    34,    46,    45,    51,    32,
+      20,    34,    51,    19
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -616,16 +614,16 @@ static const yytype_uint8 yyr1[] =
        0,    35,    36,    37,    37,    38,    38,    39,    40,    41,
       41,    42,    42,    43,    43,    44,    44,    45,    45,    46,
       46,    47,    47,    47,    48,    48,    48,    48,    49,    49,
-      49,    49,    49,    49,    50,    50,    51
+      49,    49,    49,    49,    50,    50,    51,    51
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     5,     0,     2,     1,     1,     3,     1,     3,
-       1,     1,     4,     4,     9,     1,     4,     1,     2,     1,
+       1,     1,     4,     4,     7,     1,     4,     1,     2,     1,
        3,     1,     1,     3,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1,     1,     1
+       1,     1,     1,     1,     1,     1,     1,     3
 };
 
 
@@ -1304,101 +1302,101 @@ yyreduce:
         case 2:
 #line 53 "decaf.y" /* yacc.c:1646  */
     {printf("Successful");cout<<endl;}
-#line 1308 "decaf.tab.c" /* yacc.c:1646  */
+#line 1306 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
 #line 55 "decaf.y" /* yacc.c:1646  */
     {printf("Successful declarations");cout<<endl;}
-#line 1314 "decaf.tab.c" /* yacc.c:1646  */
+#line 1312 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
 #line 57 "decaf.y" /* yacc.c:1646  */
     {printf("Successful decl");cout<<endl;}
-#line 1320 "decaf.tab.c" /* yacc.c:1646  */
+#line 1318 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
 #line 59 "decaf.y" /* yacc.c:1646  */
     {printf("Successful field_decl");cout<<endl;}
-#line 1326 "decaf.tab.c" /* yacc.c:1646  */
+#line 1324 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 61 "decaf.y" /* yacc.c:1646  */
     {printf("Successful type");cout<<(yyvsp[0].type_val)<<endl;}
-#line 1332 "decaf.tab.c" /* yacc.c:1646  */
+#line 1330 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
 #line 63 "decaf.y" /* yacc.c:1646  */
     {printf("Successful field_element_list");cout<<endl;}
-#line 1338 "decaf.tab.c" /* yacc.c:1646  */
+#line 1336 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 65 "decaf.y" /* yacc.c:1646  */
     {printf("Successful Field_Element");cout<<(yyvsp[-3].identifier_val)<<endl;}
-#line 1344 "decaf.tab.c" /* yacc.c:1646  */
+#line 1342 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
 #line 67 "decaf.y" /* yacc.c:1646  */
     {printf("Successful statement_decl");cout<<endl;}
-#line 1350 "decaf.tab.c" /* yacc.c:1646  */
+#line 1348 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
 #line 69 "decaf.y" /* yacc.c:1646  */
     {printf("Successful location");cout<<(yyvsp[-3].identifier_val)<<endl;}
-#line 1356 "decaf.tab.c" /* yacc.c:1646  */
+#line 1354 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
 #line 71 "decaf.y" /* yacc.c:1646  */
     {printf("Successful expr");cout<<endl;}
-#line 1362 "decaf.tab.c" /* yacc.c:1646  */
+#line 1360 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
 #line 73 "decaf.y" /* yacc.c:1646  */
     {printf("Successful binary_exp");cout<<endl;}
-#line 1368 "decaf.tab.c" /* yacc.c:1646  */
+#line 1366 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
 #line 75 "decaf.y" /* yacc.c:1646  */
     {printf("Successful common_expr");cout<<endl;}
-#line 1374 "decaf.tab.c" /* yacc.c:1646  */
+#line 1372 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
 #line 77 "decaf.y" /* yacc.c:1646  */
     {printf("Successful literal");cout<<(yyvsp[0].string_literal)<<endl;}
-#line 1380 "decaf.tab.c" /* yacc.c:1646  */
+#line 1378 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
 #line 79 "decaf.y" /* yacc.c:1646  */
     {printf("Successful binary_op");cout<<(yyvsp[0].assignment_operator_val)<<endl;}
-#line 1386 "decaf.tab.c" /* yacc.c:1646  */
+#line 1384 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
 #line 81 "decaf.y" /* yacc.c:1646  */
     {printf("Successful unary_op");cout<<(yyvsp[0].negation_val)<<endl;}
-#line 1392 "decaf.tab.c" /* yacc.c:1646  */
+#line 1390 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 36:
+  case 37:
 #line 83 "decaf.y" /* yacc.c:1646  */
     {printf("Successful callout_arg");cout<<endl;}
-#line 1398 "decaf.tab.c" /* yacc.c:1646  */
+#line 1396 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1402 "decaf.tab.c" /* yacc.c:1646  */
+#line 1400 "decaf.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

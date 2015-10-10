@@ -85,8 +85,8 @@ Field_Element: 	IDENTIFIER																					{fputs("ID=",bison_output);fputs(
 statement_decl:	location  ASSIGNMENT_OP expr SEMI_COLON 													{fputs("ASSIGNMENT OPERATION ENCOUNTERED\n",bison_output);}
 				|CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON 	{fputs("CALLOUT TO ",bison_output);fputs($3,bison_output);fputs(" ENCOUNTERED\n",bison_output);}
 
-location :	IDENTIFIER													{fputs("LOCATION ENCOUNTERED",bison_output);fputs($1,bison_output);fputs("\n",bison_output);}
-			|IDENTIFIER OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET	{fputs("LOCATION ENCOUNTERED",bison_output);fputs($1,bison_output);fputs("\n",bison_output);}
+location :	IDENTIFIER													{fputs("LOCATION ENCOUNTERED=",bison_output);fputs($1,bison_output);fputs("\n",bison_output);}
+			|IDENTIFIER OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET	{fputs("LOCATION ENCOUNTERED=",bison_output);fputs($1,bison_output);fputs("\n",bison_output);}
 
 expr :	binary_exp
 		| unary_op  binary_exp	
@@ -125,7 +125,8 @@ binary_op:	OP_MINUS										{fputs("SUBTRACTION ENCOUNTERED\n",bison_output);}
 unary_op :	NEGATION										//{fputs("ENCOUNTERED NEGATION"<<endl;}
 			| OP_MINUS %prec UNARY_MINUS 					//{fputs("ENCOUNTNERED UNARY MINUS"<<endl;}
 
-callout_arg: expr | expr COMMA callout_arg
+callout_arg:	expr 
+				| expr COMMA callout_arg
 
 %%
 

@@ -70,7 +70,7 @@ location : IDENTIFIER | IDENTIFIER 	OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKE
 
 expr : binary_exp | unary_op  binary_exp {printf("Successful expr");cout<<endl;}
 
-binary_exp: common_expr  | binary_exp binary_op binary_exp {printf("Successful binary_exp");cout<<endl;}
+binary_exp: common_expr  |  binary_exp binary_op binary_exp  {printf("Successful binary_exp");cout<<endl;}
 
 common_expr : location  | literal  | OPEN_PARENTHESIS expr CLOSE_PARENTHESIS {printf("Successful common_expr");cout<<endl;}
 
