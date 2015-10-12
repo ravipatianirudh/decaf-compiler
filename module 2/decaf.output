@@ -1,0 +1,778 @@
+Terminals unused in grammar
+
+   HEX_LITERAL
+   ERROR
+   IF
+   ELSE
+   FOR
+   BREAK
+   CONTINUE
+   RETURN
+   VOID
+
+
+State 57 conflicts: 6 shift/reduce
+
+
+Grammar
+
+    0 $accept: Program $end
+
+    1 Program: CLASS IDENTIFIER START_BLOCK declarations CLOSE_BLOCK
+
+    2 declarations: %empty
+    3             | decl declarations
+
+    4 decl: field_decl
+    5     | statement_decl
+
+    6 field_decl: type field_element_list SEMI_COLON
+
+    7 type: INT
+    8     | BOOLEAN
+
+    9 field_element_list: Field_Element COMMA field_element_list
+   10                   | Field_Element
+
+   11 Field_Element: IDENTIFIER
+   12              | IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET
+
+   13 statement_decl: location ASSIGNMENT_OP expr SEMI_COLON
+   14               | CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON
+
+   15 location: IDENTIFIER
+   16         | IDENTIFIER OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET
+
+   17 expr: binary_exp
+   18     | unary_op binary_exp
+
+   19 binary_exp: common_expr
+   20           | binary_exp binary_op binary_exp
+
+   21 common_expr: location
+   22            | literal
+   23            | OPEN_PARENTHESIS expr CLOSE_PARENTHESIS
+
+   24 literal: DECIMAL_LITERAL
+   25        | CHAR_LITERAL
+   26        | BOOLEAN_LITERAL
+   27        | STRING_LITERAL
+
+   28 binary_op: OP_MINUS
+   29          | OP_PLUS
+   30          | ARITHMETIC_OP
+   31          | RELATIONAL_OP
+   32          | EQUALITY_OP
+   33          | CONDITIONAL_OP
+
+   34 unary_op: NEGATION
+   35         | OP_MINUS
+
+   36 callout_arg: expr
+   37            | expr COMMA callout_arg
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+OP_PLUS (258) 29
+IDENTIFIER (259) 1 11 12 15 16
+INT (260) 7
+BOOLEAN (261) 8
+BOOLEAN_LITERAL (262) 26
+STRING_LITERAL (263) 14 27
+CHAR_LITERAL (264) 25
+HEX_LITERAL (265)
+DECIMAL_LITERAL (266) 12 24
+ERROR (267)
+RELATIONAL_OP (268) 31
+CONDITIONAL_OP (269) 33
+ARITHMETIC_OP (270) 30
+ASSIGNMENT_OP (271) 13
+EQUALITY_OP (272) 32
+OP_MINUS (273) 28 35
+NEGATION (274) 34
+CLASS (275) 1
+SEMI_COLON (276) 6 13 14
+COMMA (277) 9 14 37
+CALLOUT (278) 14
+IF (279)
+ELSE (280)
+FOR (281)
+BREAK (282)
+CONTINUE (283)
+RETURN (284)
+VOID (285)
+START_BLOCK (286) 1
+CLOSE_BLOCK (287) 1
+OPEN_SQUARE_BRACKET (288) 12 16
+CLOSE_SQUARE_BRACKET (289) 12 16
+OPEN_PARENTHESIS (290) 14 23
+CLOSE_PARENTHESIS (291) 14 23
+UNARY_MINUS (292)
+
+
+Nonterminals, with rules where they appear
+
+$accept (38)
+    on left: 0
+Program (39)
+    on left: 1, on right: 0
+declarations (40)
+    on left: 2 3, on right: 1 3
+decl (41)
+    on left: 4 5, on right: 3
+field_decl (42)
+    on left: 6, on right: 4
+type (43)
+    on left: 7 8, on right: 6
+field_element_list (44)
+    on left: 9 10, on right: 6 9
+Field_Element (45)
+    on left: 11 12, on right: 9 10
+statement_decl (46)
+    on left: 13 14, on right: 5
+location (47)
+    on left: 15 16, on right: 13 21
+expr (48)
+    on left: 17 18, on right: 13 16 23 36 37
+binary_exp (49)
+    on left: 19 20, on right: 17 18 20
+common_expr (50)
+    on left: 21 22 23, on right: 19
+literal (51)
+    on left: 24 25 26 27, on right: 22
+binary_op (52)
+    on left: 28 29 30 31 32 33, on right: 20
+unary_op (53)
+    on left: 34 35, on right: 18
+callout_arg (54)
+    on left: 36 37, on right: 14 37
+
+
+State 0
+
+    0 $accept: . Program $end
+
+    CLASS  shift, and go to state 1
+
+    Program  go to state 2
+
+
+State 1
+
+    1 Program: CLASS . IDENTIFIER START_BLOCK declarations CLOSE_BLOCK
+
+    IDENTIFIER  shift, and go to state 3
+
+
+State 2
+
+    0 $accept: Program . $end
+
+    $end  shift, and go to state 4
+
+
+State 3
+
+    1 Program: CLASS IDENTIFIER . START_BLOCK declarations CLOSE_BLOCK
+
+    START_BLOCK  shift, and go to state 5
+
+
+State 4
+
+    0 $accept: Program $end .
+
+    $default  accept
+
+
+State 5
+
+    1 Program: CLASS IDENTIFIER START_BLOCK . declarations CLOSE_BLOCK
+
+    IDENTIFIER  shift, and go to state 6
+    INT         shift, and go to state 7
+    BOOLEAN     shift, and go to state 8
+    CALLOUT     shift, and go to state 9
+
+    $default  reduce using rule 2 (declarations)
+
+    declarations    go to state 10
+    decl            go to state 11
+    field_decl      go to state 12
+    type            go to state 13
+    statement_decl  go to state 14
+    location        go to state 15
+
+
+State 6
+
+   15 location: IDENTIFIER .  [OP_PLUS, RELATIONAL_OP, CONDITIONAL_OP, ARITHMETIC_OP, ASSIGNMENT_OP, EQUALITY_OP, OP_MINUS, SEMI_COLON, COMMA, CLOSE_SQUARE_BRACKET, CLOSE_PARENTHESIS]
+   16         | IDENTIFIER . OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET
+
+    OPEN_SQUARE_BRACKET  shift, and go to state 16
+
+    $default  reduce using rule 15 (location)
+
+
+State 7
+
+    7 type: INT .
+
+    $default  reduce using rule 7 (type)
+
+
+State 8
+
+    8 type: BOOLEAN .
+
+    $default  reduce using rule 8 (type)
+
+
+State 9
+
+   14 statement_decl: CALLOUT . OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON
+
+    OPEN_PARENTHESIS  shift, and go to state 17
+
+
+State 10
+
+    1 Program: CLASS IDENTIFIER START_BLOCK declarations . CLOSE_BLOCK
+
+    CLOSE_BLOCK  shift, and go to state 18
+
+
+State 11
+
+    3 declarations: decl . declarations
+
+    IDENTIFIER  shift, and go to state 6
+    INT         shift, and go to state 7
+    BOOLEAN     shift, and go to state 8
+    CALLOUT     shift, and go to state 9
+
+    $default  reduce using rule 2 (declarations)
+
+    declarations    go to state 19
+    decl            go to state 11
+    field_decl      go to state 12
+    type            go to state 13
+    statement_decl  go to state 14
+    location        go to state 15
+
+
+State 12
+
+    4 decl: field_decl .
+
+    $default  reduce using rule 4 (decl)
+
+
+State 13
+
+    6 field_decl: type . field_element_list SEMI_COLON
+
+    IDENTIFIER  shift, and go to state 20
+
+    field_element_list  go to state 21
+    Field_Element       go to state 22
+
+
+State 14
+
+    5 decl: statement_decl .
+
+    $default  reduce using rule 5 (decl)
+
+
+State 15
+
+   13 statement_decl: location . ASSIGNMENT_OP expr SEMI_COLON
+
+    ASSIGNMENT_OP  shift, and go to state 23
+
+
+State 16
+
+   16 location: IDENTIFIER OPEN_SQUARE_BRACKET . expr CLOSE_SQUARE_BRACKET
+
+    IDENTIFIER        shift, and go to state 6
+    BOOLEAN_LITERAL   shift, and go to state 24
+    STRING_LITERAL    shift, and go to state 25
+    CHAR_LITERAL      shift, and go to state 26
+    DECIMAL_LITERAL   shift, and go to state 27
+    OP_MINUS          shift, and go to state 28
+    NEGATION          shift, and go to state 29
+    OPEN_PARENTHESIS  shift, and go to state 30
+
+    location     go to state 31
+    expr         go to state 32
+    binary_exp   go to state 33
+    common_expr  go to state 34
+    literal      go to state 35
+    unary_op     go to state 36
+
+
+State 17
+
+   14 statement_decl: CALLOUT OPEN_PARENTHESIS . STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON
+
+    STRING_LITERAL  shift, and go to state 37
+
+
+State 18
+
+    1 Program: CLASS IDENTIFIER START_BLOCK declarations CLOSE_BLOCK .
+
+    $default  reduce using rule 1 (Program)
+
+
+State 19
+
+    3 declarations: decl declarations .
+
+    $default  reduce using rule 3 (declarations)
+
+
+State 20
+
+   11 Field_Element: IDENTIFIER .  [SEMI_COLON, COMMA]
+   12              | IDENTIFIER . OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET
+
+    OPEN_SQUARE_BRACKET  shift, and go to state 38
+
+    $default  reduce using rule 11 (Field_Element)
+
+
+State 21
+
+    6 field_decl: type field_element_list . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 39
+
+
+State 22
+
+    9 field_element_list: Field_Element . COMMA field_element_list
+   10                   | Field_Element .  [SEMI_COLON]
+
+    COMMA  shift, and go to state 40
+
+    $default  reduce using rule 10 (field_element_list)
+
+
+State 23
+
+   13 statement_decl: location ASSIGNMENT_OP . expr SEMI_COLON
+
+    IDENTIFIER        shift, and go to state 6
+    BOOLEAN_LITERAL   shift, and go to state 24
+    STRING_LITERAL    shift, and go to state 25
+    CHAR_LITERAL      shift, and go to state 26
+    DECIMAL_LITERAL   shift, and go to state 27
+    OP_MINUS          shift, and go to state 28
+    NEGATION          shift, and go to state 29
+    OPEN_PARENTHESIS  shift, and go to state 30
+
+    location     go to state 31
+    expr         go to state 41
+    binary_exp   go to state 33
+    common_expr  go to state 34
+    literal      go to state 35
+    unary_op     go to state 36
+
+
+State 24
+
+   26 literal: BOOLEAN_LITERAL .
+
+    $default  reduce using rule 26 (literal)
+
+
+State 25
+
+   27 literal: STRING_LITERAL .
+
+    $default  reduce using rule 27 (literal)
+
+
+State 26
+
+   25 literal: CHAR_LITERAL .
+
+    $default  reduce using rule 25 (literal)
+
+
+State 27
+
+   24 literal: DECIMAL_LITERAL .
+
+    $default  reduce using rule 24 (literal)
+
+
+State 28
+
+   35 unary_op: OP_MINUS .
+
+    $default  reduce using rule 35 (unary_op)
+
+
+State 29
+
+   34 unary_op: NEGATION .
+
+    $default  reduce using rule 34 (unary_op)
+
+
+State 30
+
+   23 common_expr: OPEN_PARENTHESIS . expr CLOSE_PARENTHESIS
+
+    IDENTIFIER        shift, and go to state 6
+    BOOLEAN_LITERAL   shift, and go to state 24
+    STRING_LITERAL    shift, and go to state 25
+    CHAR_LITERAL      shift, and go to state 26
+    DECIMAL_LITERAL   shift, and go to state 27
+    OP_MINUS          shift, and go to state 28
+    NEGATION          shift, and go to state 29
+    OPEN_PARENTHESIS  shift, and go to state 30
+
+    location     go to state 31
+    expr         go to state 42
+    binary_exp   go to state 33
+    common_expr  go to state 34
+    literal      go to state 35
+    unary_op     go to state 36
+
+
+State 31
+
+   21 common_expr: location .
+
+    $default  reduce using rule 21 (common_expr)
+
+
+State 32
+
+   16 location: IDENTIFIER OPEN_SQUARE_BRACKET expr . CLOSE_SQUARE_BRACKET
+
+    CLOSE_SQUARE_BRACKET  shift, and go to state 43
+
+
+State 33
+
+   17 expr: binary_exp .  [SEMI_COLON, COMMA, CLOSE_SQUARE_BRACKET, CLOSE_PARENTHESIS]
+   20 binary_exp: binary_exp . binary_op binary_exp
+
+    OP_PLUS         shift, and go to state 44
+    RELATIONAL_OP   shift, and go to state 45
+    CONDITIONAL_OP  shift, and go to state 46
+    ARITHMETIC_OP   shift, and go to state 47
+    EQUALITY_OP     shift, and go to state 48
+    OP_MINUS        shift, and go to state 49
+
+    $default  reduce using rule 17 (expr)
+
+    binary_op  go to state 50
+
+
+State 34
+
+   19 binary_exp: common_expr .
+
+    $default  reduce using rule 19 (binary_exp)
+
+
+State 35
+
+   22 common_expr: literal .
+
+    $default  reduce using rule 22 (common_expr)
+
+
+State 36
+
+   18 expr: unary_op . binary_exp
+
+    IDENTIFIER        shift, and go to state 6
+    BOOLEAN_LITERAL   shift, and go to state 24
+    STRING_LITERAL    shift, and go to state 25
+    CHAR_LITERAL      shift, and go to state 26
+    DECIMAL_LITERAL   shift, and go to state 27
+    OPEN_PARENTHESIS  shift, and go to state 30
+
+    location     go to state 31
+    binary_exp   go to state 51
+    common_expr  go to state 34
+    literal      go to state 35
+
+
+State 37
+
+   14 statement_decl: CALLOUT OPEN_PARENTHESIS STRING_LITERAL . COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON
+
+    COMMA  shift, and go to state 52
+
+
+State 38
+
+   12 Field_Element: IDENTIFIER OPEN_SQUARE_BRACKET . DECIMAL_LITERAL CLOSE_SQUARE_BRACKET
+
+    DECIMAL_LITERAL  shift, and go to state 53
+
+
+State 39
+
+    6 field_decl: type field_element_list SEMI_COLON .
+
+    $default  reduce using rule 6 (field_decl)
+
+
+State 40
+
+    9 field_element_list: Field_Element COMMA . field_element_list
+
+    IDENTIFIER  shift, and go to state 20
+
+    field_element_list  go to state 54
+    Field_Element       go to state 22
+
+
+State 41
+
+   13 statement_decl: location ASSIGNMENT_OP expr . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 55
+
+
+State 42
+
+   23 common_expr: OPEN_PARENTHESIS expr . CLOSE_PARENTHESIS
+
+    CLOSE_PARENTHESIS  shift, and go to state 56
+
+
+State 43
+
+   16 location: IDENTIFIER OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET .
+
+    $default  reduce using rule 16 (location)
+
+
+State 44
+
+   29 binary_op: OP_PLUS .
+
+    $default  reduce using rule 29 (binary_op)
+
+
+State 45
+
+   31 binary_op: RELATIONAL_OP .
+
+    $default  reduce using rule 31 (binary_op)
+
+
+State 46
+
+   33 binary_op: CONDITIONAL_OP .
+
+    $default  reduce using rule 33 (binary_op)
+
+
+State 47
+
+   30 binary_op: ARITHMETIC_OP .
+
+    $default  reduce using rule 30 (binary_op)
+
+
+State 48
+
+   32 binary_op: EQUALITY_OP .
+
+    $default  reduce using rule 32 (binary_op)
+
+
+State 49
+
+   28 binary_op: OP_MINUS .
+
+    $default  reduce using rule 28 (binary_op)
+
+
+State 50
+
+   20 binary_exp: binary_exp binary_op . binary_exp
+
+    IDENTIFIER        shift, and go to state 6
+    BOOLEAN_LITERAL   shift, and go to state 24
+    STRING_LITERAL    shift, and go to state 25
+    CHAR_LITERAL      shift, and go to state 26
+    DECIMAL_LITERAL   shift, and go to state 27
+    OPEN_PARENTHESIS  shift, and go to state 30
+
+    location     go to state 31
+    binary_exp   go to state 57
+    common_expr  go to state 34
+    literal      go to state 35
+
+
+State 51
+
+   18 expr: unary_op binary_exp .  [SEMI_COLON, COMMA, CLOSE_SQUARE_BRACKET, CLOSE_PARENTHESIS]
+   20 binary_exp: binary_exp . binary_op binary_exp
+
+    OP_PLUS         shift, and go to state 44
+    RELATIONAL_OP   shift, and go to state 45
+    CONDITIONAL_OP  shift, and go to state 46
+    ARITHMETIC_OP   shift, and go to state 47
+    EQUALITY_OP     shift, and go to state 48
+    OP_MINUS        shift, and go to state 49
+
+    $default  reduce using rule 18 (expr)
+
+    binary_op  go to state 50
+
+
+State 52
+
+   14 statement_decl: CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA . callout_arg CLOSE_PARENTHESIS SEMI_COLON
+
+    IDENTIFIER        shift, and go to state 6
+    BOOLEAN_LITERAL   shift, and go to state 24
+    STRING_LITERAL    shift, and go to state 25
+    CHAR_LITERAL      shift, and go to state 26
+    DECIMAL_LITERAL   shift, and go to state 27
+    OP_MINUS          shift, and go to state 28
+    NEGATION          shift, and go to state 29
+    OPEN_PARENTHESIS  shift, and go to state 30
+
+    location     go to state 31
+    expr         go to state 58
+    binary_exp   go to state 33
+    common_expr  go to state 34
+    literal      go to state 35
+    unary_op     go to state 36
+    callout_arg  go to state 59
+
+
+State 53
+
+   12 Field_Element: IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL . CLOSE_SQUARE_BRACKET
+
+    CLOSE_SQUARE_BRACKET  shift, and go to state 60
+
+
+State 54
+
+    9 field_element_list: Field_Element COMMA field_element_list .
+
+    $default  reduce using rule 9 (field_element_list)
+
+
+State 55
+
+   13 statement_decl: location ASSIGNMENT_OP expr SEMI_COLON .
+
+    $default  reduce using rule 13 (statement_decl)
+
+
+State 56
+
+   23 common_expr: OPEN_PARENTHESIS expr CLOSE_PARENTHESIS .
+
+    $default  reduce using rule 23 (common_expr)
+
+
+State 57
+
+   20 binary_exp: binary_exp . binary_op binary_exp
+   20           | binary_exp binary_op binary_exp .  [OP_PLUS, RELATIONAL_OP, CONDITIONAL_OP, ARITHMETIC_OP, EQUALITY_OP, OP_MINUS, SEMI_COLON, COMMA, CLOSE_SQUARE_BRACKET, CLOSE_PARENTHESIS]
+
+    OP_PLUS         shift, and go to state 44
+    RELATIONAL_OP   shift, and go to state 45
+    CONDITIONAL_OP  shift, and go to state 46
+    ARITHMETIC_OP   shift, and go to state 47
+    EQUALITY_OP     shift, and go to state 48
+    OP_MINUS        shift, and go to state 49
+
+    OP_PLUS         [reduce using rule 20 (binary_exp)]
+    RELATIONAL_OP   [reduce using rule 20 (binary_exp)]
+    CONDITIONAL_OP  [reduce using rule 20 (binary_exp)]
+    ARITHMETIC_OP   [reduce using rule 20 (binary_exp)]
+    EQUALITY_OP     [reduce using rule 20 (binary_exp)]
+    OP_MINUS        [reduce using rule 20 (binary_exp)]
+    $default        reduce using rule 20 (binary_exp)
+
+    binary_op  go to state 50
+
+
+State 58
+
+   36 callout_arg: expr .  [CLOSE_PARENTHESIS]
+   37            | expr . COMMA callout_arg
+
+    COMMA  shift, and go to state 61
+
+    $default  reduce using rule 36 (callout_arg)
+
+
+State 59
+
+   14 statement_decl: CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg . CLOSE_PARENTHESIS SEMI_COLON
+
+    CLOSE_PARENTHESIS  shift, and go to state 62
+
+
+State 60
+
+   12 Field_Element: IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET .
+
+    $default  reduce using rule 12 (Field_Element)
+
+
+State 61
+
+   37 callout_arg: expr COMMA . callout_arg
+
+    IDENTIFIER        shift, and go to state 6
+    BOOLEAN_LITERAL   shift, and go to state 24
+    STRING_LITERAL    shift, and go to state 25
+    CHAR_LITERAL      shift, and go to state 26
+    DECIMAL_LITERAL   shift, and go to state 27
+    OP_MINUS          shift, and go to state 28
+    NEGATION          shift, and go to state 29
+    OPEN_PARENTHESIS  shift, and go to state 30
+
+    location     go to state 31
+    expr         go to state 58
+    binary_exp   go to state 33
+    common_expr  go to state 34
+    literal      go to state 35
+    unary_op     go to state 36
+    callout_arg  go to state 63
+
+
+State 62
+
+   14 statement_decl: CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 64
+
+
+State 63
+
+   37 callout_arg: expr COMMA callout_arg .
+
+    $default  reduce using rule 37 (callout_arg)
+
+
+State 64
+
+   14 statement_decl: CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON .
+
+    $default  reduce using rule 14 (statement_decl)
