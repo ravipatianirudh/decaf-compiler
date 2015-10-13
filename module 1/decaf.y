@@ -66,9 +66,11 @@ void yyerror(const char *s);
 %%
 Program : CLASS IDENTIFIER START_BLOCK declarations CLOSE_BLOCK 	{fputs("PROGRAM ENCOUNTERED\n",bison_output);}
 
-declarations: | decl declarations
+declarations: | decl declarations	{ // declarations decl	}
 
-decl : field_decl|statement_decl
+decl : field_decl|statement_decl	{ // field_decl_lines statement_decl_lines	}
+
+{ // field_decl_lines : field_decl_lines field_decl similarly for statement }
 
 field_decl: type field_element_list SEMI_COLON
 
@@ -92,7 +94,7 @@ expr :	binary_exp
 		| unary_op  binary_exp	
 
 binary_exp:	common_expr 
-			| binary_exp binary_op binary_exp
+			| binary_exp binary_op binary_exp	{ // binary_op -> precedence}
 
 common_expr :	location 
 				| literal
