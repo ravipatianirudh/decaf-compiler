@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstdio>
 #include "decaf.tab.h"
+
 #define YY_DECL extern "C" int yylex()
 using namespace std;
 extern FILE *flex_output;
@@ -43,8 +44,8 @@ return									{return RETURN;}
 break									{fputs("BREAK",flex_output);return BREAK;}
 continue								{fputs("CONTINUE",flex_output);return CONTINUE;}
 void									{return VOID;}
-int										{fputs("INT_DECLARATION\n",flex_output);yylval.type_val = "INT";return INT;}
-boolean									{fputs("BOOLEAN_DECLARATION\n",flex_output);yylval.type_val = "BOOLEAN";return BOOLEAN;}
+int										{fputs("INT_DECLARATION\n",flex_output); yylval.type_val = strdup(yytext); return TYPE;}
+boolean									{fputs("BOOLEAN_DECLARATION\n",flex_output); yylval.type_val = strdup(yytext); return TYPE;}
 
 true									{fputs("BOOLEAN: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.boolean_val = 1;return BOOLEAN_LITERAL;}
 false									{fputs("BOOLEAN: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.boolean_val = 0;return BOOLEAN_LITERAL;}
