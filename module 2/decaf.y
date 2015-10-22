@@ -17,8 +17,7 @@ void yyerror(const char *s);
 
 %union{
 	char *identifier_val;
-	const char *type_int;
-	const char *type_bool;
+	const char *type_val;
 	int boolean_val;
 	char *string_literal;
 	char *char_literal;
@@ -37,8 +36,7 @@ void yyerror(const char *s);
 
 %token <op_plus_val> OP_PLUS
 %token <identifier_val> IDENTIFIER
-%token <type_int> INT
-%token <type_bool> BOOLEAN
+%token <type_val> TYPE
 %token <boolean_val> BOOLEAN_LITERAL
 %token <string_literal> STRING_LITERAL
 %token <char_literal> CHAR_LITERAL
@@ -64,69 +62,27 @@ void yyerror(const char *s);
 %left UNARY_MINUS
 
 %%
-Program : CLASS IDENTIFIER START_BLOCK declarations CLOSE_BLOCK 	{fputs("PROGRAM ENCOUNTERED\n",bison_output);}
+program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK
 
-declarations: | decl declarations
+body:				field statement
+					| ''
 
-decl : field_decl|statement_decl
+field:				field_declaration field
+					| field_declaration 
 
-field_decl: type field_element_list SEMI_COLON
+field_declaration:	TYPE IDENTIFIER SEMI_COLON
+					| TYPE IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET SEMI_COLON
 
-type : 	INT		{fputs($1,bison_output);fputs(" DECLARATION ENCOUNTERED. ",bison_output);}
-		|BOOLEAN 	{fputs($1,bison_output);fputs(" DECLARATION ENCOUNTERED. ",bison_output);}
+statement:			location ASSIGNMENT_OP expression SEMI_COLON
+					| CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET SEMI_COLON
+
+location:			IDENTIFIER
+					| IDENTIFIER OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET
+
+callout_arguments:	COMMA expression callout_arguments|
+					COMMA string_literal callout_arguments
 
 
-field_element_list:	Field_Element COMMA field_element_list
-					| Field_Element
-
-Field_Element: 	IDENTIFIER																					{fputs("ID=",bison_output);fputs($1,bison_output);fputs("\n",bison_output);}
-				| IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET						{fputs("ID=",bison_output);fputs($1,bison_output);fputs(" SIZE=",bison_output);fprintf(bison_output,"%d",$3);fputs("\n",bison_output);}
-
-statement_decl:	location  ASSIGNMENT_OP expr SEMI_COLON 													{fputs("ASSIGNMENT OPERATION ENCOUNTERED\n",bison_output);}
-				|CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arg CLOSE_PARENTHESIS SEMI_COLON 	{fputs("CALLOUT TO ",bison_output);fputs($3,bison_output);fputs(" ENCOUNTERED\n",bison_output);}
-
-location :	IDENTIFIER													{fputs("LOCATION ENCOUNTERED=",bison_output);fputs($1,bison_output);fputs("\n",bison_output);}
-			|IDENTIFIER OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET	{fputs("LOCATION ENCOUNTERED=",bison_output);fputs($1,bison_output);fputs("\n",bison_output);}
-
-expr :	binary_exp
-		| unary_op  binary_exp	
-
-binary_exp:	common_expr 
-			| binary_exp binary_op binary_exp
-
-common_expr :	location 
-				| literal
-				| OPEN_PARENTHESIS expr CLOSE_PARENTHESIS
-
-literal :	DECIMAL_LITERAL									{fputs("INT ENCOUNTERD=",bison_output);fprintf(bison_output,"%d",$1);fputs("\n",bison_output);}
-			| CHAR_LITERAL									{fputs("CHAR ENCOUNTERED=",bison_output);fputs($1,bison_output);fputs("\n",bison_output);}
-			| BOOLEAN_LITERAL								{fputs("BOOLEAN ENCOUNTERED=",bison_output);fprintf(bison_output,"%d",$1);fputs("\n",bison_output);}
-			| STRING_LITERAL 								//{fputs("STRING ENCOUNTERED="<<$1<<endl;}
-
-binary_op:	OP_MINUS										{fputs("SUBTRACTION ENCOUNTERED\n",bison_output);}
-			| OP_PLUS										{fputs("ADDITION ENCOUNTERED\n",bison_output);}
-			| ARITHMETIC_OP									{
-																if(strcmp($1,"/"))
-																	fputs("DIVISION ENCOUNTERED\n",bison_output);
-																else if(strcmp($1,"*"))
-																	fputs("MULTIPLICATION ENCOUNTERED\n",bison_output);
-																else 
-																	fputs("MOD ENCOUNTERED\n",bison_output);
-															}
-			| RELATIONAL_OP									{
-																if(strcmp($1,"<"))
-																	fputs("LESS THAN ENCOUNTERED\n",bison_output);
-																else
-																	fputs("GREATER THAN ENCOUNTERED\n",bison_output);
-															}
-			| EQUALITY_OP									//{fputs("ENCOUNTERED EQUALITY OP\t"<<$1<<endl;}
-			| CONDITIONAL_OP 								//{fputs("ENCOUNTERED CONDITIONAL OP\t"<<$1<<endl;}
-
-unary_op :	NEGATION										//{fputs("ENCOUNTERED NEGATION"<<endl;}
-			| OP_MINUS %prec UNARY_MINUS 					//{fputs("ENCOUNTNERED UNARY MINUS"<<endl;}
-
-callout_arg:	expr 
-				| expr COMMA callout_arg
 
 %%
 

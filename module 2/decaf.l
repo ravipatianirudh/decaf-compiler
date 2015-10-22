@@ -26,7 +26,7 @@ extern FILE *flex_output;
 
 &&									|
 \|\|									{yylval.conditional_operator_val  = strdup(yytext);return CONDITIONAL_OP;}
-
+	
 \=									|
 \+=									|
 -=									{yylval.assignment_operator_val = strdup(yytext);return ASSIGNMENT_OP;}
@@ -43,8 +43,8 @@ return									{return RETURN;}
 break									{fputs("BREAK",flex_output);return BREAK;}
 continue								{fputs("CONTINUE",flex_output);return CONTINUE;}
 void									{return VOID;}
-int										{fputs("INT_DECLARATION\n",flex_output);yylval.type_int = "INT";return INT;}
-boolean									{fputs("BOOLEAN_DECLARATION\n",flex_output);yylval.type_bool = "BOOLEAN";return BOOLEAN;}
+int										{fputs("INT_DECLARATION\n",flex_output);yylval.type_val = "INT";return INT;}
+boolean									{fputs("BOOLEAN_DECLARATION\n",flex_output);yylval.type_val = "BOOLEAN";return BOOLEAN;}
 
 true									{fputs("BOOLEAN: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.boolean_val = 1;return BOOLEAN_LITERAL;}
 false									{fputs("BOOLEAN: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.boolean_val = 0;return BOOLEAN_LITERAL;}
