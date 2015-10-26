@@ -4,6 +4,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "ast.h"
+
 using namespace std;
 
 extern "C" int yylex();
@@ -32,6 +34,9 @@ void yyerror(const char *s);
 	char *op_minus_val;
 	char *error;
 	char *op_plus_val;
+
+	program* p;
+	body *b;
 }
 
 %token <op_plus_val> OP_PLUS
@@ -43,6 +48,9 @@ void yyerror(const char *s);
 %token <hex_literal> HEX_LITERAL
 %token <decimal_literal> DECIMAL_LITERAL
 %token <error> ERROR
+
+%type <program> program;
+%type <body> body;
 
 %token <relational_operator_val> RELATIONAL_OP
 %token <conditional_operator_val> CONDITIONAL_OP
@@ -62,11 +70,11 @@ void yyerror(const char *s);
 %left UNARY_MINUS
 
 %%
-program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK
-					| CLASS IDENTIFIER START_BLOCK CLOSE_BLOCK
+program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK							{$$ = new program($4,$2);};
+					| CLASS IDENTIFIER START_BLOCK CLOSE_BLOCK								{$$ = new program($2);}
 
-body:				field statement
-					| field
+body:				field statement															{$$ = new body("found it!\n");}
+					| field																	{$$ = new body("FOUND IT!\n");}
 
 field:				field_declaration field
 					| field_declaration 

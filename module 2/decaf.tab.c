@@ -69,6 +69,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "ast.h"
+
 using namespace std;
 
 extern "C" int yylex();
@@ -79,7 +81,7 @@ FILE *bison_output;
 FILE *flex_output;
 void yyerror(const char *s);
 
-#line 83 "decaf.tab.c" /* yacc.c:339  */
+#line 85 "decaf.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -156,7 +158,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 18 "decaf.y" /* yacc.c:355  */
+#line 20 "decaf.y" /* yacc.c:355  */
 
 	char *identifier_val;
 	char *type_val;
@@ -175,7 +177,10 @@ union YYSTYPE
 	char *error;
 	char *op_plus_val;
 
-#line 179 "decaf.tab.c" /* yacc.c:355  */
+	program* p;
+	body *b;
+
+#line 184 "decaf.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -190,7 +195,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 194 "decaf.tab.c" /* yacc.c:358  */
+#line 199 "decaf.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -491,9 +496,9 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    65,    65,    66,    68,    69,    71,    72,    74,    75,
-      77,    78,    80,    81,    83,    84,    86,    87,    89,    90,
-      91,    92,    93,    94,    95,    96,    97,    98,    99
+       0,    73,    73,    74,    76,    77,    79,    80,    82,    83,
+      85,    86,    88,    89,    91,    92,    94,    95,    97,    98,
+      99,   100,   101,   102,   103,   104,   105,   106,   107
 };
 #endif
 
@@ -1304,8 +1309,32 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-      
-#line 1309 "decaf.tab.c" /* yacc.c:1646  */
+        case 2:
+#line 73 "decaf.y" /* yacc.c:1646  */
+    {(yyval.program) = new program((yyvsp[-1].body),(yyvsp[-3].identifier_val));}
+#line 1316 "decaf.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 3:
+#line 74 "decaf.y" /* yacc.c:1646  */
+    {(yyval.program) = new program((yyvsp[-2].identifier_val));}
+#line 1322 "decaf.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 4:
+#line 76 "decaf.y" /* yacc.c:1646  */
+    {(yyval.body) = new body("found it!\n");}
+#line 1328 "decaf.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 5:
+#line 77 "decaf.y" /* yacc.c:1646  */
+    {(yyval.body) = new body("FOUND IT!\n");}
+#line 1334 "decaf.tab.c" /* yacc.c:1646  */
+    break;
+
+
+#line 1338 "decaf.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1533,7 +1562,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 100 "decaf.y" /* yacc.c:1906  */
+#line 108 "decaf.y" /* yacc.c:1906  */
 
 
 int main(int argc,char** argv){

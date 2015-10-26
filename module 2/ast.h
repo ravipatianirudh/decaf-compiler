@@ -1,117 +1,64 @@
 #ifndef AST_H
 #define AST_H
-#include "nodeVisitor.h"
-#endif
+#include <iostream>
 
 using namespace std;
 
+class AST;
 class program;
 class body;
-class field;
-class statement;
-class field_declaration;
-/*
-%%
-program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK
-					| CLASS IDENTIFIER START_BLOCK CLOSE_BLOCK
+class Visitor;
 
-body:				field statement
-					| field
+class Visitor{
+public:
+	void visit(program *p){
+		cout<<"Hello there program!\n";
+	}
+};
 
-field:				field_declaration field
-					| field_declaration 
-
-field_declaration:	TYPE IDENTIFIER SEMI_COLON
-					| TYPE IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET SEMI_COLON
-
-statement:			location ASSIGNMENT_OP expression SEMI_COLON
-					| CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
-
-location:			IDENTIFIER
-					| IDENTIFIER OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET
-
-callout_arguments:	COMMA c_arg
-					| c_arg
-
-c_arg:				expression
-					| STRING_LITERAL
-				
-expression:			location
-					| DECIMAL_LITERAL
-					| CHAR_LITERAL
-					| BOOLEAN_LITERAL
-					| NEGATION expression
-					| OP_MINUS expression %prec UNARY_MINUS
-					| expression OP_MINUS expression
-					| expression OP_PLUS expression
-					| expression ARITHMETIC_OP expression
-					| expression RELATIONAL_OP expression
-					| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS
-%%
-*/
-
-class ast
-{
+class AST{
 public:
 	program *programNode;
-	
-	virtual void accept(class nodeVisitor *v) = 0;
-	
-	ast(){};
-	~ast(){};
+
+	AST(){}
+	AST(program *p){
+		programNode = p;
+	}
+
+	virtual void accept(Visitor &v) = 0;
 };
 
-class program : public ast{
-	public:
-		char *programIdentifier;
-		body *bodyNode;
-		
-		program(){}
-		program(char* name,body* b){
-			this->programIdentifier = name;
-			this->bodyNode = b;
-		}
-		void accept(nodeVisitor &v){v.visit(this);}
-
-
-};
-
-class body : public program{
-	public:
-		field *fieldNode;
-		statement statementNode*;
-};
-
-class field : public body{
-	public:
-		field_declaration *field_declaration_node;
-		field *field_nodes;
-
-		field(){};
-		field(field_declaration *fd,field *f){
-		}
-		void accept(nodeVisitor &v){v.visit(this);}
-	
-};
-
-
-class field_declaration
-{
+class program : public AST{
 public:
-	char* type;
-	char* field_id;
-	int field_int;
+	body* bodyNode;
+	char* programIdentifier;
 
-	field_declaration();
-	field_declaration(char* t,char* n){
-		this->type = t;
-		this->field_id = n;
+	program(){}
+	program(body* b,char *name){
+		bodyNode = b;
+		programIdentifier = name;
 	}
-	field_declaration(char* t,char* n,int f_i){
-		this->type = t;
-		this->field_id = n;
-		this.field_int = f_i;
+	program(char *name){
+		programIdentifier = name;
 	}
 
-	void accept(nodeVisitor &v){v.visit(this);}
+	void accept(Visitor &v){
+		v.visit(this);
+	}
 };
+
+class body : public program {
+public:
+	char* junk;
+
+	body(){}
+	body(char* j){
+		junk = j;
+	}
+
+	void accept(Visitor &v){
+		v.visit(this);
+	}
+};
+
+#endif

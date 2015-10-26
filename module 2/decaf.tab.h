@@ -87,7 +87,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 18 "decaf.y" /* yacc.c:1909  */
+#line 20 "decaf.y" /* yacc.c:1909  */
 
 	char *identifier_val;
 	char *type_val;
@@ -106,7 +106,10 @@ union YYSTYPE
 	char *error;
 	char *op_plus_val;
 
-#line 110 "decaf.tab.h" /* yacc.c:1909  */
+	program* p;
+	body *b;
+
+#line 113 "decaf.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
