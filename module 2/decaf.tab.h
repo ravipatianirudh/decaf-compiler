@@ -87,7 +87,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 20 "decaf.y" /* yacc.c:1909  */
+#line 33 "decaf.y" /* yacc.c:1909  */
 
 	char *identifier_val;
 	char *type_val;
@@ -106,10 +106,18 @@ union YYSTYPE
 	char *error;
 	char *op_plus_val;
 
-	program* p;
-	body *b;
+	ASTprogram *pNode;
+	ASTbody *bNode;
+	ASTfield *fNode;
+	ASTfieldDecl *fdNode;
+	ASTstatement *sNode;
+	ASTlocation *locNode;
+	//ASTcallout *callNode;
+	ASTcalloutArgumentList *callArgListNode;
+	ASTcalloutArgument *callArgumentNode;
+	ASTexpression *eNode;
 
-#line 113 "decaf.tab.h" /* yacc.c:1909  */
+#line 121 "decaf.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

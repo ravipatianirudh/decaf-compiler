@@ -35,7 +35,7 @@ Grammar
    11 location: IDENTIFIER
    12         | IDENTIFIER OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET
 
-   13 callout_arguments: COMMA c_arg
+   13 callout_arguments: callout_arguments COMMA c_arg
    14                  | c_arg
 
    15 c_arg: expression
@@ -111,7 +111,7 @@ statement (42)
 location (43)
     on left: 11 12, on right: 9 17
 callout_arguments (44)
-    on left: 13 14, on right: 10
+    on left: 13 14, on right: 10 13
 c_arg (45)
     on left: 15 16, on right: 13 14
 expression (46)
@@ -573,13 +573,12 @@ State 43
     DECIMAL_LITERAL   shift, and go to state 26
     OP_MINUS          shift, and go to state 27
     NEGATION          shift, and go to state 28
-    COMMA             shift, and go to state 52
     OPEN_PARENTHESIS  shift, and go to state 29
 
     location           go to state 30
-    callout_arguments  go to state 53
-    c_arg              go to state 54
-    expression         go to state 55
+    callout_arguments  go to state 52
+    c_arg              go to state 53
+    expression         go to state 54
 
 
 State 44
@@ -664,37 +663,21 @@ State 51
 
 State 52
 
-   13 callout_arguments: COMMA . c_arg
+   10 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments . CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
+   13 callout_arguments: callout_arguments . COMMA c_arg
 
-    IDENTIFIER        shift, and go to state 13
-    BOOLEAN_LITERAL   shift, and go to state 24
-    STRING_LITERAL    shift, and go to state 51
-    CHAR_LITERAL      shift, and go to state 25
-    DECIMAL_LITERAL   shift, and go to state 26
-    OP_MINUS          shift, and go to state 27
-    NEGATION          shift, and go to state 28
-    OPEN_PARENTHESIS  shift, and go to state 29
-
-    location    go to state 30
-    c_arg       go to state 56
-    expression  go to state 55
+    COMMA                 shift, and go to state 55
+    CLOSE_SQUARE_BRACKET  shift, and go to state 56
 
 
 State 53
-
-   10 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments . CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
-
-    CLOSE_SQUARE_BRACKET  shift, and go to state 57
-
-
-State 54
 
    14 callout_arguments: c_arg .
 
     $default  reduce using rule 14 (callout_arguments)
 
 
-State 55
+State 54
 
    15 c_arg: expression .
    23 expression: expression . OP_MINUS expression
@@ -710,18 +693,36 @@ State 55
     $default  reduce using rule 15 (c_arg)
 
 
+State 55
+
+   13 callout_arguments: callout_arguments COMMA . c_arg
+
+    IDENTIFIER        shift, and go to state 13
+    BOOLEAN_LITERAL   shift, and go to state 24
+    STRING_LITERAL    shift, and go to state 51
+    CHAR_LITERAL      shift, and go to state 25
+    DECIMAL_LITERAL   shift, and go to state 26
+    OP_MINUS          shift, and go to state 27
+    NEGATION          shift, and go to state 28
+    OPEN_PARENTHESIS  shift, and go to state 29
+
+    location    go to state 30
+    c_arg       go to state 57
+    expression  go to state 54
+
+
 State 56
-
-   13 callout_arguments: COMMA c_arg .
-
-    $default  reduce using rule 13 (callout_arguments)
-
-
-State 57
 
    10 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET . CLOSE_PARENTHESIS SEMI_COLON
 
     CLOSE_PARENTHESIS  shift, and go to state 58
+
+
+State 57
+
+   13 callout_arguments: callout_arguments COMMA c_arg .
+
+    $default  reduce using rule 13 (callout_arguments)
 
 
 State 58

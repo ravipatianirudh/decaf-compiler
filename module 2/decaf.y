@@ -15,7 +15,21 @@ extern "C" FILE* yyin;
 FILE *bison_output;
 FILE *flex_output;
 void yyerror(const char *s);
+AST *root;
 %}
+
+/*
+class AST;
+class program;
+class body;
+class field;
+class field_declaration;
+class statement;
+class location;
+class c_argument;
+class expression;
+class Visitor;
+*/
 
 %union{
 	char *identifier_val;
@@ -35,9 +49,27 @@ void yyerror(const char *s);
 	char *error;
 	char *op_plus_val;
 
-	program* p;
-	body *b;
+	ASTprogram *pNode;
+	ASTbody *bNode;
+	ASTfield *fNode;
+	ASTfieldDecl *fdNode;
+	ASTstatement *sNode;
+	ASTlocation *locNode;
+	//ASTcallout *callNode;
+	ASTcalloutArgumentList *callArgListNode;
+	ASTcalloutArgument *callArgumentNode;
+	ASTexpression *eNode;
 }
+
+%type <pNode> program
+%type <bNode> body
+%type <fNode> field
+%type <fdNode> field_declaration
+%type <sNode> statement
+%type <locNode> location
+%type <callArgListNode> callout_arguments
+%type <callArgumentNode> c_arg
+%type <eNode> expression
 
 %token <op_plus_val> OP_PLUS
 %token <identifier_val> IDENTIFIER
@@ -48,9 +80,6 @@ void yyerror(const char *s);
 %token <hex_literal> HEX_LITERAL
 %token <decimal_literal> DECIMAL_LITERAL
 %token <error> ERROR
-
-%type <program> program;
-%type <body> body;
 
 %token <relational_operator_val> RELATIONAL_OP
 %token <conditional_operator_val> CONDITIONAL_OP
@@ -70,41 +99,50 @@ void yyerror(const char *s);
 %left UNARY_MINUS
 
 %%
-program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK							{$$ = new program($4,$2);};
-					| CLASS IDENTIFIER START_BLOCK CLOSE_BLOCK								{$$ = new program($2);}
+program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK			{$$ = new ASTprogram($2,$4);root = $$;}			
+					| CLASS IDENTIFIER START_BLOCK CLOSE_BLOCK				{$$ = new ASTprogram($2);}
+					;					
 
-body:				field statement															{$$ = new body("found it!\n");}
-					| field																	{$$ = new body("FOUND IT!\n");}
+body:				field statement											{$$ = new ASTbody($1,$2);}
+					| field													{$$ = new ASTbody($1);}
+					;
 
-field:				field_declaration field
-					| field_declaration 
+field:				field_declaration field									{$$ = new ASTfield($1,$2);}
+					| field_declaration 									{$$ = new ASTfield($1);}
+					;
 
-field_declaration:	TYPE IDENTIFIER SEMI_COLON
-					| TYPE IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET SEMI_COLON
+field_declaration:	TYPE IDENTIFIER SEMI_COLON																	{$$ = new ASTfieldDecl($1,$2);}
+					| TYPE IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET SEMI_COLON		{$$ = new ASTfieldDecl($1,$2,$4);}
+					;
 
-statement:			location ASSIGNMENT_OP expression SEMI_COLON
-					| CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
+statement:			location ASSIGNMENT_OP expression SEMI_COLON																								{$$ = new ASTstatement($1,$3);}
+					| CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON			{$$ = new ASTstatement($3,$5);}
+					;
 
-location:			IDENTIFIER
-					| IDENTIFIER OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET
+location:			IDENTIFIER															{$$ = new ASTlocation($1);}
+					| IDENTIFIER OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET	{$$ = new ASTlocation($1,$3);}
+					;
 
-callout_arguments:	COMMA c_arg
-					| c_arg
+callout_arguments:	callout_arguments COMMA c_arg										{$$ = new ASTcalloutArgumentList($1,$3);}
+					| c_arg																{$$ = new ASTcalloutArgumentList($1);}
+					;
 
-c_arg:				expression
-					| STRING_LITERAL
+c_arg:				expression															{$$ = new ASTcalloutArgument($1);}
+					| STRING_LITERAL													{$$ = new ASTcalloutArgument($1);}
+					;
 				
-expression:			location
-					| DECIMAL_LITERAL
-					| CHAR_LITERAL
-					| BOOLEAN_LITERAL
-					| NEGATION expression
-					| OP_MINUS expression %prec UNARY_MINUS
-					| expression OP_MINUS expression
-					| expression OP_PLUS expression
-					| expression ARITHMETIC_OP expression
-					| expression RELATIONAL_OP expression
-					| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS
+expression:			location															{$$ = new ASTexpression($1);}
+					| DECIMAL_LITERAL													{$$ = new ASTexpression($1);}
+					| CHAR_LITERAL														{$$ = new ASTexpression($1);}
+					| BOOLEAN_LITERAL													{$$ = new ASTexpression($1);}
+					| NEGATION expression												{$$ = new ASTexpression($2);}
+					| OP_MINUS expression %prec UNARY_MINUS								{$$ = new ASTexpression($2);}
+					| expression OP_MINUS expression									{$$ = new ASTexpression($1,$3);}
+					| expression OP_PLUS expression										{$$ = new ASTexpression($1,$3);}
+					| expression ARITHMETIC_OP expression								{$$ = new ASTexpression($1,$3);}
+					| expression RELATIONAL_OP expression								{$$ = new ASTexpression($1,$3);}
+					| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS						{$$ = new ASTexpression($2);}
+					;
 %%
 
 int main(int argc,char** argv){
