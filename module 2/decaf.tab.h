@@ -39,6 +39,12 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+#line 33 "decaf.y" /* yacc.c:1909  */
+
+	#include "ast.h"
+
+#line 48 "decaf.tab.h" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -87,7 +93,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 33 "decaf.y" /* yacc.c:1909  */
+#line 36 "decaf.y" /* yacc.c:1909  */
 
 	char *identifier_val;
 	char *type_val;
@@ -112,12 +118,11 @@ union YYSTYPE
 	ASTfieldDecl *fdNode;
 	ASTstatement *sNode;
 	ASTlocation *locNode;
-	//ASTcallout *callNode;
 	ASTcalloutArgumentList *callArgListNode;
 	ASTcalloutArgument *callArgumentNode;
 	ASTexpression *eNode;
 
-#line 121 "decaf.tab.h" /* yacc.c:1909  */
+#line 126 "decaf.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

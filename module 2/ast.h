@@ -1,5 +1,5 @@
-#ifndef AST_H
-#define AST_H
+//#ifndef AST_H
+//#define AST_H
 #include <iostream>
 #include <stdlib.h>
 #include <vector>
@@ -64,7 +64,7 @@ public:
 	char* programIdentifier;
 
 	ASTprogram(){}
-	ASTprogram(ASTbody* b,char *name){
+	ASTprogram(char* name, ASTbody* b){
 		this->bodyNode = b;
 		this->programIdentifier = name;
 	}
@@ -72,7 +72,7 @@ public:
 		this->programIdentifier = name;
 	}
 
-	void accept(Visitor &v){
+	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
 };
@@ -91,7 +91,7 @@ public:
 		this->statementNode = s;
 	}
 
-	void accept(Visitor &v){
+	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
 };
@@ -110,7 +110,7 @@ public:
 		this->f_decl = f_d;
 	}
 
-	void accept(Visitor &v){
+	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
 };
@@ -132,7 +132,7 @@ public:
 		this->field_dec_literal = dec_literal;
 	}
 
-	void accept(Visitor &v){
+	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
 
@@ -143,17 +143,19 @@ public:
 	ASTlocation *stat_locationNode;
 	ASTexpression *stat_expressionNode;
 	ASTcalloutArgumentList *statement_callout;
+	char* name_callout;
 
 	ASTstatement(){}
 	ASTstatement(ASTlocation* loc,ASTexpression *expr){
 		this->stat_locationNode = loc;
 		this->stat_expressionNode = expr;
 	}
-	ASTstatement(ASTcalloutArgumentList *c){
+	ASTstatement(char* s, ASTcalloutArgumentList *c){
+		this->name_callout = s;
 		this->statement_callout = c;
 	}
 
-	void accept(Visitor &v){
+	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
 
@@ -173,7 +175,7 @@ public:
 		this->loc_expr = e;
 	}
 
-	void accept(Visitor &v){
+	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
 };
@@ -189,7 +191,7 @@ public:
 // 		c_args = c_a;
 // 	}
 
-// 	void accept(Visitor &v){
+// 	virtual void accept(Visitor &v){
 // 		v.visit(this);
 // 	}
 // };
@@ -208,7 +210,7 @@ public:
 		this->c_arg = c;
 	}
 
-	void accept(Visitor &v){
+	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
 };
@@ -226,7 +228,7 @@ public:
 		this->c_arg_string = str;
 	}
 
-	void accept(Visitor &v){
+	virtual void accept(Visitor &v){
 		v.visit(this);	
 	}
 };
@@ -269,9 +271,9 @@ public:
 		this->isBinary = true;
 	}
 
-	void accept(Visitor &v){
+	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
 
 };
-#endif
+//#endif

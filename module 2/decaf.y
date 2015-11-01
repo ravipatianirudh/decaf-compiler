@@ -31,6 +31,12 @@ class expression;
 class Visitor;
 */
 
+/*
+%code requires{
+	#include "ast.h"
+}
+*/
+
 %union{
 	char *identifier_val;
 	char *type_val;
@@ -107,7 +113,7 @@ body:				field statement											{$$ = new ASTbody($1,$2);}
 					| field													{$$ = new ASTbody($1);}
 					;
 
-field:				field_declaration field									{$$ = new ASTfield($1,$2);}
+field:				field field_declaration 								{$$ = new ASTfield($2,$1);}
 					| field_declaration 									{$$ = new ASTfield($1);}
 					;
 

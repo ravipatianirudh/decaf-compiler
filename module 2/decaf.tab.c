@@ -80,8 +80,9 @@ extern "C" FILE* yyin;
 FILE *bison_output;
 FILE *flex_output;
 void yyerror(const char *s);
+AST *root;
 
-#line 85 "decaf.tab.c" /* yacc.c:339  */
+#line 86 "decaf.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -110,6 +111,12 @@ void yyerror(const char *s);
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+#line 33 "decaf.y" /* yacc.c:355  */
+
+	#include "ast.h"
+
+#line 120 "decaf.tab.c" /* yacc.c:355  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -158,7 +165,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 33 "decaf.y" /* yacc.c:355  */
+#line 36 "decaf.y" /* yacc.c:355  */
 
 	char *identifier_val;
 	char *type_val;
@@ -183,12 +190,11 @@ union YYSTYPE
 	ASTfieldDecl *fdNode;
 	ASTstatement *sNode;
 	ASTlocation *locNode;
-	//ASTcallout *callNode;
 	ASTcalloutArgumentList *callArgListNode;
 	ASTcalloutArgument *callArgumentNode;
 	ASTexpression *eNode;
 
-#line 192 "decaf.tab.c" /* yacc.c:355  */
+#line 198 "decaf.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -203,7 +209,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 207 "decaf.tab.c" /* yacc.c:358  */
+#line 213 "decaf.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -504,9 +510,9 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   101,   101,   102,   104,   105,   107,   108,   110,   111,
-     113,   114,   116,   117,   119,   120,   122,   123,   125,   126,
-     127,   128,   129,   130,   131,   132,   133,   134,   135
+       0,   103,   103,   104,   107,   108,   111,   112,   115,   116,
+     119,   120,   123,   124,   127,   128,   131,   132,   135,   136,
+     137,   138,   139,   140,   141,   142,   143,   144,   145
 };
 #endif
 
@@ -1316,169 +1322,169 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 101 "decaf.y" /* yacc.c:1646  */
+#line 103 "decaf.y" /* yacc.c:1646  */
     {(yyval.pNode) = new ASTprogram((yyvsp[-3].identifier_val),(yyvsp[-1].bNode));}
-#line 1322 "decaf.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 3:
-#line 102 "decaf.y" /* yacc.c:1646  */
-    {(yyval.pNode) = new ASTprogram((yyvsp[-2].identifier_val));}
 #line 1328 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 4:
+  case 3:
 #line 104 "decaf.y" /* yacc.c:1646  */
-    {(yyval.bNode) = new ASTbody((yyvsp[-1].fNode),(yyvsp[0].sNode));}
+    {(yyval.pNode) = new ASTprogram((yyvsp[-2].identifier_val));}
 #line 1334 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 5:
-#line 105 "decaf.y" /* yacc.c:1646  */
-    {(yyval.bNode) = new ASTbody((yyvsp[0].fNode));}
+  case 4:
+#line 107 "decaf.y" /* yacc.c:1646  */
+    {(yyval.bNode) = new ASTbody((yyvsp[-1].fNode),(yyvsp[0].sNode));}
 #line 1340 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 6:
-#line 107 "decaf.y" /* yacc.c:1646  */
-    {(yyval.fNode) = new ASTfield((yyvsp[-1].fdNode),(yyvsp[0].fNode));}
+  case 5:
+#line 108 "decaf.y" /* yacc.c:1646  */
+    {(yyval.bNode) = new ASTbody((yyvsp[0].fNode));}
 #line 1346 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 7:
-#line 108 "decaf.y" /* yacc.c:1646  */
-    {(yyval.fNode) = new ASTfield((yyvsp[0].fdNode));}
+  case 6:
+#line 111 "decaf.y" /* yacc.c:1646  */
+    {(yyval.fNode) = new ASTfield((yyvsp[-1].fdNode),(yyvsp[0].fNode));}
 #line 1352 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 8:
-#line 110 "decaf.y" /* yacc.c:1646  */
-    {(yyval.fdNode) = new ASTfieldDecl((yyvsp[-2].type_val),(yyvsp[-1].identifier_val));}
+  case 7:
+#line 112 "decaf.y" /* yacc.c:1646  */
+    {(yyval.fNode) = new ASTfield((yyvsp[0].fdNode));}
 #line 1358 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 9:
-#line 111 "decaf.y" /* yacc.c:1646  */
-    {(yyval.fdNode) = new ASTfieldDecl((yyvsp[-5].type_val),(yyvsp[-4].identifier_val),(yyvsp[-2].decimal_literal));}
+  case 8:
+#line 115 "decaf.y" /* yacc.c:1646  */
+    {(yyval.fdNode) = new ASTfieldDecl((yyvsp[-2].type_val),(yyvsp[-1].identifier_val));}
 #line 1364 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 10:
-#line 113 "decaf.y" /* yacc.c:1646  */
-    {(yyval.sNode) = new ASTstatement((yyvsp[-3].locNode),(yyvsp[-1].eNode));}
+  case 9:
+#line 116 "decaf.y" /* yacc.c:1646  */
+    {(yyval.fdNode) = new ASTfieldDecl((yyvsp[-5].type_val),(yyvsp[-4].identifier_val),(yyvsp[-2].decimal_literal));}
 #line 1370 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 11:
-#line 114 "decaf.y" /* yacc.c:1646  */
-    {(yyval.sNode) = new ASTstatement((yyvsp[-5].string_literal),(yyvsp[-3].callArgListNode));}
+  case 10:
+#line 119 "decaf.y" /* yacc.c:1646  */
+    {(yyval.sNode) = new ASTstatement((yyvsp[-3].locNode),(yyvsp[-1].eNode));}
 #line 1376 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 12:
-#line 116 "decaf.y" /* yacc.c:1646  */
-    {(yyval.locNode) = new ASTlocation((yyvsp[0].identifier_val));}
+  case 11:
+#line 120 "decaf.y" /* yacc.c:1646  */
+    {(yyval.sNode) = new ASTstatement((yyvsp[-5].string_literal),(yyvsp[-3].callArgListNode));}
 #line 1382 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 13:
-#line 117 "decaf.y" /* yacc.c:1646  */
-    {(yyval.locNode) = new ASTlocation((yyvsp[-3].identifier_val),(yyvsp[-1].eNode));}
+  case 12:
+#line 123 "decaf.y" /* yacc.c:1646  */
+    {(yyval.locNode) = new ASTlocation((yyvsp[0].identifier_val));}
 #line 1388 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 14:
-#line 119 "decaf.y" /* yacc.c:1646  */
-    {(yyval.callArgListNode) = new ASTcalloutArgumentList((yyvsp[-2].callArgListNode),(yyvsp[0].callArgumentNode));}
+  case 13:
+#line 124 "decaf.y" /* yacc.c:1646  */
+    {(yyval.locNode) = new ASTlocation((yyvsp[-3].identifier_val),(yyvsp[-1].eNode));}
 #line 1394 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 15:
-#line 120 "decaf.y" /* yacc.c:1646  */
-    {(yyval.callArgListNode) = new ASTcalloutArgumentList((yyvsp[0].callArgumentNode));}
+  case 14:
+#line 127 "decaf.y" /* yacc.c:1646  */
+    {(yyval.callArgListNode) = new ASTcalloutArgumentList((yyvsp[-2].callArgListNode),(yyvsp[0].callArgumentNode));}
 #line 1400 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 16:
-#line 122 "decaf.y" /* yacc.c:1646  */
-    {(yyval.callArgumentNode) = new ASTcalloutArgument((yyvsp[0].eNode));}
+  case 15:
+#line 128 "decaf.y" /* yacc.c:1646  */
+    {(yyval.callArgListNode) = new ASTcalloutArgumentList((yyvsp[0].callArgumentNode));}
 #line 1406 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 17:
-#line 123 "decaf.y" /* yacc.c:1646  */
-    {(yyval.callArgumentNode) = new ASTcalloutArgument((yyvsp[0].string_literal));}
+  case 16:
+#line 131 "decaf.y" /* yacc.c:1646  */
+    {(yyval.callArgumentNode) = new ASTcalloutArgument((yyvsp[0].eNode));}
 #line 1412 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 18:
-#line 125 "decaf.y" /* yacc.c:1646  */
-    {(yyval.eNode) = new ASTexpression((yyvsp[0].locNode));}
+  case 17:
+#line 132 "decaf.y" /* yacc.c:1646  */
+    {(yyval.callArgumentNode) = new ASTcalloutArgument((yyvsp[0].string_literal));}
 #line 1418 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 19:
-#line 126 "decaf.y" /* yacc.c:1646  */
-    {(yyval.eNode) = new ASTexpression((yyvsp[0].decimal_literal));}
+  case 18:
+#line 135 "decaf.y" /* yacc.c:1646  */
+    {(yyval.eNode) = new ASTexpression();}
 #line 1424 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 20:
-#line 127 "decaf.y" /* yacc.c:1646  */
-    {(yyval.eNode) = new ASTexpression((yyvsp[0].char_literal));}
+  case 19:
+#line 136 "decaf.y" /* yacc.c:1646  */
+    {(yyval.eNode) = new ASTexpression();}
 #line 1430 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 21:
-#line 128 "decaf.y" /* yacc.c:1646  */
-    {(yyval.eNode) = new ASTexpression((yyvsp[0].boolean_val));}
+  case 20:
+#line 137 "decaf.y" /* yacc.c:1646  */
+    {(yyval.eNode) = new ASTexpression();}
 #line 1436 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 22:
-#line 129 "decaf.y" /* yacc.c:1646  */
-    {(yyval.eNode) = new ASTexpression((yyvsp[0].eNode));}
+  case 21:
+#line 138 "decaf.y" /* yacc.c:1646  */
+    {(yyval.eNode) = new ASTexpression();}
 #line 1442 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 23:
-#line 130 "decaf.y" /* yacc.c:1646  */
-    {(yyval.eNode) = new ASTexpression((yyvsp[0].eNode));}
+  case 22:
+#line 139 "decaf.y" /* yacc.c:1646  */
+    {(yyval.eNode) = new ASTexpression();}
 #line 1448 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 24:
-#line 131 "decaf.y" /* yacc.c:1646  */
-    {(yyval.eNode) = new ASTexpression((yyvsp[-2].eNode),(yyvsp[0].eNode));}
+  case 23:
+#line 140 "decaf.y" /* yacc.c:1646  */
+    {(yyval.eNode) = new ASTexpression();}
 #line 1454 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 25:
-#line 132 "decaf.y" /* yacc.c:1646  */
-    {(yyval.eNode) = new ASTexpression((yyvsp[-2].eNode),(yyvsp[0].eNode));}
+  case 24:
+#line 141 "decaf.y" /* yacc.c:1646  */
+    {(yyval.eNode) = new ASTexpression();}
 #line 1460 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 26:
-#line 133 "decaf.y" /* yacc.c:1646  */
-    {(yyval.eNode) = new ASTexpression((yyvsp[-2].eNode),(yyvsp[0].eNode));}
+  case 25:
+#line 142 "decaf.y" /* yacc.c:1646  */
+    {(yyval.eNode) = new ASTexpression();}
 #line 1466 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 27:
-#line 134 "decaf.y" /* yacc.c:1646  */
-    {(yyval.eNode) = new ASTexpression((yyvsp[-2].eNode),(yyvsp[0].eNode));}
+  case 26:
+#line 143 "decaf.y" /* yacc.c:1646  */
+    {(yyval.eNode) = new ASTexpression();}
 #line 1472 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
-  case 28:
-#line 135 "decaf.y" /* yacc.c:1646  */
-    {(yyval.eNode) = new ASTexpression((yyvsp[-1].eNode));}
+  case 27:
+#line 144 "decaf.y" /* yacc.c:1646  */
+    {(yyval.eNode) = new ASTexpression();}
 #line 1478 "decaf.tab.c" /* yacc.c:1646  */
     break;
 
+  case 28:
+#line 145 "decaf.y" /* yacc.c:1646  */
+    {(yyval.eNode) = new ASTexpression();}
+#line 1484 "decaf.tab.c" /* yacc.c:1646  */
+    break;
 
-#line 1482 "decaf.tab.c" /* yacc.c:1646  */
+
+#line 1488 "decaf.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1706,7 +1712,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 136 "decaf.y" /* yacc.c:1906  */
+#line 147 "decaf.y" /* yacc.c:1906  */
 
 
 int main(int argc,char** argv){
