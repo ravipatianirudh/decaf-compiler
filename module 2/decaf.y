@@ -59,9 +59,10 @@ class Visitor;
 	ASTbody *bNode;
 	ASTfield *fNode;
 	ASTfieldDecl *fdNode;
+	ASTidList *idL;
+	ASTidDecl *idC;
 	ASTstatement *sNode;
 	ASTlocation *locNode;
-	//ASTcallout *callNode;
 	ASTcalloutArgumentList *callArgListNode;
 	ASTcalloutArgument *callArgumentNode;
 	ASTexpression *eNode;
@@ -71,6 +72,8 @@ class Visitor;
 %type <bNode> body
 %type <fNode> field
 %type <fdNode> field_declaration
+%type <idL> id_list
+%type <idC> id_decl
 %type <sNode> statement
 %type <locNode> location
 %type <callArgListNode> callout_arguments
@@ -117,9 +120,16 @@ field:				field field_declaration 								{$$ = new ASTfield($2,$1);}
 					| field_declaration 									{$$ = new ASTfield($1);}
 					;
 
-field_declaration:	TYPE IDENTIFIER SEMI_COLON																	{$$ = new ASTfieldDecl($1,$2);}
-					| TYPE IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET SEMI_COLON		{$$ = new ASTfieldDecl($1,$2,$4);}
+field_declaration:	TYPE id_list SEMI_COLON									{$$ = new ASTfieldDecl($1,$2);}
 					;
+
+id_list:			id_list COMMA id_decl									{$$ = new ASTidList($1,$3);}
+					| id_decl												{$$ = new ASTidList($1);}
+					;
+
+id_decl:			IDENTIFIER																	{$$ = new ASTidDecl($1);}
+					| IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET		{$$ = new ASTidDecl($1,$3);}
+
 
 statement:			location ASSIGNMENT_OP expression SEMI_COLON																								{$$ = new ASTstatement($1,$3);}
 					| CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON			{$$ = new ASTstatement($3,$5);}
@@ -141,13 +151,13 @@ expression:			location															{$$ = new ASTexpression($1);}
 					| DECIMAL_LITERAL													{$$ = new ASTexpression($1);}
 					| CHAR_LITERAL														{$$ = new ASTexpression($1);}
 					| BOOLEAN_LITERAL													{$$ = new ASTexpression($1);}
-					| NEGATION expression												{$$ = new ASTexpression($2);}
-					| OP_MINUS expression %prec UNARY_MINUS								{$$ = new ASTexpression($2);}
-					| expression OP_MINUS expression									{$$ = new ASTexpression($1,$3);}
-					| expression OP_PLUS expression										{$$ = new ASTexpression($1,$3);}
-					| expression ARITHMETIC_OP expression								{$$ = new ASTexpression($1,$3);}
-					| expression RELATIONAL_OP expression								{$$ = new ASTexpression($1,$3);}
-					| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS						{$$ = new ASTexpression($2);}
+					| NEGATION expression												{$$ = new ASTexpression($2,5);}
+					| OP_MINUS expression %prec UNARY_MINUS								{$$ = new ASTexpression($2,6);}
+					| expression OP_MINUS expression									{$$ = new ASTexpression($1,$3,7);}
+					| expression OP_PLUS expression										{$$ = new ASTexpression($1,$3,8);}
+					| expression ARITHMETIC_OP expression								{$$ = new ASTexpression($1,$3,9);}
+					| expression RELATIONAL_OP expression								{$$ = new ASTexpression($1,$3,10);}
+					| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS						{$$ = new ASTexpression($2,11);}
 					;
 %%
 
