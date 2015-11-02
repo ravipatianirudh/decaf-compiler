@@ -11,6 +11,7 @@ class ASTfield;
 class ASTfieldDecl;
 class ASTidList;
 class ASTidDecl;
+class ASTstatementList;
 class ASTstatement;
 class ASTlocation;
 class ASTcalloutArgumentList;
@@ -20,36 +21,20 @@ class Visitor;
 
 class Visitor{
 public:
-	void visit(ASTprogram *p){
-		cout<<"Visited ASTprogram\n";
-	}
-	void visit(ASTbody *b){
-		cout<<"Visited ASTbody\n";
-	}
-	void visit(ASTfield *f){
-		cout<<"Visited ASTfield\n";
-	}
-	void visit(ASTfieldDecl *f_d){
-		cout<<"Visited ASTfieldDecl\n";
-	}
-	void visit(ASTidList *idL){
-		cout<<"Visited ASTidList\n";
-	}
-	void visit(ASTidDecl *idD){
-		cout<<"Visited ASTidDecl\n";
-	}
-
-	void visit(ASTlocation *l){
-		cout<<"Visited ASTlocation\n";
-	}
-	void visit(ASTcalloutArgument *c_a){
-		cout<<"Visited ASTcalloutArgument\n";
-	}
-	void visit(ASTexpression *e){
-		cout<<"Visited ASTexpression\n";
-	}
+	virtual void visit(AST *node) = 0;
+	virtual void visit(ASTprogram *node) = 0;
+	virtual void visit(ASTbody *node) = 0;
+	virtual void visit(ASTfield *node) = 0;
+	virtual void visit(ASTfieldDecl *node) = 0;
+	virtual void visit(ASTidList *node) = 0;
+	virtual void visit(ASTidDecl *node) = 0;
+	virtual void visit(ASTstatementList *node) = 0;
+	virtual void visit(ASTstatement *node) = 0;
+	virtual void visit(ASTlocation *node) = 0;
+	virtual void visit(ASTcalloutArgumentList *node) = 0;
+	virtual void visit(ASTcalloutArgument *node) = 0;
+	virtual void visit(ASTexpression *node) = 0;
 };
-
 
 class AST{
 public:
@@ -85,15 +70,15 @@ public:
 class ASTbody : public ASTprogram {
 public:
 	ASTfield* fieldNode;
-	ASTstatement* statementNode;
+	ASTstatementList* statementListNode;
 
 	ASTbody(){}
 	ASTbody(ASTfield* f){
 		this->fieldNode = f;
 	}
-	ASTbody(ASTfield* f,ASTstatement* s){
+	ASTbody(ASTfield* f,ASTstatementList* s){
 		this->fieldNode = f;
-		this->statementNode = s;
+		this->statementListNode = s;
 	}
 
 	virtual void accept(Visitor &v){
@@ -103,14 +88,15 @@ public:
 
 class ASTfield : public ASTbody{
 public:
-	ASTfield* fieldNodeList;
+	std::vector<ASTfield *> fieldNodeList;
+	// ASTfield* fieldNodeList;
 	ASTfieldDecl* f_decl;
 
 	ASTfield(){}
-	ASTfield(ASTfieldDecl *f_d,ASTfield *f){
-		this->fieldNodeList = f;
-		this->f_decl = f_d;
-	}
+	// ASTfield(ASTfieldDecl *f_d,ASTfield *f){
+	// 	this->fieldNodeList = f;
+	// 	this->f_decl = f_d;
+	// }
 	ASTfield(ASTfieldDecl *f_d){
 		this->f_decl = f_d;
 	}
@@ -130,7 +116,7 @@ public:
 		this->field_type = t;
 		this->field_id_list = l;
 	}
-	
+
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
@@ -139,14 +125,15 @@ public:
 
 class ASTidList : public ASTfieldDecl {
 public:
-	ASTidList *list;
+	std::vector<ASTidList *> list;
+	// ASTidList *list;
 	ASTidDecl *decl;
 
 	ASTidList(){}
-	ASTidList(ASTidList *l,ASTidDecl *d){
-		this->list = l;
-		this->decl = d;
-	}
+	// ASTidList(ASTidList *l,ASTidDecl *d){
+	// 	this->list = l;
+	// 	this->decl = d;
+	// }
 	ASTidList(ASTidDecl *d){
 		this->decl = d;
 	}
@@ -175,7 +162,29 @@ public:
 	}
 };
 
-class ASTstatement : public ASTbody{
+
+class ASTstatementList : public ASTbody {
+public:
+	std::vector<ASTstatementList*> stat_list;
+	// ASTstatementList *stat_list;
+	ASTstatement *stat;
+
+	ASTstatementList(){}
+	// ASTstatementList(ASTstatementList *l,ASTstatement *s){
+	// 	this->stat_list = l;
+	// 	this->stat = s;
+	// }
+	ASTstatementList( ASTstatement *s){
+		this->stat = s;
+	}
+
+
+	virtual void accept(Visitor &v){
+		v.visit(this);
+	}
+};
+
+class ASTstatement : public ASTstatementList{
 public:
 	ASTlocation *stat_locationNode;
 	ASTexpression *stat_expressionNode;
@@ -219,17 +228,17 @@ public:
 
 class ASTcalloutArgumentList : public ASTstatement {
 public:
-	ASTcalloutArgumentList *callout_args_list;
-	ASTcalloutArgument *c_arg;
+	std::vector<ASTcalloutArgument*> callout_args_list;
+	// ASTcalloutArgumentList *callout_args_list;
 
 	ASTcalloutArgumentList(){}
-	ASTcalloutArgumentList(ASTcalloutArgumentList *c_args,ASTcalloutArgument *c_a){
-		this->callout_args_list = c_args;
-		this->c_arg = c_a;
-	}
-	ASTcalloutArgumentList(ASTcalloutArgument *c){
-		this->c_arg = c;
-	}
+	// ASTcalloutArgumentList(ASTcalloutArgumentList *c_args,ASTcalloutArgument *c_a){
+	// 	this->callout_args_list = c_args;
+	// 	this->c_arg = c_a;
+	// }
+	// ASTcalloutArgumentList(ASTcalloutArgument *c){
+	// 	this->c_arg = c;
+	// }
 
 	virtual void accept(Visitor &v){
 		v.visit(this);
@@ -250,7 +259,7 @@ public:
 	}
 
 	virtual void accept(Visitor &v){
-		v.visit(this);	
+		v.visit(this);
 	}
 };
 
@@ -297,5 +306,29 @@ public:
 
 	virtual void accept(Visitor &v){
 		v.visit(this);
+	}
+};
+
+class XML : public Visitor {
+public:
+	void visit(AST *node){
+	}
+	void visit(ASTprogram *node){
+		if (node != NULL){
+			cout<<"THIS IS THE PROGRAM NODE -- "<<node->programIdentifier<<endl;
+			node->bodyNode->accept(*this);
+		}
+	}
+	void visit(ASTbody *node){
+		cout<<"THIS IS THE BODY NODE\n";
+		node->fieldNode->accept(*this);
+		node->statementListNode->accept(*this);
+	}
+
+	void visit(ASTfield *node){
+		cout<<"THIS IS THE FIELD NODE\n";
+	}
+	void visit(ASTfieldDecl *node){
+		cout<<"THIS IS THE FIELD DECL of type "<<node->field_type<<endl;
 	}
 };

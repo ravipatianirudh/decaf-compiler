@@ -15,7 +15,7 @@ extern "C" FILE* yyin;
 FILE *bison_output;
 FILE *flex_output;
 void yyerror(const char *s);
-AST *root;
+ASTprogram *root;
 %}
 
 /*
@@ -61,6 +61,7 @@ class Visitor;
 	ASTfieldDecl *fdNode;
 	ASTidList *idL;
 	ASTidDecl *idC;
+	ASTstatementList *sListNode;
 	ASTstatement *sNode;
 	ASTlocation *locNode;
 	ASTcalloutArgumentList *callArgListNode;
@@ -74,6 +75,7 @@ class Visitor;
 %type <fdNode> field_declaration
 %type <idL> id_list
 %type <idC> id_decl
+%type <sListNode> statement_list
 %type <sNode> statement
 %type <locNode> location
 %type <callArgListNode> callout_arguments
@@ -112,7 +114,7 @@ program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK			{$$ = new ASTprogram(
 					| CLASS IDENTIFIER START_BLOCK CLOSE_BLOCK				{$$ = new ASTprogram($2);}
 					;					
 
-body:				field statement											{$$ = new ASTbody($1,$2);}
+body:				field statement_list											{$$ = new ASTbody($1,$2);}
 					| field													{$$ = new ASTbody($1);}
 					;
 
@@ -130,6 +132,10 @@ id_list:			id_list COMMA id_decl									{$$ = new ASTidList($1,$3);}
 id_decl:			IDENTIFIER																	{$$ = new ASTidDecl($1);}
 					| IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET		{$$ = new ASTidDecl($1,$3);}
 
+
+statement_list:		statement_list statement													{$$ =  new ASTstatementList($1,$2);}
+					| statement																	{$$ =  new ASTstatementList($1);}
+					;
 
 statement:			location ASSIGNMENT_OP expression SEMI_COLON																								{$$ = new ASTstatement($1,$3);}
 					| CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON			{$$ = new ASTstatement($3,$5);}
@@ -164,7 +170,7 @@ expression:			location															{$$ = new ASTexpression($1);}
 int main(int argc,char** argv){
 	bison_output = fopen("bison_output.txt","w+");
 	flex_output  = fopen("flex_output.txt","w+");
-
+	int done;
 	if(argc>1)
 	{
 		++argv;
@@ -181,8 +187,15 @@ int main(int argc,char** argv){
 		yyin=stdin;
 	// parse through the input until there is no more:
 		do {
-		yyparse();
+		done = yyparse();
 	} while (!feof(yyin));
+
+	if(done == 0){
+		cout<<"parsing done... now visit!!!!\n";
+		XML v;
+		root->accept(v);
+	}
+
 	fclose(bison_output);
 }
 

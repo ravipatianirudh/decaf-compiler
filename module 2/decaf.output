@@ -20,7 +20,7 @@ Grammar
     1 program: CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK
     2        | CLASS IDENTIFIER START_BLOCK CLOSE_BLOCK
 
-    3 body: field statement
+    3 body: field statement_list
     4     | field
 
     5 field: field field_declaration
@@ -34,55 +34,58 @@ Grammar
    10 id_decl: IDENTIFIER
    11        | IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET
 
-   12 statement: location ASSIGNMENT_OP expression SEMI_COLON
-   13          | CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
+   12 statement_list: statement_list statement
+   13               | statement
 
-   14 location: IDENTIFIER
-   15         | IDENTIFIER OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET
+   14 statement: location ASSIGNMENT_OP expression SEMI_COLON
+   15          | CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
 
-   16 callout_arguments: callout_arguments COMMA c_arg
-   17                  | c_arg
+   16 location: IDENTIFIER
+   17         | IDENTIFIER OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET
 
-   18 c_arg: expression
-   19      | STRING_LITERAL
+   18 callout_arguments: callout_arguments COMMA c_arg
+   19                  | c_arg
 
-   20 expression: location
-   21           | DECIMAL_LITERAL
-   22           | CHAR_LITERAL
-   23           | BOOLEAN_LITERAL
-   24           | NEGATION expression
-   25           | OP_MINUS expression
-   26           | expression OP_MINUS expression
-   27           | expression OP_PLUS expression
-   28           | expression ARITHMETIC_OP expression
-   29           | expression RELATIONAL_OP expression
-   30           | OPEN_PARENTHESIS expression CLOSE_PARENTHESIS
+   20 c_arg: expression
+   21      | STRING_LITERAL
+
+   22 expression: location
+   23           | DECIMAL_LITERAL
+   24           | CHAR_LITERAL
+   25           | BOOLEAN_LITERAL
+   26           | NEGATION expression
+   27           | OP_MINUS expression
+   28           | expression OP_MINUS expression
+   29           | expression OP_PLUS expression
+   30           | expression ARITHMETIC_OP expression
+   31           | expression RELATIONAL_OP expression
+   32           | OPEN_PARENTHESIS expression CLOSE_PARENTHESIS
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-OP_PLUS (258) 27
-IDENTIFIER (259) 1 2 10 11 14 15
+OP_PLUS (258) 29
+IDENTIFIER (259) 1 2 10 11 16 17
 TYPE (260) 7
-BOOLEAN_LITERAL (261) 23
-STRING_LITERAL (262) 13 19
-CHAR_LITERAL (263) 22
+BOOLEAN_LITERAL (261) 25
+STRING_LITERAL (262) 15 21
+CHAR_LITERAL (263) 24
 HEX_LITERAL (264)
-DECIMAL_LITERAL (265) 11 21
+DECIMAL_LITERAL (265) 11 23
 ERROR (266)
-RELATIONAL_OP (267) 29
+RELATIONAL_OP (267) 31
 CONDITIONAL_OP (268)
-ARITHMETIC_OP (269) 28
-ASSIGNMENT_OP (270) 12
+ARITHMETIC_OP (269) 30
+ASSIGNMENT_OP (270) 14
 EQUALITY_OP (271)
-OP_MINUS (272) 25 26
-NEGATION (273) 24
+OP_MINUS (272) 27 28
+NEGATION (273) 26
 CLASS (274) 1 2
-SEMI_COLON (275) 7 12 13
-COMMA (276) 8 16
-CALLOUT (277) 13
+SEMI_COLON (275) 7 14 15
+COMMA (276) 8 18
+CALLOUT (277) 15
 IF (278)
 ELSE (279)
 FOR (280)
@@ -92,10 +95,10 @@ RETURN (283)
 VOID (284)
 START_BLOCK (285) 1 2
 CLOSE_BLOCK (286) 1 2
-OPEN_SQUARE_BRACKET (287) 11 13 15
-CLOSE_SQUARE_BRACKET (288) 11 13 15
-OPEN_PARENTHESIS (289) 13 30
-CLOSE_PARENTHESIS (290) 13 30
+OPEN_SQUARE_BRACKET (287) 11 15 17
+CLOSE_SQUARE_BRACKET (288) 11 15 17
+OPEN_PARENTHESIS (289) 15 32
+CLOSE_PARENTHESIS (290) 15 32
 UNARY_MINUS (291)
 
 
@@ -115,17 +118,19 @@ id_list (42)
     on left: 8 9, on right: 7 8
 id_decl (43)
     on left: 10 11, on right: 8 9
-statement (44)
-    on left: 12 13, on right: 3
-location (45)
-    on left: 14 15, on right: 12 20
-callout_arguments (46)
-    on left: 16 17, on right: 13 16
-c_arg (47)
-    on left: 18 19, on right: 16 17
-expression (48)
-    on left: 20 21 22 23 24 25 26 27 28 29 30, on right: 12 15 18 24
-    25 26 27 28 29 30
+statement_list (44)
+    on left: 12 13, on right: 3 12
+statement (45)
+    on left: 14 15, on right: 12 13
+location (46)
+    on left: 16 17, on right: 14 22
+callout_arguments (47)
+    on left: 18 19, on right: 15 18
+c_arg (48)
+    on left: 20 21, on right: 18 19
+expression (49)
+    on left: 22 23 24 25 26 27 28 29 30 31 32, on right: 14 17 20 26
+    27 28 29 30 31 32
 
 
 State 0
@@ -206,7 +211,7 @@ State 8
 
 State 9
 
-    3 body: field . statement
+    3 body: field . statement_list
     4     | field .
     5 field: field . field_declaration
 
@@ -217,8 +222,9 @@ State 9
     $default  reduce using rule 4 (body)
 
     field_declaration  go to state 17
-    statement          go to state 18
-    location           go to state 19
+    statement_list     go to state 18
+    statement          go to state 19
+    location           go to state 20
 
 
 State 10
@@ -233,7 +239,7 @@ State 11
    10 id_decl: IDENTIFIER .
    11        | IDENTIFIER . OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET
 
-    OPEN_SQUARE_BRACKET  shift, and go to state 20
+    OPEN_SQUARE_BRACKET  shift, and go to state 21
 
     $default  reduce using rule 10 (id_decl)
 
@@ -243,8 +249,8 @@ State 12
     7 field_declaration: TYPE id_list . SEMI_COLON
     8 id_list: id_list . COMMA id_decl
 
-    SEMI_COLON  shift, and go to state 21
-    COMMA       shift, and go to state 22
+    SEMI_COLON  shift, and go to state 22
+    COMMA       shift, and go to state 23
 
 
 State 13
@@ -263,19 +269,19 @@ State 14
 
 State 15
 
-   14 location: IDENTIFIER .
-   15         | IDENTIFIER . OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET
+   16 location: IDENTIFIER .
+   17         | IDENTIFIER . OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET
 
-    OPEN_SQUARE_BRACKET  shift, and go to state 23
+    OPEN_SQUARE_BRACKET  shift, and go to state 24
 
-    $default  reduce using rule 14 (location)
+    $default  reduce using rule 16 (location)
 
 
 State 16
 
-   13 statement: CALLOUT . OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
+   15 statement: CALLOUT . OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
 
-    OPEN_PARENTHESIS  shift, and go to state 24
+    OPEN_PARENTHESIS  shift, and go to state 25
 
 
 State 17
@@ -287,487 +293,508 @@ State 17
 
 State 18
 
-    3 body: field statement .
+    3 body: field statement_list .
+   12 statement_list: statement_list . statement
+
+    IDENTIFIER  shift, and go to state 15
+    CALLOUT     shift, and go to state 16
 
     $default  reduce using rule 3 (body)
+
+    statement  go to state 26
+    location   go to state 20
 
 
 State 19
 
-   12 statement: location . ASSIGNMENT_OP expression SEMI_COLON
+   13 statement_list: statement .
 
-    ASSIGNMENT_OP  shift, and go to state 25
+    $default  reduce using rule 13 (statement_list)
 
 
 State 20
 
-   11 id_decl: IDENTIFIER OPEN_SQUARE_BRACKET . DECIMAL_LITERAL CLOSE_SQUARE_BRACKET
+   14 statement: location . ASSIGNMENT_OP expression SEMI_COLON
 
-    DECIMAL_LITERAL  shift, and go to state 26
+    ASSIGNMENT_OP  shift, and go to state 27
 
 
 State 21
+
+   11 id_decl: IDENTIFIER OPEN_SQUARE_BRACKET . DECIMAL_LITERAL CLOSE_SQUARE_BRACKET
+
+    DECIMAL_LITERAL  shift, and go to state 28
+
+
+State 22
 
     7 field_declaration: TYPE id_list SEMI_COLON .
 
     $default  reduce using rule 7 (field_declaration)
 
 
-State 22
+State 23
 
     8 id_list: id_list COMMA . id_decl
 
     IDENTIFIER  shift, and go to state 11
 
-    id_decl  go to state 27
-
-
-State 23
-
-   15 location: IDENTIFIER OPEN_SQUARE_BRACKET . expression CLOSE_SQUARE_BRACKET
-
-    IDENTIFIER        shift, and go to state 15
-    BOOLEAN_LITERAL   shift, and go to state 28
-    CHAR_LITERAL      shift, and go to state 29
-    DECIMAL_LITERAL   shift, and go to state 30
-    OP_MINUS          shift, and go to state 31
-    NEGATION          shift, and go to state 32
-    OPEN_PARENTHESIS  shift, and go to state 33
-
-    location    go to state 34
-    expression  go to state 35
+    id_decl  go to state 29
 
 
 State 24
 
-   13 statement: CALLOUT OPEN_PARENTHESIS . STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
+   17 location: IDENTIFIER OPEN_SQUARE_BRACKET . expression CLOSE_SQUARE_BRACKET
 
-    STRING_LITERAL  shift, and go to state 36
+    IDENTIFIER        shift, and go to state 15
+    BOOLEAN_LITERAL   shift, and go to state 30
+    CHAR_LITERAL      shift, and go to state 31
+    DECIMAL_LITERAL   shift, and go to state 32
+    OP_MINUS          shift, and go to state 33
+    NEGATION          shift, and go to state 34
+    OPEN_PARENTHESIS  shift, and go to state 35
+
+    location    go to state 36
+    expression  go to state 37
 
 
 State 25
 
-   12 statement: location ASSIGNMENT_OP . expression SEMI_COLON
+   15 statement: CALLOUT OPEN_PARENTHESIS . STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
 
-    IDENTIFIER        shift, and go to state 15
-    BOOLEAN_LITERAL   shift, and go to state 28
-    CHAR_LITERAL      shift, and go to state 29
-    DECIMAL_LITERAL   shift, and go to state 30
-    OP_MINUS          shift, and go to state 31
-    NEGATION          shift, and go to state 32
-    OPEN_PARENTHESIS  shift, and go to state 33
-
-    location    go to state 34
-    expression  go to state 37
+    STRING_LITERAL  shift, and go to state 38
 
 
 State 26
 
-   11 id_decl: IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL . CLOSE_SQUARE_BRACKET
+   12 statement_list: statement_list statement .
 
-    CLOSE_SQUARE_BRACKET  shift, and go to state 38
+    $default  reduce using rule 12 (statement_list)
 
 
 State 27
+
+   14 statement: location ASSIGNMENT_OP . expression SEMI_COLON
+
+    IDENTIFIER        shift, and go to state 15
+    BOOLEAN_LITERAL   shift, and go to state 30
+    CHAR_LITERAL      shift, and go to state 31
+    DECIMAL_LITERAL   shift, and go to state 32
+    OP_MINUS          shift, and go to state 33
+    NEGATION          shift, and go to state 34
+    OPEN_PARENTHESIS  shift, and go to state 35
+
+    location    go to state 36
+    expression  go to state 39
+
+
+State 28
+
+   11 id_decl: IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL . CLOSE_SQUARE_BRACKET
+
+    CLOSE_SQUARE_BRACKET  shift, and go to state 40
+
+
+State 29
 
     8 id_list: id_list COMMA id_decl .
 
     $default  reduce using rule 8 (id_list)
 
 
-State 28
-
-   23 expression: BOOLEAN_LITERAL .
-
-    $default  reduce using rule 23 (expression)
-
-
-State 29
-
-   22 expression: CHAR_LITERAL .
-
-    $default  reduce using rule 22 (expression)
-
-
 State 30
 
-   21 expression: DECIMAL_LITERAL .
+   25 expression: BOOLEAN_LITERAL .
 
-    $default  reduce using rule 21 (expression)
+    $default  reduce using rule 25 (expression)
 
 
 State 31
 
-   25 expression: OP_MINUS . expression
+   24 expression: CHAR_LITERAL .
 
-    IDENTIFIER        shift, and go to state 15
-    BOOLEAN_LITERAL   shift, and go to state 28
-    CHAR_LITERAL      shift, and go to state 29
-    DECIMAL_LITERAL   shift, and go to state 30
-    OP_MINUS          shift, and go to state 31
-    NEGATION          shift, and go to state 32
-    OPEN_PARENTHESIS  shift, and go to state 33
-
-    location    go to state 34
-    expression  go to state 39
+    $default  reduce using rule 24 (expression)
 
 
 State 32
 
-   24 expression: NEGATION . expression
+   23 expression: DECIMAL_LITERAL .
 
-    IDENTIFIER        shift, and go to state 15
-    BOOLEAN_LITERAL   shift, and go to state 28
-    CHAR_LITERAL      shift, and go to state 29
-    DECIMAL_LITERAL   shift, and go to state 30
-    OP_MINUS          shift, and go to state 31
-    NEGATION          shift, and go to state 32
-    OPEN_PARENTHESIS  shift, and go to state 33
-
-    location    go to state 34
-    expression  go to state 40
+    $default  reduce using rule 23 (expression)
 
 
 State 33
 
-   30 expression: OPEN_PARENTHESIS . expression CLOSE_PARENTHESIS
+   27 expression: OP_MINUS . expression
 
     IDENTIFIER        shift, and go to state 15
-    BOOLEAN_LITERAL   shift, and go to state 28
-    CHAR_LITERAL      shift, and go to state 29
-    DECIMAL_LITERAL   shift, and go to state 30
-    OP_MINUS          shift, and go to state 31
-    NEGATION          shift, and go to state 32
-    OPEN_PARENTHESIS  shift, and go to state 33
+    BOOLEAN_LITERAL   shift, and go to state 30
+    CHAR_LITERAL      shift, and go to state 31
+    DECIMAL_LITERAL   shift, and go to state 32
+    OP_MINUS          shift, and go to state 33
+    NEGATION          shift, and go to state 34
+    OPEN_PARENTHESIS  shift, and go to state 35
 
-    location    go to state 34
+    location    go to state 36
     expression  go to state 41
 
 
 State 34
 
-   20 expression: location .
+   26 expression: NEGATION . expression
 
-    $default  reduce using rule 20 (expression)
+    IDENTIFIER        shift, and go to state 15
+    BOOLEAN_LITERAL   shift, and go to state 30
+    CHAR_LITERAL      shift, and go to state 31
+    DECIMAL_LITERAL   shift, and go to state 32
+    OP_MINUS          shift, and go to state 33
+    NEGATION          shift, and go to state 34
+    OPEN_PARENTHESIS  shift, and go to state 35
+
+    location    go to state 36
+    expression  go to state 42
 
 
 State 35
 
-   15 location: IDENTIFIER OPEN_SQUARE_BRACKET expression . CLOSE_SQUARE_BRACKET
-   26 expression: expression . OP_MINUS expression
-   27           | expression . OP_PLUS expression
-   28           | expression . ARITHMETIC_OP expression
-   29           | expression . RELATIONAL_OP expression
+   32 expression: OPEN_PARENTHESIS . expression CLOSE_PARENTHESIS
 
-    OP_PLUS               shift, and go to state 42
-    RELATIONAL_OP         shift, and go to state 43
-    ARITHMETIC_OP         shift, and go to state 44
-    OP_MINUS              shift, and go to state 45
-    CLOSE_SQUARE_BRACKET  shift, and go to state 46
+    IDENTIFIER        shift, and go to state 15
+    BOOLEAN_LITERAL   shift, and go to state 30
+    CHAR_LITERAL      shift, and go to state 31
+    DECIMAL_LITERAL   shift, and go to state 32
+    OP_MINUS          shift, and go to state 33
+    NEGATION          shift, and go to state 34
+    OPEN_PARENTHESIS  shift, and go to state 35
+
+    location    go to state 36
+    expression  go to state 43
 
 
 State 36
 
-   13 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL . OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
+   22 expression: location .
 
-    OPEN_SQUARE_BRACKET  shift, and go to state 47
+    $default  reduce using rule 22 (expression)
 
 
 State 37
 
-   12 statement: location ASSIGNMENT_OP expression . SEMI_COLON
-   26 expression: expression . OP_MINUS expression
-   27           | expression . OP_PLUS expression
-   28           | expression . ARITHMETIC_OP expression
-   29           | expression . RELATIONAL_OP expression
+   17 location: IDENTIFIER OPEN_SQUARE_BRACKET expression . CLOSE_SQUARE_BRACKET
+   28 expression: expression . OP_MINUS expression
+   29           | expression . OP_PLUS expression
+   30           | expression . ARITHMETIC_OP expression
+   31           | expression . RELATIONAL_OP expression
 
-    OP_PLUS        shift, and go to state 42
-    RELATIONAL_OP  shift, and go to state 43
-    ARITHMETIC_OP  shift, and go to state 44
-    OP_MINUS       shift, and go to state 45
-    SEMI_COLON     shift, and go to state 48
+    OP_PLUS               shift, and go to state 44
+    RELATIONAL_OP         shift, and go to state 45
+    ARITHMETIC_OP         shift, and go to state 46
+    OP_MINUS              shift, and go to state 47
+    CLOSE_SQUARE_BRACKET  shift, and go to state 48
 
 
 State 38
+
+   15 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL . OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
+
+    OPEN_SQUARE_BRACKET  shift, and go to state 49
+
+
+State 39
+
+   14 statement: location ASSIGNMENT_OP expression . SEMI_COLON
+   28 expression: expression . OP_MINUS expression
+   29           | expression . OP_PLUS expression
+   30           | expression . ARITHMETIC_OP expression
+   31           | expression . RELATIONAL_OP expression
+
+    OP_PLUS        shift, and go to state 44
+    RELATIONAL_OP  shift, and go to state 45
+    ARITHMETIC_OP  shift, and go to state 46
+    OP_MINUS       shift, and go to state 47
+    SEMI_COLON     shift, and go to state 50
+
+
+State 40
 
    11 id_decl: IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET .
 
     $default  reduce using rule 11 (id_decl)
 
 
-State 39
-
-   25 expression: OP_MINUS expression .
-   26           | expression . OP_MINUS expression
-   27           | expression . OP_PLUS expression
-   28           | expression . ARITHMETIC_OP expression
-   29           | expression . RELATIONAL_OP expression
-
-    $default  reduce using rule 25 (expression)
-
-
-State 40
-
-   24 expression: NEGATION expression .
-   26           | expression . OP_MINUS expression
-   27           | expression . OP_PLUS expression
-   28           | expression . ARITHMETIC_OP expression
-   29           | expression . RELATIONAL_OP expression
-
-    $default  reduce using rule 24 (expression)
-
-
 State 41
 
-   26 expression: expression . OP_MINUS expression
-   27           | expression . OP_PLUS expression
-   28           | expression . ARITHMETIC_OP expression
-   29           | expression . RELATIONAL_OP expression
-   30           | OPEN_PARENTHESIS expression . CLOSE_PARENTHESIS
+   27 expression: OP_MINUS expression .
+   28           | expression . OP_MINUS expression
+   29           | expression . OP_PLUS expression
+   30           | expression . ARITHMETIC_OP expression
+   31           | expression . RELATIONAL_OP expression
 
-    OP_PLUS            shift, and go to state 42
-    RELATIONAL_OP      shift, and go to state 43
-    ARITHMETIC_OP      shift, and go to state 44
-    OP_MINUS           shift, and go to state 45
-    CLOSE_PARENTHESIS  shift, and go to state 49
+    $default  reduce using rule 27 (expression)
 
 
 State 42
 
-   27 expression: expression OP_PLUS . expression
+   26 expression: NEGATION expression .
+   28           | expression . OP_MINUS expression
+   29           | expression . OP_PLUS expression
+   30           | expression . ARITHMETIC_OP expression
+   31           | expression . RELATIONAL_OP expression
 
-    IDENTIFIER        shift, and go to state 15
-    BOOLEAN_LITERAL   shift, and go to state 28
-    CHAR_LITERAL      shift, and go to state 29
-    DECIMAL_LITERAL   shift, and go to state 30
-    OP_MINUS          shift, and go to state 31
-    NEGATION          shift, and go to state 32
-    OPEN_PARENTHESIS  shift, and go to state 33
-
-    location    go to state 34
-    expression  go to state 50
+    $default  reduce using rule 26 (expression)
 
 
 State 43
 
-   29 expression: expression RELATIONAL_OP . expression
+   28 expression: expression . OP_MINUS expression
+   29           | expression . OP_PLUS expression
+   30           | expression . ARITHMETIC_OP expression
+   31           | expression . RELATIONAL_OP expression
+   32           | OPEN_PARENTHESIS expression . CLOSE_PARENTHESIS
 
-    IDENTIFIER        shift, and go to state 15
-    BOOLEAN_LITERAL   shift, and go to state 28
-    CHAR_LITERAL      shift, and go to state 29
-    DECIMAL_LITERAL   shift, and go to state 30
-    OP_MINUS          shift, and go to state 31
-    NEGATION          shift, and go to state 32
-    OPEN_PARENTHESIS  shift, and go to state 33
-
-    location    go to state 34
-    expression  go to state 51
+    OP_PLUS            shift, and go to state 44
+    RELATIONAL_OP      shift, and go to state 45
+    ARITHMETIC_OP      shift, and go to state 46
+    OP_MINUS           shift, and go to state 47
+    CLOSE_PARENTHESIS  shift, and go to state 51
 
 
 State 44
 
-   28 expression: expression ARITHMETIC_OP . expression
+   29 expression: expression OP_PLUS . expression
 
     IDENTIFIER        shift, and go to state 15
-    BOOLEAN_LITERAL   shift, and go to state 28
-    CHAR_LITERAL      shift, and go to state 29
-    DECIMAL_LITERAL   shift, and go to state 30
-    OP_MINUS          shift, and go to state 31
-    NEGATION          shift, and go to state 32
-    OPEN_PARENTHESIS  shift, and go to state 33
+    BOOLEAN_LITERAL   shift, and go to state 30
+    CHAR_LITERAL      shift, and go to state 31
+    DECIMAL_LITERAL   shift, and go to state 32
+    OP_MINUS          shift, and go to state 33
+    NEGATION          shift, and go to state 34
+    OPEN_PARENTHESIS  shift, and go to state 35
 
-    location    go to state 34
+    location    go to state 36
     expression  go to state 52
 
 
 State 45
 
-   26 expression: expression OP_MINUS . expression
+   31 expression: expression RELATIONAL_OP . expression
 
     IDENTIFIER        shift, and go to state 15
-    BOOLEAN_LITERAL   shift, and go to state 28
-    CHAR_LITERAL      shift, and go to state 29
-    DECIMAL_LITERAL   shift, and go to state 30
-    OP_MINUS          shift, and go to state 31
-    NEGATION          shift, and go to state 32
-    OPEN_PARENTHESIS  shift, and go to state 33
+    BOOLEAN_LITERAL   shift, and go to state 30
+    CHAR_LITERAL      shift, and go to state 31
+    DECIMAL_LITERAL   shift, and go to state 32
+    OP_MINUS          shift, and go to state 33
+    NEGATION          shift, and go to state 34
+    OPEN_PARENTHESIS  shift, and go to state 35
 
-    location    go to state 34
+    location    go to state 36
     expression  go to state 53
 
 
 State 46
 
-   15 location: IDENTIFIER OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET .
+   30 expression: expression ARITHMETIC_OP . expression
 
-    $default  reduce using rule 15 (location)
+    IDENTIFIER        shift, and go to state 15
+    BOOLEAN_LITERAL   shift, and go to state 30
+    CHAR_LITERAL      shift, and go to state 31
+    DECIMAL_LITERAL   shift, and go to state 32
+    OP_MINUS          shift, and go to state 33
+    NEGATION          shift, and go to state 34
+    OPEN_PARENTHESIS  shift, and go to state 35
+
+    location    go to state 36
+    expression  go to state 54
 
 
 State 47
 
-   13 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET . callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
+   28 expression: expression OP_MINUS . expression
 
     IDENTIFIER        shift, and go to state 15
-    BOOLEAN_LITERAL   shift, and go to state 28
-    STRING_LITERAL    shift, and go to state 54
-    CHAR_LITERAL      shift, and go to state 29
-    DECIMAL_LITERAL   shift, and go to state 30
-    OP_MINUS          shift, and go to state 31
-    NEGATION          shift, and go to state 32
-    OPEN_PARENTHESIS  shift, and go to state 33
+    BOOLEAN_LITERAL   shift, and go to state 30
+    CHAR_LITERAL      shift, and go to state 31
+    DECIMAL_LITERAL   shift, and go to state 32
+    OP_MINUS          shift, and go to state 33
+    NEGATION          shift, and go to state 34
+    OPEN_PARENTHESIS  shift, and go to state 35
 
-    location           go to state 34
-    callout_arguments  go to state 55
-    c_arg              go to state 56
-    expression         go to state 57
+    location    go to state 36
+    expression  go to state 55
 
 
 State 48
 
-   12 statement: location ASSIGNMENT_OP expression SEMI_COLON .
+   17 location: IDENTIFIER OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET .
 
-    $default  reduce using rule 12 (statement)
+    $default  reduce using rule 17 (location)
 
 
 State 49
 
-   30 expression: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS .
+   15 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET . callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
 
-    $default  reduce using rule 30 (expression)
+    IDENTIFIER        shift, and go to state 15
+    BOOLEAN_LITERAL   shift, and go to state 30
+    STRING_LITERAL    shift, and go to state 56
+    CHAR_LITERAL      shift, and go to state 31
+    DECIMAL_LITERAL   shift, and go to state 32
+    OP_MINUS          shift, and go to state 33
+    NEGATION          shift, and go to state 34
+    OPEN_PARENTHESIS  shift, and go to state 35
+
+    location           go to state 36
+    callout_arguments  go to state 57
+    c_arg              go to state 58
+    expression         go to state 59
 
 
 State 50
 
-   26 expression: expression . OP_MINUS expression
-   27           | expression . OP_PLUS expression
-   27           | expression OP_PLUS expression .
-   28           | expression . ARITHMETIC_OP expression
-   29           | expression . RELATIONAL_OP expression
+   14 statement: location ASSIGNMENT_OP expression SEMI_COLON .
 
-    ARITHMETIC_OP  shift, and go to state 44
-
-    $default  reduce using rule 27 (expression)
+    $default  reduce using rule 14 (statement)
 
 
 State 51
 
-   26 expression: expression . OP_MINUS expression
-   27           | expression . OP_PLUS expression
-   28           | expression . ARITHMETIC_OP expression
-   29           | expression . RELATIONAL_OP expression
-   29           | expression RELATIONAL_OP expression .
+   32 expression: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS .
 
-    OP_PLUS        shift, and go to state 42
-    ARITHMETIC_OP  shift, and go to state 44
-    OP_MINUS       shift, and go to state 45
-
-    $default  reduce using rule 29 (expression)
+    $default  reduce using rule 32 (expression)
 
 
 State 52
 
-   26 expression: expression . OP_MINUS expression
-   27           | expression . OP_PLUS expression
-   28           | expression . ARITHMETIC_OP expression
-   28           | expression ARITHMETIC_OP expression .
-   29           | expression . RELATIONAL_OP expression
+   28 expression: expression . OP_MINUS expression
+   29           | expression . OP_PLUS expression
+   29           | expression OP_PLUS expression .
+   30           | expression . ARITHMETIC_OP expression
+   31           | expression . RELATIONAL_OP expression
 
-    $default  reduce using rule 28 (expression)
+    ARITHMETIC_OP  shift, and go to state 46
+
+    $default  reduce using rule 29 (expression)
 
 
 State 53
 
-   26 expression: expression . OP_MINUS expression
-   26           | expression OP_MINUS expression .
-   27           | expression . OP_PLUS expression
-   28           | expression . ARITHMETIC_OP expression
-   29           | expression . RELATIONAL_OP expression
+   28 expression: expression . OP_MINUS expression
+   29           | expression . OP_PLUS expression
+   30           | expression . ARITHMETIC_OP expression
+   31           | expression . RELATIONAL_OP expression
+   31           | expression RELATIONAL_OP expression .
 
-    ARITHMETIC_OP  shift, and go to state 44
+    OP_PLUS        shift, and go to state 44
+    ARITHMETIC_OP  shift, and go to state 46
+    OP_MINUS       shift, and go to state 47
 
-    $default  reduce using rule 26 (expression)
+    $default  reduce using rule 31 (expression)
 
 
 State 54
 
-   19 c_arg: STRING_LITERAL .
+   28 expression: expression . OP_MINUS expression
+   29           | expression . OP_PLUS expression
+   30           | expression . ARITHMETIC_OP expression
+   30           | expression ARITHMETIC_OP expression .
+   31           | expression . RELATIONAL_OP expression
 
-    $default  reduce using rule 19 (c_arg)
+    $default  reduce using rule 30 (expression)
 
 
 State 55
 
-   13 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments . CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
-   16 callout_arguments: callout_arguments . COMMA c_arg
+   28 expression: expression . OP_MINUS expression
+   28           | expression OP_MINUS expression .
+   29           | expression . OP_PLUS expression
+   30           | expression . ARITHMETIC_OP expression
+   31           | expression . RELATIONAL_OP expression
 
-    COMMA                 shift, and go to state 58
-    CLOSE_SQUARE_BRACKET  shift, and go to state 59
+    ARITHMETIC_OP  shift, and go to state 46
+
+    $default  reduce using rule 28 (expression)
 
 
 State 56
 
-   17 callout_arguments: c_arg .
+   21 c_arg: STRING_LITERAL .
 
-    $default  reduce using rule 17 (callout_arguments)
+    $default  reduce using rule 21 (c_arg)
 
 
 State 57
 
-   18 c_arg: expression .
-   26 expression: expression . OP_MINUS expression
-   27           | expression . OP_PLUS expression
-   28           | expression . ARITHMETIC_OP expression
-   29           | expression . RELATIONAL_OP expression
+   15 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments . CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON
+   18 callout_arguments: callout_arguments . COMMA c_arg
 
-    OP_PLUS        shift, and go to state 42
-    RELATIONAL_OP  shift, and go to state 43
-    ARITHMETIC_OP  shift, and go to state 44
-    OP_MINUS       shift, and go to state 45
-
-    $default  reduce using rule 18 (c_arg)
+    COMMA                 shift, and go to state 60
+    CLOSE_SQUARE_BRACKET  shift, and go to state 61
 
 
 State 58
 
-   16 callout_arguments: callout_arguments COMMA . c_arg
+   19 callout_arguments: c_arg .
 
-    IDENTIFIER        shift, and go to state 15
-    BOOLEAN_LITERAL   shift, and go to state 28
-    STRING_LITERAL    shift, and go to state 54
-    CHAR_LITERAL      shift, and go to state 29
-    DECIMAL_LITERAL   shift, and go to state 30
-    OP_MINUS          shift, and go to state 31
-    NEGATION          shift, and go to state 32
-    OPEN_PARENTHESIS  shift, and go to state 33
-
-    location    go to state 34
-    c_arg       go to state 60
-    expression  go to state 57
+    $default  reduce using rule 19 (callout_arguments)
 
 
 State 59
 
-   13 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET . CLOSE_PARENTHESIS SEMI_COLON
+   20 c_arg: expression .
+   28 expression: expression . OP_MINUS expression
+   29           | expression . OP_PLUS expression
+   30           | expression . ARITHMETIC_OP expression
+   31           | expression . RELATIONAL_OP expression
 
-    CLOSE_PARENTHESIS  shift, and go to state 61
+    OP_PLUS        shift, and go to state 44
+    RELATIONAL_OP  shift, and go to state 45
+    ARITHMETIC_OP  shift, and go to state 46
+    OP_MINUS       shift, and go to state 47
+
+    $default  reduce using rule 20 (c_arg)
 
 
 State 60
 
-   16 callout_arguments: callout_arguments COMMA c_arg .
+   18 callout_arguments: callout_arguments COMMA . c_arg
 
-    $default  reduce using rule 16 (callout_arguments)
+    IDENTIFIER        shift, and go to state 15
+    BOOLEAN_LITERAL   shift, and go to state 30
+    STRING_LITERAL    shift, and go to state 56
+    CHAR_LITERAL      shift, and go to state 31
+    DECIMAL_LITERAL   shift, and go to state 32
+    OP_MINUS          shift, and go to state 33
+    NEGATION          shift, and go to state 34
+    OPEN_PARENTHESIS  shift, and go to state 35
+
+    location    go to state 36
+    c_arg       go to state 62
+    expression  go to state 59
 
 
 State 61
 
-   13 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS . SEMI_COLON
+   15 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET . CLOSE_PARENTHESIS SEMI_COLON
 
-    SEMI_COLON  shift, and go to state 62
+    CLOSE_PARENTHESIS  shift, and go to state 63
 
 
 State 62
 
-   13 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON .
+   18 callout_arguments: callout_arguments COMMA c_arg .
 
-    $default  reduce using rule 13 (statement)
+    $default  reduce using rule 18 (callout_arguments)
+
+
+State 63
+
+   15 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS . SEMI_COLON
+
+    SEMI_COLON  shift, and go to state 64
+
+
+State 64
+
+   15 statement: CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON .
+
+    $default  reduce using rule 15 (statement)

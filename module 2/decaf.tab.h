@@ -112,9 +112,9 @@ union YYSTYPE
 	ASTfieldDecl *fdNode;
 	ASTidList *idL;
 	ASTidDecl *idC;
+	ASTstatementList *sListNode;
 	ASTstatement *sNode;
 	ASTlocation *locNode;
-	//ASTcallout *callNode;
 	ASTcalloutArgumentList *callArgListNode;
 	ASTcalloutArgument *callArgumentNode;
 	ASTexpression *eNode;
