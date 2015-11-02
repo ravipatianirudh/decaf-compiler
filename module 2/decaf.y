@@ -111,30 +111,30 @@ class Visitor;
 
 %%
 program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK			{$$ = new ASTprogram($2,$4);root = $$;}			
-					| CLASS IDENTIFIER START_BLOCK CLOSE_BLOCK				{$$ = new ASTprogram($2);}
+					| CLASS IDENTIFIER START_BLOCK CLOSE_BLOCK				{$$ = new ASTprogram($2);root = $$;}
 					;					
 
 body:				field statement_list											{$$ = new ASTbody($1,$2);}
 					| field													{$$ = new ASTbody($1);}
 					;
 
-field:				field field_declaration 								{$$ = new ASTfield($2,$1);}
-					| field_declaration 									{$$ = new ASTfield($1);}
+field:				field field_declaration 								{$1->fieldNodeList.push_back($2);$$ = $1;}
+					| field_declaration 									{$$ = new ASTfield();$$->fieldNodeList.push_back($1);}
 					;
 
 field_declaration:	TYPE id_list SEMI_COLON									{$$ = new ASTfieldDecl($1,$2);}
 					;
 
-id_list:			id_list COMMA id_decl									{$$ = new ASTidList($1,$3);}
-					| id_decl												{$$ = new ASTidList($1);}
+id_list:			id_list COMMA id_decl									{$1->idList.push_back($3);$$ = $1;}
+					| id_decl												{$$ =  new ASTidList();$$->idList.push_back($1);}
 					;
 
 id_decl:			IDENTIFIER																	{$$ = new ASTidDecl($1);}
 					| IDENTIFIER OPEN_SQUARE_BRACKET DECIMAL_LITERAL CLOSE_SQUARE_BRACKET		{$$ = new ASTidDecl($1,$3);}
 
 
-statement_list:		statement_list statement													{$$ =  new ASTstatementList($1,$2);}
-					| statement																	{$$ =  new ASTstatementList($1);}
+statement_list:		statement_list statement													{$1->stat_list.push_back($2);$$=$1;}
+					| statement																	{$$ = new ASTstatementList();$$->stat_list.push_back($1);}
 					;
 
 statement:			location ASSIGNMENT_OP expression SEMI_COLON																								{$$ = new ASTstatement($1,$3);}
@@ -145,8 +145,8 @@ location:			IDENTIFIER															{$$ = new ASTlocation($1);}
 					| IDENTIFIER OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET	{$$ = new ASTlocation($1,$3);}
 					;
 
-callout_arguments:	callout_arguments COMMA c_arg										{$$ = new ASTcalloutArgumentList($1,$3);}
-					| c_arg																{$$ = new ASTcalloutArgumentList($1);}
+callout_arguments:	callout_arguments COMMA c_arg										{$1->callout_args_list.push_back($3);$$ = $1;}
+					| c_arg																{$$ = new ASTcalloutArgumentList();$$->callout_args_list.push_back($1);}
 					;
 
 c_arg:				expression															{$$ = new ASTcalloutArgument($1);}
@@ -161,9 +161,9 @@ expression:			location															{$$ = new ASTexpression($1);}
 					| OP_MINUS expression %prec UNARY_MINUS								{$$ = new ASTexpression($2,6);}
 					| expression OP_MINUS expression									{$$ = new ASTexpression($1,$3,7);}
 					| expression OP_PLUS expression										{$$ = new ASTexpression($1,$3,8);}
-					| expression ARITHMETIC_OP expression								{$$ = new ASTexpression($1,$3,9);}
-					| expression RELATIONAL_OP expression								{$$ = new ASTexpression($1,$3,10);}
-					| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS						{$$ = new ASTexpression($2,11);}
+					| expression ARITHMETIC_OP expression								{$$ = new ASTexpression($1,$3,9,$2);}
+					| expression RELATIONAL_OP expression								{$$ = new ASTexpression($1,$3,10,$2);}
+					| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS						{$$ = new ASTexpression($2,12);}
 					;
 %%
 
@@ -195,7 +195,6 @@ int main(int argc,char** argv){
 		XML v;
 		root->accept(v);
 	}
-
 	fclose(bison_output);
 }
 

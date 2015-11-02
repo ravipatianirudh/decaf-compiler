@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <vector>
+#include <string.h>
 
 using namespace std;
 
@@ -56,10 +57,10 @@ public:
 	ASTprogram(){}
 	ASTprogram(char* name, ASTbody* b){
 		this->bodyNode = b;
-		this->programIdentifier = name;
+		this->programIdentifier = strdup(name);
 	}
 	ASTprogram(char *name){
-		this->programIdentifier = name;
+		this->programIdentifier = strdup(name);
 	}
 
 	virtual void accept(Visitor &v){
@@ -88,18 +89,9 @@ public:
 
 class ASTfield : public ASTbody{
 public:
-	std::vector<ASTfield *> fieldNodeList;
-	// ASTfield* fieldNodeList;
-	ASTfieldDecl* f_decl;
+	std::vector<ASTfieldDecl*> fieldNodeList;
 
 	ASTfield(){}
-	// ASTfield(ASTfieldDecl *f_d,ASTfield *f){
-	// 	this->fieldNodeList = f;
-	// 	this->f_decl = f_d;
-	// }
-	ASTfield(ASTfieldDecl *f_d){
-		this->f_decl = f_d;
-	}
 
 	virtual void accept(Visitor &v){
 		v.visit(this);
@@ -113,7 +105,7 @@ public:
 
 	ASTfieldDecl(){}
 	ASTfieldDecl(char *t,ASTidList *l){
-		this->field_type = t;
+		this->field_type = strdup(t);
 		this->field_id_list = l;
 	}
 
@@ -125,18 +117,9 @@ public:
 
 class ASTidList : public ASTfieldDecl {
 public:
-	std::vector<ASTidList *> list;
-	// ASTidList *list;
-	ASTidDecl *decl;
+	std::vector<ASTidDecl*> idList;
 
 	ASTidList(){}
-	// ASTidList(ASTidList *l,ASTidDecl *d){
-	// 	this->list = l;
-	// 	this->decl = d;
-	// }
-	ASTidList(ASTidDecl *d){
-		this->decl = d;
-	}
 
 	virtual void accept(Visitor &v){
 		v.visit(this);
@@ -147,14 +130,17 @@ class ASTidDecl : public ASTidList {
 public:
 	char *decl_id;
 	int decl_val;
+	bool valPresent;
 
 	ASTidDecl(){}
 	ASTidDecl(char *i){
-		this->decl_id = i;
+		this->decl_id = strdup(i);
+		valPresent = false;
 	}
 	ASTidDecl(char *i,int d){
-		this->decl_id = i;
+		this->decl_id = strdup(i);
 		this->decl_val = d;
+		valPresent = true;
 	}
 
 	virtual void accept(Visitor &v){
@@ -165,19 +151,9 @@ public:
 
 class ASTstatementList : public ASTbody {
 public:
-	std::vector<ASTstatementList*> stat_list;
-	// ASTstatementList *stat_list;
-	ASTstatement *stat;
+	std::vector<ASTstatement*> stat_list;
 
 	ASTstatementList(){}
-	// ASTstatementList(ASTstatementList *l,ASTstatement *s){
-	// 	this->stat_list = l;
-	// 	this->stat = s;
-	// }
-	ASTstatementList( ASTstatement *s){
-		this->stat = s;
-	}
-
 
 	virtual void accept(Visitor &v){
 		v.visit(this);
@@ -190,55 +166,31 @@ public:
 	ASTexpression *stat_expressionNode;
 	ASTcalloutArgumentList *statement_callout;
 	char* name_callout;
+	bool statementIsLocationAssign;
 
 	ASTstatement(){}
 	ASTstatement(ASTlocation* loc,ASTexpression *expr){
 		this->stat_locationNode = loc;
 		this->stat_expressionNode = expr;
+		this->statementIsLocationAssign = true;
 	}
 	ASTstatement(char* s, ASTcalloutArgumentList *c){
-		this->name_callout = s;
+		this->name_callout = strdup(s);
 		this->statement_callout = c;
+		this->statementIsLocationAssign = false;
 	}
 
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
 
-};
-
-class ASTlocation : public ASTstatement{
-public:
-	char* loc_id;
-	ASTexpression *loc_expr;
-
-	ASTlocation(){}
-	ASTlocation(char *c){
-		this->loc_id = c;
-	}
-	ASTlocation(char *c,ASTexpression *e){
-		this->loc_id = c;
-		this->loc_expr = e;
-	}
-
-	virtual void accept(Visitor &v){
-		v.visit(this);
-	}
 };
 
 class ASTcalloutArgumentList : public ASTstatement {
 public:
 	std::vector<ASTcalloutArgument*> callout_args_list;
-	// ASTcalloutArgumentList *callout_args_list;
 
 	ASTcalloutArgumentList(){}
-	// ASTcalloutArgumentList(ASTcalloutArgumentList *c_args,ASTcalloutArgument *c_a){
-	// 	this->callout_args_list = c_args;
-	// 	this->c_arg = c_a;
-	// }
-	// ASTcalloutArgumentList(ASTcalloutArgument *c){
-	// 	this->c_arg = c;
-	// }
 
 	virtual void accept(Visitor &v){
 		v.visit(this);
@@ -249,13 +201,16 @@ class ASTcalloutArgument : public ASTcalloutArgumentList{
 public:
 	ASTexpression *c_arg_expression;
 	char* c_arg_string;
+	bool isExpression;
 
 	ASTcalloutArgument(){}
 	ASTcalloutArgument(ASTexpression *expr){
 		this->c_arg_expression = expr;
+		this->isExpression  = true;
 	}
 	ASTcalloutArgument(char* str){
-		this->c_arg_string = str;
+		this->c_arg_string = strdup(str);
+		this->isExpression  = false;
 	}
 
 	virtual void accept(Visitor &v){
@@ -270,28 +225,34 @@ public:
 	bool bool_exp_literal;
 	bool isBinary;
 	int expressionID;
+	int binSignVal;
 
 	ASTlocation *loc_exp;
 
-	std::vector<ASTexpression> expressionList;
+	std::vector<ASTexpression*> expressionList;
 
 	ASTexpression(){}
+	ASTexpression(ASTlocation *loc){
+		this->loc_exp = loc;
+		this->isBinary = false;
+		this->expressionID = 1;
+	}
 	ASTexpression(int lit){
 		this->int_exp_literal = lit;
 		this->isBinary = false;
+		this->expressionID = 2;
 	}
 	ASTexpression(char lit){
 		this->char_exp_literal = lit;
 		this->isBinary = false;
+		this->expressionID = 3;
 	}
 	ASTexpression(bool lit){
 		this->bool_exp_literal = lit;
 		this->isBinary = false;
+		this->expressionID = 4;
 	}
-	ASTexpression(ASTlocation *loc){
-		this->loc_exp = loc;
-		this->isBinary = false;
-	}
+
 	ASTexpression(ASTexpression *unary_expr,int expID){
 		this->expressionList.push_back(unary_expr);
 		this->isBinary = false;
@@ -302,6 +263,53 @@ public:
 		this->expressionList.push_back(bin2);
 		this->isBinary = true;
 		this->expressionID = expID;
+	}
+	ASTexpression(ASTexpression *bin1,ASTexpression *bin2,int expID,char* sgn){
+		this->expressionList.push_back(bin1);
+		this->expressionList.push_back(bin2);
+		this->isBinary = true;
+		this->expressionID = expID;
+		if(strcmp(sgn,"*") == 0){
+			this->binSignVal = 1;
+		}else if(strcmp(sgn,"/")){
+			this->binSignVal = 2;
+		}else if(strcmp(sgn,"%")){
+			this->binSignVal = 3;
+		}else if(strcmp(sgn,"<")){
+			this->binSignVal = 4;
+		}else if(strcmp(sgn,">")){
+			this->binSignVal = 5;
+		}else if(strcmp(sgn,"<=")){
+			this->binSignVal = 6;
+		}else if(strcmp(sgn,">=")){
+			this->binSignVal = 7;
+		}else if(strcmp(sgn,"&&")){
+			this->binSignVal = 8;
+		}else if(strcmp(sgn,"||")){
+			this->binSignVal = 9;
+		}
+	}
+
+	virtual void accept(Visitor &v){
+		v.visit(this);
+	}
+};
+
+class ASTlocation : public ASTstatement{
+public:
+	char* loc_id;
+	ASTexpression *loc_expr;
+	bool locExpressionPresent;
+
+	ASTlocation(){}
+	ASTlocation(char *c){
+		this->loc_id = strdup(c);
+		this->locExpressionPresent = false;
+	}
+	ASTlocation(char *c,ASTexpression *e){
+		this->loc_id = strdup(c);
+		this->loc_expr = e;
+		this->locExpressionPresent = true;
 	}
 
 	virtual void accept(Visitor &v){
@@ -327,8 +335,119 @@ public:
 
 	void visit(ASTfield *node){
 		cout<<"THIS IS THE FIELD NODE\n";
+		for(vector<ASTfieldDecl*>::iterator it = node->fieldNodeList.begin(); it!= node->fieldNodeList.end(); it++){
+			cout<<"iterating through field production\n";
+			(*it)->accept(*this);
+
+		}
 	}
 	void visit(ASTfieldDecl *node){
 		cout<<"THIS IS THE FIELD DECL of type "<<node->field_type<<endl;
+		node->field_id_list->accept(*this);
+	}
+	void visit(ASTidList *node){
+		cout<<"THIS IS THE ID LIST NODE\n";
+		for(vector<ASTidDecl*>::iterator it = node->idList.begin(); it!= node->idList.end(); it++){
+			(*it)->accept(*this);
+		}
+	}
+	void visit(ASTidDecl *node){
+		cout<<"THIS IS THE ID DECL NODE of name "<<node->decl_id<<endl;
+		if(node->valPresent == true){
+			cout<<" and value "<<node->decl_val<<endl;
+		}
+	}
+
+	void visit(ASTstatementList *node){
+		cout<<"THIS IS THE STATEMENT LIST NODE\n";
+		for(vector<ASTstatement*>::iterator it = node->stat_list.begin(); it!= node->stat_list.end(); it++){
+			(*it)->accept(*this);
+		}
+	}
+	void visit(ASTstatement *node){
+		cout<<"THIS IS THE STATEMENT NODE\n";
+		if(node->statementIsLocationAssign == true){
+			node->stat_locationNode->accept(*this);
+			node->stat_expressionNode->accept(*this);
+		}
+		else{
+			cout<<"CALLOUT CALLED "<<node->name_callout<<endl;
+			node->statement_callout->accept(*this);
+		}
+	}
+	void visit(ASTlocation *node){
+		cout<<"THIS IS THE LOCATION NODE\n";
+		cout<<"LOCATION NAME IS "<<node->loc_id<<endl;
+		if(node->locExpressionPresent == true){
+			node->loc_expr->accept(*this);
+		}
+		cout<<"DONE LOCATION\n";
+	}
+	void visit(ASTcalloutArgumentList *node){
+		cout<<"THE CALLOUT ARGUMENT LIST NODE\n";
+		for(vector<ASTcalloutArgument*>::iterator it = node->callout_args_list.begin(); it!= node->callout_args_list.end() ; it++){
+			(*it)->accept(*this);
+		}
+	}
+	void visit(ASTcalloutArgument *node){
+		if(node->isExpression == false){
+			cout<<"THE STRING LITERAL IS "<<node->c_arg_string<<endl;
+		}else{
+			node->c_arg_expression->accept(*this);
+		}
+	}
+	void visit(ASTexpression *node){
+		cout<<"FUCKED!\n";
+		switch(node->expressionID){
+			case 1: node->loc_exp->accept(*this);
+					break;
+			case 2:	cout<<"EXPRESSION INT "<<node->int_exp_literal<<endl;
+					break;
+			case 3:	cout<<"EXPRESSION STRING "<<node->char_exp_literal<<endl;
+					break;
+			case 4:	cout<<"EXPRESSION BOOLEAN "<<node->bool_exp_literal<<endl;
+					break;
+			case 5:	cout<<"EXPRESSION NEGATION\n";
+					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
+						(*it)->accept(*this);
+					}
+					break;
+			case 6:	cout<<"EXPRESSION UNARY MINUS\n";
+					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
+						(*it)->accept(*this);
+					}
+					break;
+			case 7:	cout<<"EXPRESSION BINARY MINUS\n";
+					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
+						(*it)->accept(*this);
+					}
+					break;
+			case 8:	cout<<"EXPRESSION BINARY PLUS\n";
+					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
+						(*it)->accept(*this);
+					}
+					break;
+			case 9:	cout<<"EXPRESSION BINARY ARITHMETIC\n";
+					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
+						(*it)->accept(*this);
+					}
+					break;
+			case 10:	cout<<"EXPRESSION BINARY RELATIONAL\n";
+						for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
+							(*it)->accept(*this);
+						}
+						break;
+
+			case 11: 	cout<<"EXPRESSION BINARY CONDITIONAL\n";
+						for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
+							(*it)->accept(*this);
+						}
+						break;
+			case 12: 	cout<<"EXPRESSION EXPRESSION \n";
+					 	for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
+							(*it)->accept(*this);
+						}
+						break;
+		}
 	}
 };

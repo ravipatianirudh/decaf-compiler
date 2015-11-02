@@ -1,0 +1,10 @@
+CLASS
+ID: kiraak
+INT_DECLARATION
+ID: a
+BOOLEAN_DECLARATION
+ID: b
+ID: c
+ID: d
+ID: e
+ID: f
