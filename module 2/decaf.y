@@ -103,7 +103,7 @@ class Visitor;
 
 %token CLASS SEMI_COLON COMMA CALLOUT IF ELSE FOR BREAK CONTINUE RETURN VOID START_BLOCK CLOSE_BLOCK OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET OPEN_PARENTHESIS CLOSE_PARENTHESIS UNARY_MINUS
 
-%left RELATIONAL_OP
+%left RELATIONAL_OP CONDITIONAL_OP
 %left OP_MINUS OP_PLUS
 %left ARITHMETIC_OP
 %left NEGATION
@@ -137,8 +137,8 @@ statement_list:		statement_list statement													{$1->stat_list.push_back($
 					| statement																	{$$ = new ASTstatementList();$$->stat_list.push_back($1);}
 					;
 
-statement:			location ASSIGNMENT_OP expression SEMI_COLON																								{$$ = new ASTstatement($1,$3);}
-					| CALLOUT OPEN_PARENTHESIS STRING_LITERAL OPEN_SQUARE_BRACKET callout_arguments CLOSE_SQUARE_BRACKET CLOSE_PARENTHESIS SEMI_COLON			{$$ = new ASTstatement($3,$5);}
+statement:			location ASSIGNMENT_OP expression SEMI_COLON															{$$ = new ASTstatement($1,$3);}
+					| CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arguments CLOSE_PARENTHESIS SEMI_COLON			{$$ = new ASTstatement($3,$5);}
 					;
 
 location:			IDENTIFIER															{$$ = new ASTlocation($1);}
@@ -163,6 +163,7 @@ expression:			location															{$$ = new ASTexpression($1);}
 					| expression OP_PLUS expression										{$$ = new ASTexpression($1,$3,8);}
 					| expression ARITHMETIC_OP expression								{$$ = new ASTexpression($1,$3,9,$2);}
 					| expression RELATIONAL_OP expression								{$$ = new ASTexpression($1,$3,10,$2);}
+					| expression CONDITIONAL_OP expression								{$$ = new ASTexpression($1,$3,11,$2);}
 					| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS						{$$ = new ASTexpression($2,12);}
 					;
 %%

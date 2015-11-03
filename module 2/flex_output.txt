@@ -1,10 +1,19 @@
 CLASS
-ID: kiraak
+ID: Woohoo
 INT_DECLARATION
 ID: a
+INT: 5
 BOOLEAN_DECLARATION
 ID: b
 ID: c
 ID: d
+INT: 5
 ID: e
-ID: f
+CALLOUT
+STRING: "heehaw"
+STRING: "horse"
+STRING: "mare"
+ID: a
+ID: b
+ID: c
+ID: d

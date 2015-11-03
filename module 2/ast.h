@@ -72,14 +72,17 @@ class ASTbody : public ASTprogram {
 public:
 	ASTfield* fieldNode;
 	ASTstatementList* statementListNode;
+	bool statementsPresent;
 
 	ASTbody(){}
 	ASTbody(ASTfield* f){
 		this->fieldNode = f;
+		this->statementsPresent = false;
 	}
 	ASTbody(ASTfield* f,ASTstatementList* s){
 		this->fieldNode = f;
 		this->statementListNode = s;
+		this->statementsPresent = true;
 	}
 
 	virtual void accept(Visitor &v){
@@ -330,7 +333,9 @@ public:
 	void visit(ASTbody *node){
 		cout<<"THIS IS THE BODY NODE\n";
 		node->fieldNode->accept(*this);
-		node->statementListNode->accept(*this);
+		if(node -> statementsPresent == true){
+			node->statementListNode->accept(*this);
+		}
 	}
 
 	void visit(ASTfield *node){
