@@ -26,15 +26,14 @@ extern FILE *flex_output;
 \<=									|
 >=									{yylval.relational_operator_val = strdup(yytext);return RELATIONAL_OP;}
 
+\=\=								|
+!=									|
 &&									|
 \|\|									{yylval.conditional_operator_val  = strdup(yytext);return CONDITIONAL_OP;}
 	
 \=									|
 \+=									|
 -=									{yylval.assignment_operator_val = strdup(yytext);return ASSIGNMENT_OP;}
-
-\=\=									|
-!=									{yylval.equality_operator_val = strdup(yytext);return EQUALITY_OP;}
 
 class									{fputs("CLASS\n",flex_output);return CLASS;}
 callout									{fputs("CALLOUT\n",flex_output);return CALLOUT;}

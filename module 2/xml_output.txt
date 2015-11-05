@@ -1,0 +1,25 @@
+<Woohoo>
+    <field_declarations count="2">
+        <declaration name="a" count="5" type="integer" />
+        <declaration name="b" type="boolean" />
+        <declaration name="c" type="boolean" />
+        <declaration name="d" count="5" type="boolean" />
+        <declaration name="e" type="boolean" />
+    </field_declarations>
+    <statement_declarations count="2">
+        <callout function=""heehaw"">
+            "horse"
+            "mare"
+        </callout>
+        <assignment>
+            <location id="a" />
+            <binary_expression type="subtraction">
+            <location id="b" />
+            <binary_expression type="and">
+            <location id="c" />
+            <location id="d" />
+            </binary_expression>
+            </binary_expression>
+        </assignment>
+    </statement_declarations>
+</Woohoo>

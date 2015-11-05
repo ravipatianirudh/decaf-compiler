@@ -87,7 +87,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 40 "decaf.y" /* yacc.c:1909  */
+#line 41 "decaf.y" /* yacc.c:1909  */
 
 	char *identifier_val;
 	char *type_val;

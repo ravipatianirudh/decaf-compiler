@@ -2,8 +2,12 @@
 #include <stdlib.h>
 #include <vector>
 #include <string.h>
+#include <string>
+#include <bits/stdc++.h>
 
 using namespace std;
+
+extern FILE *xml_output;
 
 class AST;
 class ASTprogram;
@@ -131,6 +135,7 @@ public:
 
 class ASTidDecl : public ASTidList {
 public:
+	char *idType;
 	char *decl_id;
 	int decl_val;
 	bool valPresent;
@@ -274,22 +279,26 @@ public:
 		this->expressionID = expID;
 		if(strcmp(sgn,"*") == 0){
 			this->binSignVal = 1;
-		}else if(strcmp(sgn,"/")){
+		}else if(strcmp(sgn,"/") == 0){
 			this->binSignVal = 2;
-		}else if(strcmp(sgn,"%")){
+		}else if(strcmp(sgn,"%") == 0){
 			this->binSignVal = 3;
-		}else if(strcmp(sgn,"<")){
+		}else if(strcmp(sgn,"<") == 0){
 			this->binSignVal = 4;
-		}else if(strcmp(sgn,">")){
+		}else if(strcmp(sgn,">") == 0){
 			this->binSignVal = 5;
-		}else if(strcmp(sgn,"<=")){
+		}else if(strcmp(sgn,"<=") == 0){
 			this->binSignVal = 6;
-		}else if(strcmp(sgn,">=")){
+		}else if(strcmp(sgn,">=") == 0){
 			this->binSignVal = 7;
-		}else if(strcmp(sgn,"&&")){
+		}else if(strcmp(sgn,"&&") == 0){
 			this->binSignVal = 8;
-		}else if(strcmp(sgn,"||")){
+		}else if(strcmp(sgn,"||") == 0){
 			this->binSignVal = 9;
+		}else if(strcmp(sgn,"==") == 0){
+			this->binSignVal = 10;
+		}else if(strcmp(sgn,"!=") == 0){
+			this->binSignVal = 11;
 		}
 	}
 
@@ -326,12 +335,20 @@ public:
 	}
 	void visit(ASTprogram *node){
 		if (node != NULL){
-			cout<<"THIS IS THE PROGRAM NODE -- "<<node->programIdentifier<<endl;
+			//cout<<"<"<<node->programIdentifier<<">"<<endl;
+			fputs("<",xml_output);
+			fputs(node->programIdentifier,xml_output);
+			fputs(">\n",xml_output);
+
 			node->bodyNode->accept(*this);
+			//cout<<"</"<<node->programIdentifier<<">"<<endl;
+			fputs("</",xml_output);
+			fputs(node->programIdentifier,xml_output);
+			fputs(">\n",xml_output);
 		}
 	}
 	void visit(ASTbody *node){
-		cout<<"THIS IS THE BODY NODE\n";
+		// //cout<<"THIS IS THE BODY NODE\n";
 		node->fieldNode->accept(*this);
 		if(node -> statementsPresent == true){
 			node->statementListNode->accept(*this);
@@ -339,116 +356,260 @@ public:
 	}
 
 	void visit(ASTfield *node){
-		cout<<"THIS IS THE FIELD NODE\n";
+		int a1 = (node->fieldNodeList.size());
+		//cout<<"    <field_declarations count=\""<<a1<<"\">" <<endl;
+			fputs("    <field_declarations count=\"",xml_output);
+			//cout<<a1<<endl;
+			//char *c = itoa(a1);
+			fprintf(xml_output,"%d",a1);
+			fputs("\">\n",xml_output);
 		for(vector<ASTfieldDecl*>::iterator it = node->fieldNodeList.begin(); it!= node->fieldNodeList.end(); it++){
-			cout<<"iterating through field production\n";
 			(*it)->accept(*this);
-
 		}
+		//cout<<"    </field_declarations>"<<endl;
+		fputs("    </field_declarations>\n",xml_output);
 	}
 	void visit(ASTfieldDecl *node){
-		cout<<"THIS IS THE FIELD DECL of type "<<node->field_type<<endl;
+		// //cout<<"THIS IS THE FIELD DECL of type "<<node->field_type<<endl;
 		node->field_id_list->accept(*this);
 	}
 	void visit(ASTidList *node){
-		cout<<"THIS IS THE ID LIST NODE\n";
+		// //cout<<"THIS IS THE ID LIST NODE\n";
 		for(vector<ASTidDecl*>::iterator it = node->idList.begin(); it!= node->idList.end(); it++){
 			(*it)->accept(*this);
 		}
 	}
 	void visit(ASTidDecl *node){
-		cout<<"THIS IS THE ID DECL NODE of name "<<node->decl_id<<endl;
+		//cout<<"        <declaration name=\""<<node->decl_id<<"\"";
+		fputs("        <declaration name=\"",xml_output);
+		fputs(node->decl_id,xml_output);
+		fputs("\"",xml_output);
 		if(node->valPresent == true){
-			cout<<" and value "<<node->decl_val<<endl;
+			//cout<<" count=\""<<node->decl_val<<"\"";
+			fputs(" count=\"",xml_output);
+			fprintf(xml_output, "%d",node->decl_val );
+			fputs("\"",xml_output);
+			}
+			//cout<<" type=";
+			fputs(" type=",xml_output);
+		// //cout<<node->idType<<endl;
+		// //cout<<s1<<endl;
+		if(strcmp(node->idType,strdup("int"))==0)
+		{
+			//cout<<"\"integer\"/>"<<endl;
+			fputs("\"integer\" />\n",xml_output);
+		}
+		else
+		{
+			//cout<<"\"boolean\"/>"<<endl;
+			fputs("\"boolean\" />\n",xml_output);
 		}
 	}
 
 	void visit(ASTstatementList *node){
-		cout<<"THIS IS THE STATEMENT LIST NODE\n";
+		int a2= (node->stat_list.size());
+		//cout<<"    <statement_declarations count=\""<<a2<<"\">"<<endl;
+		fputs("    <statement_declarations count=\"",xml_output);
+		fprintf(xml_output,"%lu",node->stat_list.size());
+		fputs("\">\n",xml_output);
+
 		for(vector<ASTstatement*>::iterator it = node->stat_list.begin(); it!= node->stat_list.end(); it++){
 			(*it)->accept(*this);
 		}
+		//cout<<"    </statement_declarations>"<<endl;
+		fputs("    </statement_declarations>\n",xml_output);
 	}
 	void visit(ASTstatement *node){
-		cout<<"THIS IS THE STATEMENT NODE\n";
+		// //cout<<"THIS IS THE STATEMENT NODE\n";
 		if(node->statementIsLocationAssign == true){
+			//cout<<"        <assignment>"<<endl;
+			fputs("        <assignment>\n",xml_output);
 			node->stat_locationNode->accept(*this);
 			node->stat_expressionNode->accept(*this);
+			//cout<<"        </assignment"<<endl;
+			fputs("        </assignment>\n",xml_output);
 		}
 		else{
-			cout<<"CALLOUT CALLED "<<node->name_callout<<endl;
+			//cout<<"        <callout function=\""<<node->name_callout<<"\">"<<endl;
+			fputs("        <callout function=\"",xml_output);
+			fputs(node->name_callout,xml_output);
+			fputs("\">\n",xml_output);
 			node->statement_callout->accept(*this);
+			//cout<<"        </callout>"<<endl;
+			fputs("        </callout>\n",xml_output);
 		}
 	}
 	void visit(ASTlocation *node){
-		cout<<"THIS IS THE LOCATION NODE\n";
-		cout<<"LOCATION NAME IS "<<node->loc_id<<endl;
-		if(node->locExpressionPresent == true){
-			node->loc_expr->accept(*this);
-		}
-		cout<<"DONE LOCATION\n";
+		// //cout<<"THIS IS THE LOCATION NODE\n";
+		if(node!=NULL)
+		{
+			if(node->locExpressionPresent == false){
+				//cout<<"            <location id=\""<<node->loc_id<<"\" />\n";
+				fputs("            <location id=\"",xml_output);
+				fputs(node->loc_id,xml_output);
+				fputs("\" />\n",xml_output);
+			}
+			if(node->locExpressionPresent == true){
+				//cout<<"            <location id=\""<<node->loc_id<<"\">"<<endl;
+				fputs("            <location id=\"",xml_output);
+				fputs(node->loc_id,xml_output);
+				fputs("\" />\n",xml_output);
+				//cout<<"            <position>"<<endl;
+				fputs("            <position>\n",xml_output);
+				node->loc_expr->accept(*this);
+				//cout<<"                </position>"<<endl;
+				fputs("                </position>\n",xml_output);
+				//cout<<"            </location>"<<endl;
+				fputs("            </location>\n",xml_output);
+			}
 	}
+}
 	void visit(ASTcalloutArgumentList *node){
-		cout<<"THE CALLOUT ARGUMENT LIST NODE\n";
+		// //cout<<"THE CALLOUT ARGUMENT LIST NODE\n";
 		for(vector<ASTcalloutArgument*>::iterator it = node->callout_args_list.begin(); it!= node->callout_args_list.end() ; it++){
 			(*it)->accept(*this);
 		}
 	}
 	void visit(ASTcalloutArgument *node){
 		if(node->isExpression == false){
-			cout<<"THE STRING LITERAL IS "<<node->c_arg_string<<endl;
+			//cout<<"            "<<node->c_arg_string<<endl;
+			fputs("            ",xml_output);
+			fputs(node->c_arg_string,xml_output);
+			fputs("\n",xml_output);
 		}else{
 			node->c_arg_expression->accept(*this);
 		}
 	}
 	void visit(ASTexpression *node){
-		cout<<"FUCKED!\n";
+		// //cout<<"FUCKED!\n";
 		switch(node->expressionID){
 			case 1: node->loc_exp->accept(*this);
 					break;
-			case 2:	cout<<"EXPRESSION INT "<<node->int_exp_literal<<endl;
+			case 2:	//cout<<"<integer value=\""<<node->int_exp_literal<<"\"/>"<<endl;
+					fputs("<integer value=\"",xml_output);
+					fprintf(xml_output, "%d",node->int_exp_literal);
+					fputs("\"/>\n",xml_output);
 					break;
-			case 3:	cout<<"EXPRESSION STRING "<<node->char_exp_literal<<endl;
+			case 3:	//cout<<"<string value=\""<<node->char_exp_literal<<endl;
+					fputs("<string value=\"",xml_output);
+					fprintf(xml_output, "%c",node->char_exp_literal);
+					fputs("\"/>\n",xml_output);
 					break;
-			case 4:	cout<<"EXPRESSION BOOLEAN "<<node->bool_exp_literal<<endl;
+			case 4:	//cout<<"boolean value=\""<<node->bool_exp_literal<<"\"/>"<<endl;
+					fputs("<string value=\"",xml_output);
+					fprintf(xml_output, node->bool_exp_literal? "true" : "false");
+					fputs("\"/>\n",xml_output);
 					break;
-			case 5:	cout<<"EXPRESSION NEGATION\n";
+			case 5:	//cout<<"            <unary_expression type=\"not\">"<<endl;
+					fputs("            <unary_expression type=\"not\">\n",xml_output);
 					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
 						(*it)->accept(*this);
 					}
+					//cout<<"            </unary_expression>"<<endl;
+					fputs("            </unary_expression>\n",xml_output);
 					break;
-			case 6:	cout<<"EXPRESSION UNARY MINUS\n";
+			case 6:	//cout<<"            <unary_expression type=\"minus\">"<<endl;
+					fputs("            <unary_expression type=\"minus\">\n",xml_output);
 					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
 						(*it)->accept(*this);
 					}
+					//cout<<"            </unary_expression>"<<endl;
+					fputs("            </unary_expression>\n",xml_output);
 					break;
-			case 7:	cout<<"EXPRESSION BINARY MINUS\n";
+			case 7:	//cout<<"            <binary_expression type=\"subtraction\">"<<endl;
+					fputs("            <binary_expression type=\"subtraction\">\n",xml_output);
 					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
 						(*it)->accept(*this);
 					}
+					//cout<<"            </binary_expression>"<<endl;
+					fputs("            </binary_expression>\n",xml_output);
 					break;
-			case 8:	cout<<"EXPRESSION BINARY PLUS\n";
+			case 8:	//cout<<"            <binary_expression type=\"addition\">"<<endl;
+					fputs("            <binary_expression type=\"addition\">\n",xml_output);
 					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
 						(*it)->accept(*this);
 					}
+					//cout<<"            </binary_expression>"<<endl;
+					fputs("            </binary_expression>\n",xml_output);
 					break;
-			case 9:	cout<<"EXPRESSION BINARY ARITHMETIC\n";
+			case 9:	//cout<<"            <binary_expression type=\"";
+					fputs("            <binary_expression type=\"",xml_output);
+					switch(node->binSignVal){
+					case 1:
+					//cout<<"multiplication\">"<<endl;
+					fputs("multiplication\">\n",xml_output);
+					break;
+					case 2:
+					//cout<<"division\">"<<endl;
+					fputs("division\">\n",xml_output);
+					break;
+					case 3:
+					//cout<<"remainder\">"<<endl;
+					fputs("remainder\">\n",xml_output);
+					break;
+					}
 					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
 						(*it)->accept(*this);
 					}
+					//cout<<"            </binary_expression>"<<endl;
+					fputs("            </binary_expression>\n",xml_output);
 					break;
-			case 10:	cout<<"EXPRESSION BINARY RELATIONAL\n";
-						for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
-							(*it)->accept(*this);
-						}
-						break;
+			case 10:	////cout<<"EXPRESSION BINARY RELATIONAL\n";
+					//cout<<"            <binary_expression type=\"";
+					fputs("            <binary_expression type=\"",xml_output);
+					switch(node->binSignVal){
+					case 4:
+					//cout<<"less_than\">"<<endl;
+					fputs("less_than\">\n",xml_output);
+					break;
+					case 5:
+					//cout<<"greater_than\">"<<endl;
+					fputs("greater_than\">\n",xml_output);
+					break;
+					case 6:
+					//cout<<"less_equal\">"<<endl;
+					fputs("less_equal\">\n",xml_output);
+					break;
+					case 7:
+					//cout<<"greater_equal\">"<<endl;
+					fputs("greater_equal\">\n",xml_output);
+					break;
+					}
+					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
+						(*it)->accept(*this);
+					}
+					//cout<<"            </binary_expression>"<<endl;
+					fputs("            </binary_expression>\n",xml_output);
+					break;
 
-			case 11: 	cout<<"EXPRESSION BINARY CONDITIONAL\n";
-						for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
-							(*it)->accept(*this);
-						}
-						break;
-			case 12: 	cout<<"EXPRESSION EXPRESSION \n";
+			case 11: //	//cout<<"EXPRESSION BINARY CONDITIONAL\n";
+					//cout<<"            <binary_expression type=\"";
+					fputs("            <binary_expression type=\"",xml_output);
+					switch(node->binSignVal){
+					case 8:
+					//cout<<"and\">"<<endl;
+					fputs("and\">\n",xml_output);
+					break;
+					case 9:
+					//cout<<"or\">"<<endl;
+					fputs("or\">\n",xml_output);
+					break;
+					case 10:
+					//cout<<"is_equal\">"<<endl;
+					fputs("is_equal\">\n",xml_output);
+					break;
+					case 11:
+					//cout<<"is_not_equal\">"<<endl;
+					fputs("is_not_equal\">\n",xml_output);
+					break;
+					}
+					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
+						(*it)->accept(*this);
+					}
+					//cout<<"            </binary_expression>"<<endl;
+					fputs("            </binary_expression>\n",xml_output);
+					break;
+			case 12: 	////cout<<"EXPRESSION EXPRESSION \n";
 					 	for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
 							(*it)->accept(*this);
 						}

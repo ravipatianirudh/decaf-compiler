@@ -14,6 +14,7 @@ extern "C" FILE* yyin;
 
 FILE *bison_output;
 FILE *flex_output;
+FILE *xml_output;
 void yyerror(const char *s);
 ASTprogram *root;
 %}
@@ -110,9 +111,9 @@ class Visitor;
 %left UNARY_MINUS
 
 %%
-program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK			{$$ = new ASTprogram($2,$4);root = $$;}			
+program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK			{$$ = new ASTprogram($2,$4);root = $$;}
 					| CLASS IDENTIFIER START_BLOCK CLOSE_BLOCK				{$$ = new ASTprogram($2);root = $$;}
-					;					
+					;
 
 body:				field statement_list											{$$ = new ASTbody($1,$2);}
 					| field													{$$ = new ASTbody($1);}
@@ -122,7 +123,11 @@ field:				field field_declaration 								{$1->fieldNodeList.push_back($2);$$ = 
 					| field_declaration 									{$$ = new ASTfield();$$->fieldNodeList.push_back($1);}
 					;
 
-field_declaration:	TYPE id_list SEMI_COLON									{$$ = new ASTfieldDecl($1,$2);}
+field_declaration:	TYPE id_list SEMI_COLON									{$$ = new ASTfieldDecl($1,$2);
+																			for(vector<ASTidDecl*>::iterator it=$2->idList.begin(); it!=$2->idList.end(); it++)	{
+																							(*it)->idType = strdup($1);
+																				}
+																			}
 					;
 
 id_list:			id_list COMMA id_decl									{$1->idList.push_back($3);$$ = $1;}
@@ -152,7 +157,7 @@ callout_arguments:	callout_arguments COMMA c_arg										{$1->callout_args_list
 c_arg:				expression															{$$ = new ASTcalloutArgument($1);}
 					| STRING_LITERAL													{$$ = new ASTcalloutArgument($1);}
 					;
-				
+
 expression:			location															{$$ = new ASTexpression($1);}
 					| DECIMAL_LITERAL													{$$ = new ASTexpression($1);}
 					| CHAR_LITERAL														{$$ = new ASTexpression($1);}
@@ -169,8 +174,10 @@ expression:			location															{$$ = new ASTexpression($1);}
 %%
 
 int main(int argc,char** argv){
+	cout<<"201303004\n201303008\n";
 	bison_output = fopen("bison_output.txt","w+");
 	flex_output  = fopen("flex_output.txt","w+");
+	xml_output = fopen("xml_output.txt","w+");
 	int done;
 	if(argc>1)
 	{
@@ -192,7 +199,7 @@ int main(int argc,char** argv){
 	} while (!feof(yyin));
 
 	if(done == 0){
-		cout<<"parsing done... now visit!!!!\n";
+		cout<<"Success\n";
 		XML v;
 		root->accept(v);
 	}
