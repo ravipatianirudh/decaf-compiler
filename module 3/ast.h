@@ -3,9 +3,8 @@
 #include <vector>
 #include <string.h>
 #include <string>
-#include <bits/stdc++.h>
-#include <llvm/Value.h>
-int validity;
+// #include <bits/stdc++.h>
+// #include <llvm/Value.h>
 
 using namespace std;
 
@@ -72,8 +71,6 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-
-	virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class ASTbody : public ASTprogram {
@@ -96,8 +93,6 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-
-	virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class ASTfield : public ASTbody{
@@ -109,8 +104,6 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-
-	virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class ASTfieldDecl : public ASTfield{
@@ -127,8 +120,6 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-
-	virtual llvm::Value* codeGen(CodeGenContext& context);
 
 };
 
@@ -164,8 +155,6 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-
-	virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 
@@ -178,8 +167,6 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-
-	virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class ASTstatement : public ASTstatementList{
@@ -205,8 +192,6 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-
-	virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class ASTcalloutArgumentList : public ASTstatement {
@@ -218,8 +203,6 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-
-	virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class ASTcalloutArgument : public ASTcalloutArgumentList{
@@ -241,8 +224,6 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-
-	virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class ASTexpression : public ASTfieldDecl{
@@ -324,8 +305,6 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-
-	virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class ASTlocation : public ASTstatement{
@@ -348,8 +327,6 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-
-	virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
 class XML : public Visitor {
@@ -435,7 +412,7 @@ public:
 		fputs("    <statement_declarations count=\"",xml_output);
 		fprintf(xml_output,"%lu",node->stat_list.size());
 		fputs("\">\n",xml_output);
-		
+
 		for(vector<ASTstatement*>::iterator it = node->stat_list.begin(); it!= node->stat_list.end(); it++){
 			(*it)->accept(*this);
 		}
@@ -460,7 +437,7 @@ public:
 			node->statement_callout->accept(*this);
 			cout<<"        </callout>"<<endl;
 			fputs("        </callout>\n",xml_output);
-		}	
+		}
 	}
 	void visit(ASTlocation *node){
 		//cout<<"THIS IS THE LOCATION NODE\n";
@@ -484,7 +461,7 @@ public:
 				fputs("                </position>\n",xml_output);
 				cout<<"            </location>"<<endl;
 				fputs("            </location>\n",xml_output);
-			}		
+			}
 	}
 }
 	void visit(ASTcalloutArgumentList *node){
