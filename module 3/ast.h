@@ -52,6 +52,8 @@ public:
 	}
 
 	virtual void accept(Visitor &v) = 0;
+
+	virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTprogram : public AST{
@@ -71,6 +73,9 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
+
+	virtual void codeGen(CodeGenContext &context) = 0;
+
 };
 
 class ASTbody : public ASTprogram {
@@ -93,6 +98,8 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
+
+	virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTfield : public ASTbody{
@@ -104,6 +111,8 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
+
+	virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTfieldDecl : public ASTfield{
@@ -121,6 +130,8 @@ public:
 		v.visit(this);
 	}
 
+	virtual void codeGen(CodeGenContext &context) = 0;
+
 };
 
 class ASTidList : public ASTfieldDecl {
@@ -132,6 +143,8 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
+
+	virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTidDecl : public ASTidList {
@@ -155,6 +168,8 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
+
+	virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 
@@ -167,6 +182,8 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
+
+	virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTstatement : public ASTstatementList{
@@ -192,6 +209,8 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
+
+	virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTcalloutArgumentList : public ASTstatement {
@@ -203,6 +222,8 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
+
+	virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTcalloutArgument : public ASTcalloutArgumentList{
@@ -224,6 +245,8 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
+
+	virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTexpression : public ASTfieldDecl{
@@ -260,7 +283,6 @@ public:
 		this->isBinary = false;
 		this->expressionID = 4;
 	}
-
 	ASTexpression(ASTexpression *unary_expr,int expID){
 		this->expressionList.push_back(unary_expr);
 		this->isBinary = false;
@@ -305,6 +327,8 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
+
+	virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTlocation : public ASTstatement{
@@ -609,7 +633,7 @@ public:
 					cout<<"            </binary_expression>"<<endl;
 					fputs("            </binary_expression>\n",xml_output);
 					break;
-			case 12: 	//cout<<"EXPRESSION EXPRESSION \n";
+					case 12: 	//cout<<"EXPRESSION EXPRESSION \n";
 					 	for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
 							(*it)->accept(*this);
 						}
@@ -617,3 +641,25 @@ public:
 		}
 	}
 };
+
+using namespace llvm;
+
+class CodeGenBlock {
+public:
+	BasicBlock block;
+	std::map<string,Value*> locals;
+};
+
+class CodeGenContext{
+public:
+	std::stack<CodeGenBlock*> blockStack;
+	Function main;
+	Module* theModule;
+
+	CodeGenContext(){
+		theModule = new Module("main",getGlobalContext());
+	}
+	std::map<std::string,Value*> &locals(){
+		return blockStack.top()->locals;
+	}
+}

@@ -27,7 +27,7 @@ void CodeGenContext::generateCode(ASTprogram* root)
 
 }
 
-static const Type *typeOf(string type) 
+static const Type *typeOf(string type)
 {
 	if (type.compare("int") == 0) {
 		return Type::getInt64Ty(getGlobalContext());
@@ -44,7 +44,7 @@ Value *ASTprogram::codeGen(CodeGenContext& context)
 	int i;
 	cout<<"Program Created"<<endl;
 	Value *last = NULL;
-	
+
 	last = bodyNode->codeGen(context);
 
 }
@@ -90,7 +90,7 @@ for(int i=0;i<statementNode.size();i++)
 
 Value *ASTStatement::codeGen(CodeGenContext& context)
 {
-	
+
 	if(flag == 0)
 	{
 		return 	ass->codeGen(context);
@@ -115,7 +115,7 @@ Value *ASTStatement::codeGen(CodeGenContext& context)
 	{
 		return fr->codeGen(context);
 	}
-	
+
 	if(flag==5)
 	{
 		return ifel->codeGen(context);
@@ -183,17 +183,17 @@ Value *ASTBinexpr::codeGen(CodeGenContext& context)
 	{
 		instr=Instruction::SDiv;
 	}
-	
+
 	else if(op_.compare("%")==0)
 	{
 		instr=Instruction::SRem;
 	}
-	
+
 	else if(op_.compare("&&")==0)
 	{
 		instr=Instruction::And;
 	}
-	
+
 	else if(op_.compare("||")==0)
 	{
 		instr=Instruction::Or;
@@ -208,7 +208,7 @@ Value *ASTBinexpr::codeGen(CodeGenContext& context)
 	{
 		return CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_EQ, lhs.codeGen(context), rhs.codeGen(context),"",context.currentBlock());
 	}
-	
+
 	else if(op_.compare("<=")==0)
 	{
 		return CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_ULE, lhs.codeGen(context), rhs.codeGen(context),"",context.currentBlock());
@@ -218,7 +218,7 @@ Value *ASTBinexpr::codeGen(CodeGenContext& context)
 	{
 		return CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_UGE, lhs.codeGen(context), rhs.codeGen(context),"",context.currentBlock());
 	}
-	
+
 	else if(op_.compare("<")==0)
 	{
 		return CmpInst::Create(Instruction::ICmp, ICmpInst::ICMP_ULT, lhs.codeGen(context), rhs.codeGen(context),"",context.currentBlock());
@@ -251,7 +251,7 @@ Value *ASTUnexpr::codeGen(CodeGenContext& context)
 {
 	Value *OperandV = sc.codeGen(context);
 	return NULL;
-		
+
 	if(OperandV == NULL)return NULL;
 
 	Function *F = context.module->getFunction(std::string("unary")+op_);
@@ -285,13 +285,13 @@ Value *ASTExpr::codeGen(CodeGenContext& context)
 
 	if(flag == 1)
 	{
-		return be->codeGen(context);		
+		return be->codeGen(context);
 	}
 
 
 	if(flag==2)
 	{
-	if (context.locals().find(lc->id_) == context.locals().end()) 
+	if (context.locals().find(lc->id_) == context.locals().end())
 	{
 		std::cerr << "undeclared variable in expression " << lc->id_ << std::endl;
 		validity = 1;
@@ -311,4 +311,3 @@ Value *ASTExpr::codeGen(CodeGenContext& context)
 	}
 	return NULL;
 }
-
