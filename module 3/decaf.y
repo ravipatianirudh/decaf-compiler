@@ -64,6 +64,9 @@ class Visitor;
 	ASTfieldDecl *fdNode;
 	ASTidList *idL;
 	ASTidDecl *idC;
+	ASTmethod* mthd;
+	ASTmethodArgumentList* mthdArgList;
+	ASTmethodArgument* mthdArg;
 	ASTstatementList *sListNode;
 	ASTstatement *sNode;
 	ASTlocation *locNode;
@@ -84,6 +87,9 @@ class Visitor;
 %type <callArgListNode> callout_arguments
 %type <callArgumentNode> c_arg
 %type <eNode> expression
+%type <mthd> method
+%type <mthdArgList> method_argument_list
+%type <mthdArg> method_argument
 
 %token <op_plus_val> OP_PLUS
 %token <identifier_val> IDENTIFIER
@@ -113,12 +119,14 @@ class Visitor;
 %left UNARY_MINUS
 
 %%
-program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK			{$$ = new ASTprogram($2,$4);root = $$;}			
+program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK			{$$ = new ASTprogram($2,$4);root = $$;}
 					| CLASS IDENTIFIER START_BLOCK CLOSE_BLOCK				{$$ = new ASTprogram($2);root = $$;}
-					;					
+					;
 
 body:				field statement_list											{$$ = new ASTbody($1,$2);}
-					| field													{$$ = new ASTbody($1);}
+					| field															{$$ = new ASTbody($1);}
+					| field method													{;}
+					| field method statement_list									{;}
 					;
 
 field:				field field_declaration 								{$1->fieldNodeList.push_back($2);$$ = $1;}
@@ -146,7 +154,29 @@ statement_list:		statement_list statement													{$1->stat_list.push_back($
 
 statement:			location ASSIGNMENT_OP expression SEMI_COLON															{$$ = new ASTstatement($1,$3);}
 					| CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arguments CLOSE_PARENTHESIS SEMI_COLON			{$$ = new ASTstatement($3,$5);}
+					| IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block												{;}
+					| IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block ELSE block										{;}
+					| FOR IDENTIFIER '=' expression COMMA expression block													{;}
+					| RETURN expression SEMI_COLON																			{;}
+					| BREAK SEMI_COLON																						{;}
+					| CONTINUE SEMI_COLON																					{;}
+					| block																									{;}
 					;
+
+method:						TYPE IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS block										{;}
+							| TYPE IDENTIFIER OPEN_PARENTHESIS method_argument_list CLOSE_PARENTHESIS block					{;}
+							| VOID IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS block										{;}
+							| VOID IDENTIFIER OPEN_PARENTHESIS method_argument_list CLOSE_PARENTHESIS block					{;}
+
+method_argument_list: 		method_argument_list COMMA method_argument														{;}
+							| method_argument																				{;}
+
+method_argument:			TYPE IDENTIFIER																					{;}
+
+block:				START_BLOCK CLOSE_BLOCK
+					| START_BLOCK field CLOSE_BLOCK
+					| START_BLOCK field statement_list CLOSE_BLOCK
+					| START_BLOCK statement_list CLOSE_BLOCK
 
 location:			IDENTIFIER															{$$ = new ASTlocation($1);}
 					| IDENTIFIER OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET	{$$ = new ASTlocation($1,$3);}
@@ -159,7 +189,7 @@ callout_arguments:	callout_arguments COMMA c_arg										{$1->callout_args_list
 c_arg:				expression															{$$ = new ASTcalloutArgument($1);}
 					| STRING_LITERAL													{$$ = new ASTcalloutArgument($1);}
 					;
-				
+
 expression:			location															{$$ = new ASTexpression($1);}
 					| DECIMAL_LITERAL													{$$ = new ASTexpression($1);}
 					| CHAR_LITERAL														{$$ = new ASTexpression($1);}
@@ -201,7 +231,7 @@ int main(int argc,char** argv){
 	} while (!feof(yyin));
 
 	if(done == 0){
-		
+
 		cout<<"Success\n";
 		XML v;
 		root->accept(v);

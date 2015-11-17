@@ -17,6 +17,10 @@ class ASTfield;
 class ASTfieldDecl;
 class ASTidList;
 class ASTidDecl;
+class ASTmethod;
+class ASTmethodArgumentList;
+class ASTmethodArgument;
+class ASTblock;
 class ASTstatementList;
 class ASTstatement;
 class ASTlocation;
@@ -172,6 +176,61 @@ public:
 	virtual void codeGen(CodeGenContext &context) = 0;
 };
 
+class ASTmethod : public ASTbody{
+public:
+	int returnType;
+	char* methodID;
+	ASTmethodArgumentList* methodArgList;
+	ASTblock* method_block;
+
+	ASTmethod(int type,char* id,ASTblock *b){
+		this->returnType = type;
+		this->methodID = id;
+		this->method_block = b;
+	}
+	ASTmethod(int type,char* id,ASTblock *b,ASTmethodArgumentList* mal){
+		this->returnType = type;
+		this->methodID = id;
+		this->method_block = b;
+		this->methodArgList = mal;
+	}
+
+	virtual void accept(Visitor &v){
+		v.visit(this);
+	}
+
+	virtual void codeGen(CodeGenContext &context) = 0;
+};
+
+class ASTmethodArgumentList :public ASTmethod {
+public:
+	std::vector<ASTmethodArgument*> method_arguments;
+
+	ASTmethodArgumentList(){}
+
+	virtual void accept(Visitor &v){
+		v.visit(this);
+	}
+	
+	virtual void codeGen(CodeGenContext &context) = 0;
+};
+
+class ASTmethodArgument : public ASTmethodArgumentList {
+public:
+	int methArgType;
+	char* methArgID;
+
+	ASTmethodArgument(int type,char* id){
+		this->methArgType = type;
+		this-> methArgID = id;
+	}
+	
+	virtual void accept(Visitor &v){
+		v.visit(this);
+	}
+	
+	virtual void codeGen(CodeGenContext &context) = 0;
+};
 
 class ASTstatementList : public ASTbody {
 public:
@@ -662,4 +721,4 @@ public:
 	std::map<std::string,Value*> &locals(){
 		return blockStack.top()->locals;
 	}
-}
+};
