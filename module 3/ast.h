@@ -224,12 +224,38 @@ public:
 		this->methArgType = type;
 		this-> methArgID = id;
 	}
-	
+
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
 	
 	virtual void codeGen(CodeGenContext &context) = 0;
+};
+
+class ASTblock : public	ASTmethod {
+public:
+	ASTstatement* block_stat;
+	ASTfield* block_field;
+	bool fieldPresent;
+	bool statPresent;
+
+	ASTblock(){}
+	ASTblock(ASTfield* f){
+		this->block_field = f;
+		this->fieldPresent = true;
+		this->statPresent = false;
+	}
+	ASTblock(ASTstatement* s){
+		this->block_stat = s;
+		this->fieldPresent = false;
+		this->statPresent = true;
+	}
+	ASTblock(ASTfield *f,ASTstatement *s){
+		this->block_stat = s;
+		this->block_field = f;
+		this->fieldPresent = true;
+		this->statPresent = true;
+	}
 };
 
 class ASTstatementList : public ASTbody {
