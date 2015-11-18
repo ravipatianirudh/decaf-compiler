@@ -3,7 +3,7 @@
 #include <vector>
 #include <string.h>
 #include <string>
-// #include <bits/stdc++.h>
+#include <bits/stdc++.h>
 // #include <llvm/Value.h>
 
 using namespace std;
@@ -57,7 +57,7 @@ public:
 
 	virtual void accept(Visitor &v) = 0;
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTprogram : public AST{
@@ -78,7 +78,7 @@ public:
 		v.visit(this);
 	}
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 
 };
 
@@ -86,16 +86,33 @@ class ASTbody : public ASTprogram {
 public:
 	ASTfield* fieldNode;
 	ASTstatementList* statementListNode;
+	ASTmethod* methodNode;
 	bool statementsPresent;
+	bool methodPresent;
 
 	ASTbody(){}
 	ASTbody(ASTfield* f){
 		this->fieldNode = f;
 		this->statementsPresent = false;
+		this->methodPresent = false;
 	}
 	ASTbody(ASTfield* f,ASTstatementList* s){
 		this->fieldNode = f;
 		this->statementListNode = s;
+		this->statementsPresent = true;
+		this->methodPresent = false;
+	}
+	ASTbody(ASTfield* f,ASTmethod* m){
+		this->fieldNode = f;
+		this->methodNode = m;
+		this->methodPresent = true;
+		this->statementsPresent = false;
+	}
+	ASTbody(ASTfield* f,ASTmethod* m,ASTstatementList *s){
+		this->fieldNode = f;
+		this->methodNode = m;
+		this->statementListNode = s;
+		this->methodPresent = true;
 		this->statementsPresent = true;
 	}
 
@@ -103,7 +120,7 @@ public:
 		v.visit(this);
 	}
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTfield : public ASTbody{
@@ -116,7 +133,7 @@ public:
 		v.visit(this);
 	}
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTfieldDecl : public ASTfield{
@@ -134,7 +151,7 @@ public:
 		v.visit(this);
 	}
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 
 };
 
@@ -148,7 +165,7 @@ public:
 		v.visit(this);
 	}
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTidDecl : public ASTidList {
@@ -173,23 +190,41 @@ public:
 		v.visit(this);
 	}
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTmethod : public ASTbody{
 public:
-	int returnType;
+
+	char* int_or_bool;
+	bool isVoid;
 	char* methodID;
 	ASTmethodArgumentList* methodArgList;
 	ASTblock* method_block;
 
-	ASTmethod(int type,char* id,ASTblock *b){
-		this->returnType = type;
+	ASTmethod(){}
+
+	ASTmethod(char *type,char* id,ASTblock *b){
+		this->int_or_bool = type;
 		this->methodID = id;
 		this->method_block = b;
+		this->isVoid = false;
 	}
-	ASTmethod(int type,char* id,ASTblock *b,ASTmethodArgumentList* mal){
-		this->returnType = type;
+
+	ASTmethod(char* id,ASTblock *b){
+		this->methodID = id;
+		this->method_block = b;
+		this->isVoid = true;
+	}
+	ASTmethod(char* type,char* id,ASTblock *b,ASTmethodArgumentList* mal){
+		this->int_or_bool = type;
+		this->methodID = id;
+		this->method_block = b;
+		this->methodArgList = mal;
+		this->isVoid = false;
+	}
+	ASTmethod(char* id,ASTblock *b,ASTmethodArgumentList* mal){
+		this->isVoid = true;
 		this->methodID = id;
 		this->method_block = b;
 		this->methodArgList = mal;
@@ -199,7 +234,7 @@ public:
 		v.visit(this);
 	}
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTmethodArgumentList :public ASTmethod {
@@ -212,15 +247,15 @@ public:
 		v.visit(this);
 	}
 	
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTmethodArgument : public ASTmethodArgumentList {
 public:
-	int methArgType;
+	char* methArgType;
 	char* methArgID;
 
-	ASTmethodArgument(int type,char* id){
+	ASTmethodArgument(char* type,char* id){
 		this->methArgType = type;
 		this-> methArgID = id;
 	}
@@ -229,7 +264,7 @@ public:
 		v.visit(this);
 	}
 	
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTblock : public	ASTmethod {
@@ -239,7 +274,10 @@ public:
 	bool fieldPresent;
 	bool statPresent;
 
-	ASTblock(){}
+	ASTblock(){
+		this->fieldPresent =false;
+		this-> statPresent = false;
+	}
 	ASTblock(ASTfield* f){
 		this->block_field = f;
 		this->fieldPresent = true;
@@ -268,7 +306,7 @@ public:
 		v.visit(this);
 	}
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTstatement : public ASTstatementList{
@@ -276,26 +314,61 @@ public:
 	ASTlocation *stat_locationNode;
 	ASTexpression *stat_expressionNode;
 	ASTcalloutArgumentList *statement_callout;
+	std::vector<ASTexpression*> loop_conditional_expression;
+	std::vector<ASTblock*> statement_block;
 	char* name_callout;
 	bool statementIsLocationAssign;
+	int statementID;
 
 	ASTstatement(){}
 	ASTstatement(ASTlocation* loc,ASTexpression *expr){
 		this->stat_locationNode = loc;
 		this->stat_expressionNode = expr;
 		this->statementIsLocationAssign = true;
+		this->statementID = 1;
 	}
 	ASTstatement(char* s, ASTcalloutArgumentList *c){
 		this->name_callout = strdup(s);
 		this->statement_callout = c;
 		this->statementIsLocationAssign = false;
+		this->statementID = 2;
+	}
+	ASTstatement(ASTexpression* e,ASTblock *b){
+		this->loop_conditional_expression.push_back(e);
+		this->statement_block.push_back(b);
+		this->statementID = 3;
+	}
+	ASTstatement(ASTexpression* e,ASTblock *b1,ASTblock *b2){
+		this->loop_conditional_expression.push_back(e);
+		this->statement_block.push_back(b1);
+		this->statement_block.push_back(b2);
+		this->statementID = 4;
+	}
+	ASTstatement(ASTexpression* e1,ASTexpression* e2,ASTblock* b){
+		this->loop_conditional_expression.push_back(e1);
+		this->loop_conditional_expression.push_back(e2);
+		this->statement_block.push_back(b);
+		this->statementID = 5;
+	}
+	ASTstatement(ASTexpression *e){
+		this->loop_conditional_expression.push_back(e);
+		this->statementID = 6;
+	}
+
+	ASTstatement(int id){
+		this->statementID = id;
+	}
+
+	ASTstatement(ASTblock* b){
+		this->statement_block.push_back(b);
+		this->statementID = 9;
 	}
 
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTcalloutArgumentList : public ASTstatement {
@@ -308,7 +381,7 @@ public:
 		v.visit(this);
 	}
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTcalloutArgument : public ASTcalloutArgumentList{
@@ -331,7 +404,7 @@ public:
 		v.visit(this);
 	}
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTexpression : public ASTfieldDecl{
@@ -413,7 +486,7 @@ public:
 		v.visit(this);
 	}
 
-	virtual void codeGen(CodeGenContext &context) = 0;
+	// virtual void codeGen(CodeGenContext &context) = 0;
 };
 
 class ASTlocation : public ASTstatement{
@@ -727,24 +800,24 @@ public:
 	}
 };
 
-using namespace llvm;
+// using namespace llvm;
 
-class CodeGenBlock {
-public:
-	BasicBlock block;
-	std::map<string,Value*> locals;
-};
+// class CodeGenBlock {
+// public:
+// 	BasicBlock block;
+// 	std::map<string,Value*> locals;
+// };
 
-class CodeGenContext{
-public:
-	std::stack<CodeGenBlock*> blockStack;
-	Function main;
-	Module* theModule;
+// class CodeGenContext{
+// public:
+// 	std::stack<CodeGenBlock*> blockStack;
+// 	Function main;
+// 	Module* theModule;
 
-	CodeGenContext(){
-		theModule = new Module("main",getGlobalContext());
-	}
-	std::map<std::string,Value*> &locals(){
-		return blockStack.top()->locals;
-	}
-};
+// 	CodeGenContext(){
+// 		theModule = new Module("main",getGlobalContext());
+// 	}
+// 	std::map<std::string,Value*> &locals(){
+// 		return blockStack.top()->locals;
+// 	}
+// };

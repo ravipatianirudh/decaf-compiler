@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "codegen.h"
+//#include "codegen.h"
 #include "ast.h"
 
 
@@ -67,6 +67,7 @@ class Visitor;
 	ASTmethod* mthd;
 	ASTmethodArgumentList* mthdArgList;
 	ASTmethodArgument* mthdArg;
+	ASTblock* blck;
 	ASTstatementList *sListNode;
 	ASTstatement *sNode;
 	ASTlocation *locNode;
@@ -90,6 +91,7 @@ class Visitor;
 %type <mthd> method
 %type <mthdArgList> method_argument_list
 %type <mthdArg> method_argument
+%type <blck> block
 
 %token <op_plus_val> OP_PLUS
 %token <identifier_val> IDENTIFIER
@@ -125,8 +127,8 @@ program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK			{$$ = new ASTprogram(
 
 body:				field statement_list											{$$ = new ASTbody($1,$2);}
 					| field															{$$ = new ASTbody($1);}
-					| field method													{;}
-					| field method statement_list									{;}
+					| field method													{$$ = new ASTbody($1,$2);}
+					| field method statement_list									{$$ = new ASTbody($1,$2,$3);}
 					;
 
 field:				field field_declaration 								{$1->fieldNodeList.push_back($2);$$ = $1;}
@@ -154,29 +156,29 @@ statement_list:		statement_list statement													{$1->stat_list.push_back($
 
 statement:			location ASSIGNMENT_OP expression SEMI_COLON															{$$ = new ASTstatement($1,$3);}
 					| CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arguments CLOSE_PARENTHESIS SEMI_COLON			{$$ = new ASTstatement($3,$5);}
-					| IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block												{;}
-					| IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block ELSE block										{;}
-					| FOR IDENTIFIER '=' expression COMMA expression block													{;}
-					| RETURN expression SEMI_COLON																			{;}
-					| BREAK SEMI_COLON																						{;}
-					| CONTINUE SEMI_COLON																					{;}
-					| block																									{;}
+					| IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block												{$$ = new ASTstatement($3,$5);}
+					| IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block ELSE block										{$$ = new ASTstatement($3,$5,$7);}
+					| FOR IDENTIFIER '=' expression COMMA expression block													{$$ = new ASTstatement($4,$6,$7);}
+					| RETURN expression SEMI_COLON																			{$$ = new ASTstatement($2);}
+					| BREAK SEMI_COLON																						{$$ = new ASTstatement(7);}
+					| CONTINUE SEMI_COLON																					{$$ = new ASTstatement(8);}
+					| block																									{$$ = new ASTstatement($1);}
 					;
 
-method:						TYPE IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS block										{;}
-							| TYPE IDENTIFIER OPEN_PARENTHESIS method_argument_list CLOSE_PARENTHESIS block					{;}
-							| VOID IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS block										{;}
-							| VOID IDENTIFIER OPEN_PARENTHESIS method_argument_list CLOSE_PARENTHESIS block					{;}
+method:						TYPE IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS block										{$$ = new ASTmethod($1,$2,$5);}
+							| TYPE IDENTIFIER OPEN_PARENTHESIS method_argument_list CLOSE_PARENTHESIS block					{$$ = new ASTmethod($1,$2,$6,$4);}
+							| VOID IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS block										{$$ = new ASTmethod($2,$5);}
+							| VOID IDENTIFIER OPEN_PARENTHESIS method_argument_list CLOSE_PARENTHESIS block					{$$ = new ASTmethod($2,$6,$4);}
 
-method_argument_list: 		method_argument_list COMMA method_argument														{;}
-							| method_argument																				{;}
+method_argument_list: 		method_argument_list COMMA method_argument														{$1->method_arguments.push_back($3);$$ = $1;}
+							| method_argument																				{$$ = new ASTmethodArgumentList();$$->method_arguments.push_back($1);}
 
-method_argument:			TYPE IDENTIFIER																					{;}
+method_argument:			TYPE IDENTIFIER																					{$$ = new ASTmethodArgument($1,$2);}
 
-block:				START_BLOCK CLOSE_BLOCK
-					| START_BLOCK field CLOSE_BLOCK
-					| START_BLOCK field statement_list CLOSE_BLOCK
-					| START_BLOCK statement_list CLOSE_BLOCK
+block:				START_BLOCK CLOSE_BLOCK																					{$$ = new ASTbody();}
+					| START_BLOCK field CLOSE_BLOCK																			{$$ = new ASTbody($2);}
+					| START_BLOCK field statement_list CLOSE_BLOCK															{$$ = new ASTbody($2,$3);}
+					| START_BLOCK statement_list CLOSE_BLOCK																{$$ = new ASTbody($2);}
 
 location:			IDENTIFIER															{$$ = new ASTlocation($1);}
 					| IDENTIFIER OPEN_SQUARE_BRACKET expression CLOSE_SQUARE_BRACKET	{$$ = new ASTlocation($1,$3);}
@@ -236,9 +238,8 @@ int main(int argc,char** argv){
 		XML v;
 		root->accept(v);
 
-		CodeGenContext context;
-		context.generateCode(root)
-
+		//CodeGenContext context;
+		//context.generateCode(root)
 	}
 	fclose(bison_output);
 }
