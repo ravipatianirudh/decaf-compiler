@@ -1,7 +1,0 @@
-class Woohoo
-{
-	int a[5];
-	boolean b, c, d[5], e;
-	callout("heehaw","horse","mare");
-	a = b-(c&&d);
-}
