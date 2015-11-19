@@ -4,7 +4,32 @@
 #include <string.h>
 #include <string>
 #include <bits/stdc++.h>
-// #include <llvm/Value.h>
+
+#include <map>
+#include <stack>
+#include <llvm/IR/Module.h>
+#include <llvm/IR/IRBuilder.h>
+#include <llvm/IR/Function.h>
+#include <llvm/IR/Type.h>
+#include <llvm/IR/DerivedTypes.h>
+#include <llvm/IR/LLVMContext.h>
+//#include <llvm/IR/PassManager.h>
+#include <llvm/PassManager.h>
+#include <llvm/IR/Instructions.h>
+#include <llvm/IR/CallingConv.h>
+#include <llvm/Bitcode/ReaderWriter.h>
+#include <llvm/Analysis/Verifier.h>
+#include <llvm/Assembly/PrintModulePass.h>
+#include <llvm/IR/IRBuilder.h>
+//#include <llvm/ModuleProvider.h>
+#include <llvm/Support/TargetSelect.h>
+#include <llvm/ExecutionEngine/GenericValue.h>
+#include <llvm/ExecutionEngine/JIT.h>
+#include <llvm/Support/raw_ostream.h>
+
+int validity;
+using namespace llvm;
+static IRBuilder<> Builder(getGlobalContext());
 
 using namespace std;
 
@@ -48,6 +73,7 @@ public:
 
 class AST{
 public:
+	// llvm::Value *retLLVMval;
 	ASTprogram *programNode;
 
 	AST(){}
@@ -57,11 +83,12 @@ public:
 
 	virtual void accept(Visitor &v) = 0;
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTprogram : public AST{
 public:
+	// llvm::Value *retLLVMval;
 	ASTbody* bodyNode;
 	char* programIdentifier;
 
@@ -78,12 +105,13 @@ public:
 		v.visit(this);
 	}
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 
 };
 
 class ASTbody : public ASTprogram {
 public:
+	// llvm::Value *retLLVMval;
 	ASTfield* fieldNode;
 	ASTstatementList* statementListNode;
 	ASTmethod* methodNode;
@@ -120,11 +148,12 @@ public:
 		v.visit(this);
 	}
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTfield : public ASTbody{
 public:
+	// llvm::Value *retLLVMval;
 	std::vector<ASTfieldDecl*> fieldNodeList;
 
 	ASTfield(){}
@@ -133,11 +162,12 @@ public:
 		v.visit(this);
 	}
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTfieldDecl : public ASTfield{
 public:
+	// llvm::Value *retLLVMval;
 	char* field_type;
 	ASTidList *field_id_list;
 
@@ -151,12 +181,13 @@ public:
 		v.visit(this);
 	}
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 
 };
 
 class ASTidList : public ASTfieldDecl {
 public:
+	// llvm::Value *retLLVMval;
 	std::vector<ASTidDecl*> idList;
 
 	ASTidList(){}
@@ -165,11 +196,12 @@ public:
 		v.visit(this);
 	}
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTidDecl : public ASTidList {
 public:
+	// llvm::Value *retLLVMval;
 	char *idType;
 	char *decl_id;
 	int decl_val;
@@ -190,11 +222,12 @@ public:
 		v.visit(this);
 	}
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTmethod : public ASTbody{
 public:
+	// llvm::Value *retLLVMval;
 
 	char* int_or_bool;
 	bool isVoid;
@@ -234,11 +267,12 @@ public:
 		v.visit(this);
 	}
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTmethodArgumentList :public ASTmethod {
 public:
+	// llvm::Value *retLLVMval;
 	std::vector<ASTmethodArgument*> method_arguments;
 
 	ASTmethodArgumentList(){}
@@ -246,12 +280,13 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-	
-	// virtual void codeGen(CodeGenContext &context) = 0;
+
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTmethodArgument : public ASTmethodArgumentList {
 public:
+	// llvm::Value *retLLVMval;
 	char* methArgType;
 	char* methArgID;
 
@@ -263,12 +298,13 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
-	
-	// virtual void codeGen(CodeGenContext &context) = 0;
+
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTblock : public	ASTmethod {
 public:
+	// llvm::Value *retLLVMval;
 	ASTstatementList* block_stat;
 	ASTfield* block_field;
 	bool fieldPresent;
@@ -298,6 +334,7 @@ public:
 
 class ASTstatementList : public ASTbody {
 public:
+	// llvm::Value *retLLVMval;
 	std::vector<ASTstatement*> stat_list;
 
 	ASTstatementList(){}
@@ -306,11 +343,12 @@ public:
 		v.visit(this);
 	}
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTstatement : public ASTstatementList{
 public:
+	// llvm::Value *retLLVMval;
 	ASTlocation *stat_locationNode;
 	ASTexpression *stat_expressionNode;
 	ASTcalloutArgumentList *statement_callout;
@@ -368,11 +406,12 @@ public:
 		v.visit(this);
 	}
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTcalloutArgumentList : public ASTstatement {
 public:
+	// llvm::Value *retLLVMval;
 	std::vector<ASTcalloutArgument*> callout_args_list;
 
 	ASTcalloutArgumentList(){}
@@ -381,11 +420,12 @@ public:
 		v.visit(this);
 	}
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTcalloutArgument : public ASTcalloutArgumentList{
 public:
+	// llvm::Value *retLLVMval;
 	ASTexpression *c_arg_expression;
 	char* c_arg_string;
 	bool isExpression;
@@ -404,11 +444,12 @@ public:
 		v.visit(this);
 	}
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTexpression : public ASTfieldDecl{
 public:
+	// llvm::Value *retLLVMval;
 	int int_exp_literal;
 	char char_exp_literal;
 	bool bool_exp_literal;
@@ -486,11 +527,12 @@ public:
 		v.visit(this);
 	}
 
-	// virtual void codeGen(CodeGenContext &context) = 0;
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class ASTlocation : public ASTstatement{
 public:
+	// llvm::Value *retLLVMval;
 	char* loc_id;
 	ASTexpression *loc_expr;
 	bool locExpressionPresent;
@@ -509,6 +551,8 @@ public:
 	virtual void accept(Visitor &v){
 		v.visit(this);
 	}
+
+	virtual llvm::Value* codeGen(CodeGenContext &context);
 };
 
 class XML : public Visitor {
@@ -800,24 +844,180 @@ public:
 	}
 };
 
-// using namespace llvm;
+class CodeGenBlock {
+    public:
+        BasicBlock *block;
+        std::map<std::string, Value*> locals;
+};
 
-// class CodeGenBlock {
-// public:
-// 	BasicBlock block;
-// 	std::map<string,Value*> locals;
-// };
+class CodeGenContext {
+    std::stack<CodeGenBlock *> blocks;
+    Function *mainFunction;
 
-// class CodeGenContext{
-// public:
-// 	std::stack<CodeGenBlock*> blockStack;
-// 	Function main;
-// 	Module* theModule;
+    public:
+    Module *module;
+    CodeGenContext() { module = new Module("main", getGlobalContext()); }
 
-// 	CodeGenContext(){
-// 		theModule = new Module("main",getGlobalContext());
-// 	}
-// 	std::map<std::string,Value*> &locals(){
-// 		return blockStack.top()->locals;
-// 	}
-// };
+    void generateCode(ASTProgram* root);
+    GenericValue runCode();
+    std::map<std::string, Value*>& locals() { return blocks.top()->locals; }
+    BasicBlock *currentBlock() { return blocks.top()->block; }
+    void pushBlock(BasicBlock *block) { blocks.push(new CodeGenBlock()); blocks.top()->block = block; }
+    void popBlock() { CodeGenBlock *top = blocks.top(); blocks.pop(); delete top; }
+};
+
+void CodeGenContext::generateCode(ASTProgram* root)
+{
+	std::cout << "Generating code...\n";
+
+	vector<const Type*> argTypes;
+	FunctionType *ftype = FunctionType::get(Type::getVoidTy(getGlobalContext()), argTypes, false);
+	mainFunction = Function::Create(ftype, GlobalValue::InternalLinkage, "Class Program", module);
+	BasicBlock *bblock = BasicBlock::Create(getGlobalContext(), "entry", mainFunction, 0);
+
+	pushBlock(bblock);
+	*root->codeGen(*this); /* emit bytecode for the toplevel block */
+	popBlock();
+
+		std::cout << "Code is generated.\n";
+		PassManager pm;
+		pm.add(createPrintModulePass(&outs()));
+		pm.run(*module);
+
+}
+
+static const Type *typeOf(string type)
+{
+	if (type.compare("int") == 0) {
+		return Type::getInt64Ty(getGlobalContext());
+	}
+	else if (type.compare("boolean")==0)
+		return Type::getInt1Ty(getGlobalContext());
+
+	return Type::getVoidTy(getGlobalContext());
+}
+
+Value* ASTprogram::codeGen(CodeGenContext& context){
+	cout<<"LLVM in program!\n";
+	Value *last = NULL;
+	this->bodyNode->codeGen(context);
+}
+
+Value* ASTbody::codeGen(CodeGenContext& context){
+	cout<<"LLVM in body!\n";
+	Value *last = NULL;
+	this->fieldNode->codeGen(context);
+	if(this->statementsPresent == true)
+		this->statementListNode->codeGen(context);
+	if(this->methodPresent == true)
+		this->methodNode->codeGen(context);
+}
+
+Value* ASTfield::codeGen(CodeGenContext& context){
+	cout<<"LLVM in field\n";
+	Value *last = NULL;
+	int i;
+	for(int i = 0;i < this->fieldNodeList.size();i++){
+		this->fieldNodeList[i]->codeGen(context);
+	}
+}
+
+Value* ASTfieldDecl::codeGen(CodeGenContext& context){
+	cout<<"LLVM in field Declaration\n";
+	Value *last = NULL;
+	this->field_id_list->codeGen(context);
+}
+
+Value* ASTidList::codeGen(CodeGenContext& context){
+	cout<<"LLVM in id list \n";
+	Value *last = NULL;
+	int i;
+	for(int i = 0 ; i < this-> idList.size() ;i++){
+		this->idList[i]->codeGen(context);
+	}
+}
+
+Value* ASTidDecl::codeGen(CodeGenContext& context){
+	cout<<"LLVM in id declaration\n";
+	Value* v;
+
+	AllocaInst *alloc = new AllocaInst(typeOf(this->idType), this->decl_id, context.currentBlock());
+	context.locals()[this->decl_id] = alloc;
+	v = alloc;
+
+	return v;
+}
+
+Value* ASTstatementList::codeGen(CodeGenContext& context){
+	cout<<"LLVM in statement list\n";
+	Value *last=NULL;
+	int i;
+	for(int  i=0;i<this->stat_list.size();i++){
+		this->stat_list[i]->codeGen(context);
+	}
+}
+
+Value* ASTstatement::codeGen(CodeGenContext& context){
+	cout<<"LLVM in statement\n";
+	if(this->statementIsLocationAssign == true){
+		this->stat_locationNode->codeGen(context);
+		this->stat_expressionNode->codeGen(context);
+	}
+}
+
+Value* ASTexpression::codeGen(CodeGenContext& context){
+	switch(this->expressionID){
+		case 1:	this->loc_exp->codeGen(context);
+				break;
+		case 2:	return ConstantInt::get(Type::getInt64Ty(getGlobalContext()),this->int_exp_literal,true);			//	int literal
+				break;
+
+		case 3:	return ConstantInt::get(Type::getInt8Ty(getGlobalContext()),(int)this->char_exp_literal,true);		//	char literal
+				break;
+
+		case 4:	return ConstantInt::get(Type::getInt1Ty(getGlobalContext()),(int)this->bool_exp_literal,true);		//	bool literal
+				break;
+
+		case 5:
+				return Builder.CreateNot(this->expressionList[0]->codeGen(context), "notInst");
+				break;
+		case 6:
+				return Builder.CreateFNeg(this->expressionList[0]->codeGen(context), "notInst");
+				break;
+		case 7:	return Builder.CreateFSub(this->expressionList[1]->codeGen(context), this->expressionList[1]->codeGen(context), "subInst");
+				break;
+
+		case 8:	return Builder.CreateFAdd(this->expressionList[0]->codeGen(context), this->expressionList[1]->codeGen(context), "addInst");
+				break;
+
+		case 9: switch(this->binSignVal){
+					case 1:	return Builder.CreateFMul(this->expressionList[0]->codeGen(context), this->expressionList[1]->codeGen(context), "mulInst");
+							break;
+					case 2: return Builder.CreateFDiv(this->expressionList[0]->codeGen(context), this->expressionList[1]->codeGen(context), "divInst");
+							break;
+					case 3: return Builder.CreateFRem(this->expressionList[0]->codeGen(context), this->expressionList[1]->codeGen(context), "modInst");
+							break;
+					case 4: return Builder.CreateICmpSLT(this->expressionList[0]->codeGen(context), this->expressionList[1]->codeGen(context), "ltCmp");
+							break;
+					case 5: return Builder.CreateICmpSGT(this->expressionList[0]->codeGen(context), this->expressionList[1]->codeGen(context), "gtCmp");
+							break;
+					case 6: return Builder.CreateICmpSLE(this->expressionList[0]->codeGen(context), this->expressionList[1]->codeGen(context), "leCmp");
+							break;
+					case 7: return Builder.CreateICmpSGE(this->expressionList[0]->codeGen(context), this->expressionList[1]->codeGen(context), "geCmp");
+							break;
+					case 8: return Builder.CreateAnd(this->expressionList[0]->codeGen(context), this->expressionList[1]->codeGen(context), "andCmp");
+							break;
+					case 9: return Builder.CreateOr(this->expressionList[0]->codeGen(context), this->expressionList[1]->codeGen(context), "orCmp");
+							break;
+					case 10: 	return Builder.CreateICmpEQ(this->expressionList[0]->codeGen(context), this->expressionList[1]->codeGen(context), "eqCmp");
+								break;
+					case 11: 	return Builder.CreateICmpNE(this->expressionList[0]->codeGen(context), this->expressionList[1]->codeGen(context), "neqCmp");
+								break;
+		}
+	}
+}
+
+
+Value* ASTlocation::codeGen(CodeGenContext& context){
+	return NULL;
+}
