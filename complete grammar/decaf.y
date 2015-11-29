@@ -238,8 +238,8 @@ int main(int argc,char** argv){
 		XML v;
 		root->accept(v);
 
-		//CodeGenContext context;
-		//context.generateCode(root)
+		CodeGenContext context;
+		context.generateCode(root)
 	}
 	fclose(bison_output);
 }

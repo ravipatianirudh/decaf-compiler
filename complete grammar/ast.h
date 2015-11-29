@@ -1017,7 +1017,6 @@ Value* ASTexpression::codeGen(CodeGenContext& context){
 	}
 }
 
-
 Value* ASTlocation::codeGen(CodeGenContext& context){
 	return NULL;
 }
