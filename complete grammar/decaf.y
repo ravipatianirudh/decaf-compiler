@@ -165,8 +165,8 @@ statement:			location ASSIGNMENT_OP expression SEMI_COLON															{$$ = ne
 					| BREAK SEMI_COLON																						{$$ = new ASTstatement(7);}
 					| CONTINUE SEMI_COLON																					{$$ = new ASTstatement(8);}
 					| block																									{$$ = new ASTstatement($1);}
-					| IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS	SEMI_COLON														{$$ = new ASTstatement($1);}
-					| IDENTIFIER OPEN_PARENTHESIS expression_list CLOSE_PARENTHESIS SEMI_COLON										{$$ = new ASTstatement($1,$3);}
+					| IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS	SEMI_COLON												{$$ = new ASTstatement($1);}
+					| IDENTIFIER OPEN_PARENTHESIS expression_list CLOSE_PARENTHESIS SEMI_COLON								{$$ = new ASTstatement($1,$3);}
 					;
 
 
@@ -181,7 +181,7 @@ method_argument_list: 		method_argument_list COMMA method_argument														
 
 method_argument:			TYPE IDENTIFIER																					{$$ = new ASTmethodArgument($1,$2);}
 
-block:				START_BLOCK CLOSE_BLOCK																					{$$ = new ASTblock();}
+block:				START_BLOCK CLOSE_BLOCK																					{$$ = new ASTblock();cout<<"HERE!\n";}
 					| START_BLOCK field CLOSE_BLOCK																			{$$ = new ASTblock($2);}
 					| START_BLOCK field statement_list CLOSE_BLOCK															{$$ = new ASTblock($2,$3);}
 					| START_BLOCK statement_list CLOSE_BLOCK																{$$ = new ASTblock($2);}

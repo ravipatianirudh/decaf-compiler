@@ -73,6 +73,10 @@ public:
 	virtual void visit(ASTcalloutArgumentList *node) = 0;
 	virtual void visit(ASTcalloutArgument *node) = 0;
 	virtual void visit(ASTexpression *node) = 0;
+	virtual void visit(ASTmethod *node) = 0;
+	virtual void visit(ASTmethodArgumentList *node) = 0;
+	virtual void visit(ASTmethodArgument *node) = 0;
+	virtual void visit(ASTblock *node) = 0;
 };
 
 class AST{
@@ -235,6 +239,7 @@ public:
 
 	char* int_or_bool;
 	bool isVoid;
+	bool hasArgs;
 	char* methodID;
 	ASTmethodArgumentList* methodArgList;
 	ASTblock* method_block;
@@ -246,12 +251,14 @@ public:
 		this->methodID = id;
 		this->method_block = b;
 		this->isVoid = false;
+		this->hasArgs = false;
 	}
 
 	ASTmethod(char* id,ASTblock *b){
 		this->methodID = id;
 		this->method_block = b;
 		this->isVoid = true;
+		this->hasArgs = false;
 	}
 	ASTmethod(char* type,char* id,ASTblock *b,ASTmethodArgumentList* mal){
 		this->int_or_bool = type;
@@ -259,12 +266,14 @@ public:
 		this->method_block = b;
 		this->methodArgList = mal;
 		this->isVoid = false;
+		this->hasArgs = true;
 	}
 	ASTmethod(char* id,ASTblock *b,ASTmethodArgumentList* mal){
 		this->isVoid = true;
 		this->methodID = id;
 		this->method_block = b;
 		this->methodArgList = mal;
+		this->hasArgs = true;
 	}
 
 	virtual void accept(Visitor &v){
@@ -334,6 +343,10 @@ public:
 		this->fieldPresent = true;
 		this->statPresent = true;
 	}
+
+	virtual void accept(Visitor &v){
+		v.visit(this);
+	}
 };
 
 class ASTstatementList : public ASTbody {
@@ -361,6 +374,7 @@ public:
 	std::vector<ASTblock*> statement_block;
 	char* name_callout;
 	bool statementIsLocationAssign;
+	bool statementIsMethodCall;
 	int statementID;
 
 	ASTstatement(){}
@@ -369,53 +383,63 @@ public:
 		this->stat_expressionNode = expr;
 		this->statementIsLocationAssign = true;
 		this->statementID = 1;
+		this->statementIsMethodCall = false;
 	}
 	ASTstatement(char* s, ASTcalloutArgumentList *c){
 		this->name_callout = strdup(s);
 		this->statement_callout = c;
 		this->statementIsLocationAssign = false;
 		this->statementID = 2;
+		this->statementIsMethodCall = false;
 	}
 	ASTstatement(ASTexpression* e,ASTblock *b){
 		this->loop_conditional_expression.push_back(e);
 		this->statement_block.push_back(b);
 		this->statementID = 3;
+		this->statementIsMethodCall = false;
 	}
 	ASTstatement(ASTexpression* e,ASTblock *b1,ASTblock *b2){
 		this->loop_conditional_expression.push_back(e);
 		this->statement_block.push_back(b1);
 		this->statement_block.push_back(b2);
 		this->statementID = 4;
+		this->statementIsMethodCall = false;
 	}
 	ASTstatement(ASTexpression* e1,ASTexpression* e2,ASTblock* b){
 		this->loop_conditional_expression.push_back(e1);
 		this->loop_conditional_expression.push_back(e2);
 		this->statement_block.push_back(b);
 		this->statementID = 5;
+		this->statementIsMethodCall = false;
 	}
 	ASTstatement(ASTexpression *e){
 		this->loop_conditional_expression.push_back(e);
 		this->statementID = 6;
+		this->statementIsMethodCall = false;
 	}
 
 	ASTstatement(int id){
 		this->statementID = id;
+		this->statementIsMethodCall = false;
 	}
 
 	ASTstatement(ASTblock* b){
 		this->statement_block.push_back(b);
 		this->statementID = 9;
+		this->statementIsMethodCall = false;
 	}
 
 	ASTstatement(char* s){
 		this->name_callout = s;
 		this->statementID = 10;
+		this->statementIsMethodCall = true;
 	}
 
 	ASTstatement(char* s,ASTexpressionList *e){
 		this->name_callout = s;
 		this->method_call_arguments = e;
 		this->statementID = 11;
+		this->statementIsMethodCall = true;
 	}
 
 	virtual void accept(Visitor &v){
@@ -601,6 +625,9 @@ public:
 	void visit(ASTbody *node){
 		//cout<<"THIS IS THE BODY NODE\n";
 		node->fieldNode->accept(*this);
+		if(node-> methodPresent == true ){
+			node->methodNode->accept(*this);
+		}
 		if(node -> statementsPresent == true){
 			node->statementListNode->accept(*this);
 		}
@@ -657,6 +684,37 @@ public:
 		}
 	}
 
+	void visit(ASTmethod *node) {
+		if(node->isVoid == true){
+			cout<<"    <method_define = \""<<node->methodID<<"\",type == VOID>\n";
+		}else{
+			cout<<"    <method_define = \""<<node->methodID<<"\",type == "<<node->int_or_bool<<" >\n";
+		}
+		if(node->hasArgs == true){
+			node->methodArgList->accept(*this);
+		}
+
+		node->method_block->accept(*this);
+	}
+
+	void visit(ASTmethodArgumentList *node) {
+		for(vector<ASTmethodArgument*>::iterator it = node->method_arguments.begin(); it!= node->method_arguments.end(); it++){
+			(*it)->accept(*this);
+		}
+	}
+	void visit(ASTmethodArgument *node) {
+		cout<<"         <method_argument type = "<<node->methArgType<<" id = \""<<node->methArgID<<"\">\n";
+	}
+
+	void visit(ASTblock *node){
+		if(node->fieldPresent == true){
+			node->block_field->accept(*this);
+		}
+		if(node->statPresent == true){
+			node->block_stat->accept(*this);
+		}
+	}
+
 	void visit(ASTstatementList *node){
 		int a2= (node->stat_list.size());
 		cout<<"    <statement_declarations count=\""<<a2<<"\">"<<endl;
@@ -672,23 +730,115 @@ public:
 	}
 	void visit(ASTstatement *node){
 		//cout<<"THIS IS THE STATEMENT NODE\n";
-		if(node->statementIsLocationAssign == true){
-			cout<<"        <assignment>"<<endl;
-			fputs("        <assignment>\n",xml_output);
-			node->stat_locationNode->accept(*this);
-			node->stat_expressionNode->accept(*this);
-			cout<<"        </assignment"<<endl;
-			fputs("        </assignment>\n",xml_output);
+		switch (node->statementID) {
+			case 1:
+							cout<<"        <assignment>"<<endl;
+							fputs("        <assignment>\n",xml_output);
+							node->stat_locationNode->accept(*this);
+							node->stat_expressionNode->accept(*this);
+							cout<<"        </assignment"<<endl;
+							fputs("        </assignment>\n",xml_output);
+							break;
+			case 2:
+							cout<<"        <callout function=\""<<node->name_callout<<"\">"<<endl;
+							fputs("        <callout function=\"",xml_output);
+							fputs(node->name_callout,xml_output);
+							fputs("\">\n",xml_output);
+							node->statement_callout->accept(*this);
+							cout<<"        </callout>"<<endl;
+							fputs("        </callout>\n",xml_output);
+							break;
+			case 3:
+							cout<<"        <if>\n";
+							cout<<"        <if expression>\n";
+							node->loop_conditional_expression[0]->accept(*this);
+							cout<<"        <if block>\n";
+							node->statement_block[0]->accept(*this);
+							cout<<"        </if>\n";
+							break;
+			case 4:
+							cout<<"        <if>\n";
+							cout<<"        <if expression>\n";
+							node->loop_conditional_expression[0]->accept(*this);
+							cout<<"        <if block>\n";
+							node->statement_block[0]->accept(*this);
+							cout<<"        </if>\n";
+							cout<<"        <else>\n";
+							cout<<"        <else block>\n";
+							node->statement_block[1]->accept(*this);
+							cout<<"        </else>\n";
+							break;
+			case 5:
+							cout<<"        <for>\n";
+							cout<<"        <for expression 1>\n";
+							node->loop_conditional_expression[0]->accept(*this);
+							cout<<"        <for expression 2>\n";
+							node->loop_conditional_expression[1]->accept(*this);
+							cout<<"        <for block>\n";
+							node->statement_block[0]->accept(*this);
+							cout<<"        </for>\n";
+							break;
+			case 6:
+							cout<<"       <return expression>\n";
+							node->loop_conditional_expression[0]->accept(*this);
+							cout<<"       </return>\n";
+							break;
+			case 7:
+							cout<<"       <break>\n";
+							break;
+
+			case 8:
+							cout<<"       <continue>\n";
+							break;
+			case 9:
+							cout<<"<block>\n";
+							node->statement_block[0]->accept(*this);
+							cout<<"</block>\n";
+							break;
+			case 10:
+							cout<<"        <method_call = \""<<node->name_callout<<"\">"<<endl;
+							fputs("        <method_call=\"",xml_output);
+							fputs(node->name_callout,xml_output);
+							fputs("\">\n",xml_output);
+							cout<<"        </method_call>"<<endl;
+							fputs("        </method_call>\n",xml_output);
+							break;
+			case 11:
+							cout<<"        <method_call = \""<<node->name_callout<<"\">"<<endl;
+							fputs("        <method_call=\"",xml_output);
+							fputs(node->name_callout,xml_output);
+							fputs("\">\n",xml_output);
+							cout<<"        <method_call_args>\n";
+							node->method_call_arguments->accept(*this);
+							cout<<"        </method_call>"<<endl;
+							fputs("        </method_call>\n",xml_output);
+							break;
 		}
-		else{
-			cout<<"        <callout function=\""<<node->name_callout<<"\">"<<endl;
-			fputs("        <callout function=\"",xml_output);
-			fputs(node->name_callout,xml_output);
-			fputs("\">\n",xml_output);
-			node->statement_callout->accept(*this);
-			cout<<"        </callout>"<<endl;
-			fputs("        </callout>\n",xml_output);
-		}
+		// if(node->statementIsMethodCall == true){
+		// 	cout<<"        <method_call = \""<<node->name_callout<<"\">"<<endl;
+		// 	fputs("        <method_call=\"",xml_output);
+		// 	fputs(node->name_callout,xml_output);
+		// 	fputs("\">\n",xml_output);
+		// 	node->method_call_arguments->accept(*this);
+		// 	cout<<"        </method_call>"<<endl;
+		// 	fputs("        </method_call>\n",xml_output);
+		// }else if(node->statementIsLocationAssign == true){
+		// 	cout<<"        <assignment>"<<endl;
+		// 	fputs("        <assignment>\n",xml_output);
+		// 	node->stat_locationNode->accept(*this);
+		// 	node->stat_expressionNode->accept(*this);
+		// 	cout<<"        </assignment"<<endl;
+		// 	fputs("        </assignment>\n",xml_output);
+		// }
+		// else{
+		// 	cout<<"        <callout function=\""<<node->name_callout<<"\">"<<endl;
+		// 	fputs("        <callout function=\"",xml_output);
+		// 	fputs(node->name_callout,xml_output);
+		// 	fputs("\">\n",xml_output);
+		// 	node->statement_callout->accept(*this);
+		// 	cout<<"        </callout>"<<endl;
+		// 	fputs("        </callout>\n",xml_output);
+		// }
 	}
 	void visit(ASTlocation *node){
 		//cout<<"THIS IS THE LOCATION NODE\n";
@@ -731,6 +881,13 @@ public:
 			node->c_arg_expression->accept(*this);
 		}
 	}
+
+	void visit(ASTexpressionList *node) {
+		for(vector<ASTexpression*>::iterator it = node->expression_list.begin(); it!= node->expression_list.end() ; it++){
+			(*it)->accept(*this);
+		}
+	}
+
 	void visit(ASTexpression *node){
 		//cout<<"FUCKED!\n";
 		switch(node->expressionID){

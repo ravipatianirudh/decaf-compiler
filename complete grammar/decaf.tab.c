@@ -1596,7 +1596,7 @@ yyreduce:
 
   case 35:
 #line 184 "decaf.y" /* yacc.c:1646  */
-    {(yyval.blck) = new ASTblock();}
+    {(yyval.blck) = new ASTblock();cout<<"HERE!\n";}
 #line 1601 "decaf.tab.c" /* yacc.c:1646  */
     break;
 

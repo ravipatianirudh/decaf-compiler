@@ -1,0 +1,24 @@
+<Woohoo>
+    <field_declarations count="2">
+        <declaration name="a" count="5" type="integer" />
+        <declaration name="b" type="boolean" />
+        <declaration name="c" type="boolean" />
+        <declaration name="d" count="5" type="boolean" />
+        <declaration name="e" type="boolean" />
+    </field_declarations>
+    <statement_declarations count="1">
+            <binary_expression type="is_equal">
+            <location id="llol" />
+            <location id="ll" />
+            </binary_expression>
+    <statement_declarations count="1">
+        <assignment>
+            <location id="lol" />
+            <binary_expression type="addition">
+            <location id="asd" />
+            <location id="sad" />
+            </binary_expression>
+        </assignment>
+    </statement_declarations>
+    </statement_declarations>
+</Woohoo>

@@ -9,11 +9,11 @@ ID: c
 ID: d
 INT: 5
 ID: e
-CALLOUT
-STRING: "heehaw"
-STRING: "horse"
-STRING: "mare"
-ID: a
-ID: b
-ID: c
-ID: d
+ID: fibonacci
+INT_DECLARATION
+ID: n
+IFID: llol
+ID: ll
+ID: lol
+ID: asd
+ID: sad
