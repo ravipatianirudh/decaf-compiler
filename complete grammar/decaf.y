@@ -70,6 +70,7 @@ class Visitor;
 	ASTblock* blck;
 	ASTstatementList *sListNode;
 	ASTstatement *sNode;
+	ASTexpressionList *eLnode;
 	ASTlocation *locNode;
 	ASTcalloutArgumentList *callArgListNode;
 	ASTcalloutArgument *callArgumentNode;
@@ -87,6 +88,7 @@ class Visitor;
 %type <locNode> location
 %type <callArgListNode> callout_arguments
 %type <callArgumentNode> c_arg
+%type <eLnode> expression_list
 %type <eNode> expression
 %type <mthd> method
 %type <mthdArgList> method_argument_list
@@ -163,7 +165,11 @@ statement:			location ASSIGNMENT_OP expression SEMI_COLON															{$$ = ne
 					| BREAK SEMI_COLON																						{$$ = new ASTstatement(7);}
 					| CONTINUE SEMI_COLON																					{$$ = new ASTstatement(8);}
 					| block																									{$$ = new ASTstatement($1);}
+					| IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS	SEMI_COLON														{$$ = new ASTstatement($1);}
+					| IDENTIFIER OPEN_PARENTHESIS expression_list CLOSE_PARENTHESIS SEMI_COLON										{$$ = new ASTstatement($1,$3);}
 					;
+
+
 
 method:						TYPE IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS block										{$$ = new ASTmethod($1,$2,$5);}
 							| TYPE IDENTIFIER OPEN_PARENTHESIS method_argument_list CLOSE_PARENTHESIS block					{$$ = new ASTmethod($1,$2,$6,$4);}
@@ -191,6 +197,8 @@ callout_arguments:	callout_arguments COMMA c_arg										{$1->callout_args_list
 c_arg:				expression															{$$ = new ASTcalloutArgument($1);}
 					| STRING_LITERAL													{$$ = new ASTcalloutArgument($1);}
 					;
+expression_list:	expression_list COMMA expression									{$1->expression_list.push_back($3);$$ = $1;}
+					| expression														{$$ = new ASTexpressionList();$$->expression_list.push_back($1);}
 
 expression:			location															{$$ = new ASTexpression($1);}
 					| DECIMAL_LITERAL													{$$ = new ASTexpression($1);}
@@ -238,8 +246,6 @@ int main(int argc,char** argv){
 		XML v;
 		root->accept(v);
 
-		CodeGenContext context;
-		context.generateCode(root)
 	}
 	fclose(bison_output);
 }

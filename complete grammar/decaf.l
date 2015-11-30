@@ -30,7 +30,7 @@ extern FILE *flex_output;
 !=									|
 &&									|
 \|\|									{yylval.conditional_operator_val  = strdup(yytext);return CONDITIONAL_OP;}
-	
+
 \=									|
 \+=									|
 -=									{yylval.assignment_operator_val = strdup(yytext);return ASSIGNMENT_OP;}
