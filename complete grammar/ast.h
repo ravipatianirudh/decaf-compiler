@@ -43,6 +43,7 @@ class ASTfieldDecl;
 class ASTidList;
 class ASTidDecl;
 class ASTmethod;
+class ASTmethodList;
 class ASTmethodArgumentList;
 class ASTmethodArgument;
 class ASTblock;
@@ -79,6 +80,7 @@ public:
 	virtual void visit(ASTmethodArgument *node) = 0;
 	virtual void visit(ASTblock *node) = 0;
 	virtual void visit(ASTmethodCall *node) = 0;
+	virtual void visit(ASTmethodList *node) = 0;
 };
 
 class AST{
@@ -124,7 +126,7 @@ public:
 	// llvm::Value *retLLVMval;
 	ASTfield* fieldNode;
 	ASTstatementList* statementListNode;
-	ASTmethod* methodNode;
+	ASTmethodList* methodListNode;
 	bool statementsPresent;
 	bool methodPresent;
 
@@ -140,15 +142,15 @@ public:
 		this->statementsPresent = true;
 		this->methodPresent = false;
 	}
-	ASTbody(ASTfield* f,ASTmethod* m){
+	ASTbody(ASTfield* f,ASTmethodList* m){
 		this->fieldNode = f;
-		this->methodNode = m;
+		this->methodListNode = m;
 		this->methodPresent = true;
 		this->statementsPresent = false;
 	}
-	ASTbody(ASTfield* f,ASTmethod* m,ASTstatementList *s){
+	ASTbody(ASTfield* f,ASTmethodList* m,ASTstatementList *s){
 		this->fieldNode = f;
-		this->methodNode = m;
+		this->methodListNode = m;
 		this->statementListNode = s;
 		this->methodPresent = true;
 		this->statementsPresent = true;
@@ -233,6 +235,17 @@ public:
 	}
 
 	// virtual llvm::Value* codeGen(CodeGenContext &context);
+};
+
+class ASTmethodList : public ASTbody {
+public:
+	std::vector<ASTmethod*> methods_list;
+
+	ASTmethodList(){}
+
+	virtual void accept(Visitor &v){
+		v.visit(this);
+	}
 };
 
 class ASTmethod : public ASTbody{
@@ -652,10 +665,16 @@ public:
 		//cout<<"THIS IS THE BODY NODE\n";
 		node->fieldNode->accept(*this);
 		if(node-> methodPresent == true ){
-			node->methodNode->accept(*this);
+			node->methodListNode->accept(*this);
 		}
 		if(node -> statementsPresent == true){
 			node->statementListNode->accept(*this);
+		}
+	}
+
+	void visit(ASTmethodList *node){
+		for(vector<ASTmethod*>::iterator it = node->methods_list.begin(); it!= node->methods_list.end(); it++){
+			(*it)->accept(*this);
 		}
 	}
 

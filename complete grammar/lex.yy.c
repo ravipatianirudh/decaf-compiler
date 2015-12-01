@@ -903,7 +903,7 @@ YY_RULE_SETUP
 case 23:
 YY_RULE_SETUP
 #line 42 "decaf.l"
-{fputs("FOR",flex_output);return FOR;}
+{fputs("FOR",flex_output);cout<<"FOR captured!\n";return FOR;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
@@ -964,7 +964,7 @@ YY_RULE_SETUP
 case 35:
 YY_RULE_SETUP
 #line 60 "decaf.l"
-{fputs("ID: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.identifier_val = strdup(yytext);return IDENTIFIER;}
+{fputs("ID: ",flex_output);cout<<"id captured\n";;fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.identifier_val = strdup(yytext);return IDENTIFIER;}
 	YY_BREAK
 case 36:
 /* rule 36 can match eol */

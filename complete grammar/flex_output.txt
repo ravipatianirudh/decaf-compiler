@@ -1,19 +1,171 @@
 CLASS
-ID: Woohoo
+ID: Program
 INT_DECLARATION
-ID: a
+ID: A
+ID: B
+INT: 10
+BOOLEAN_DECLARATION
+ID: C
+ID: D
+INT: 10
 INT_DECLARATION
-ID: fib
+ID: E
 INT_DECLARATION
-ID: n
-IFID: n
+ID: F
+INT_DECLARATION
+ID: G
+ID: K
+ID: test1
+INT_DECLARATION
+ID: A
+IFID: A
 INT: 0
+CALLOUT
+STRING: "printf"
+STRING: "recur A: %d\n"
+ID: A
+ID: test1
+ID: A
+INT: 2
+CALLOUT
+STRING: "printf"
+STRING: "block A: %d\n"
+ID: A
+ID: test
+INT_DECLARATION
+ID: x
+INT_DECLARATION
+ID: y
+INT_DECLARATION
+ID: z
+BOOLEAN_DECLARATION
+ID: ha
+INT_DECLARATION
+ID: i
+INT_DECLARATION
+ID: m
+INT_DECLARATION
 ID: n
+ID: h
+ID: A
+ID: l
+ID: A
+INT: 9
+FORID: l
+INT: 0
+ID: l
+INT: 6
+CALLOUT
+STRING: "printf"
+STRING: "l: %d\n"
+ID: l
+IFID: l
+INT: 5
+BREAKCALLOUT
+STRING: "printf"
+STRING: "break l: %d\n"
+ID: l
+IFID: l
+INT: 4
+CALLOUT
+STRING: "printf"
+STRING: "return before at l= %d\n"
+ID: l
+CALLOUT
+STRING: "printf"
+STRING: "return after at l= %d\n"
+ID: l
+IFID: l
+INT: 3
+CALLOUT
+STRING: "printf"
+STRING: "continue l: %d\n"
+ID: l
+CONTINUEIFID: l
+INT: 2
 INT: 1
-ID: n
-ELSEID: fib
-ID: n
+ID: test1
+ID: l
+CALLOUT
+STRING: "printf"
+STRING: "false\n"
+CALLOUT
+STRING: "printf"
+STRING: "Continue next\n"
+CONTINUECALLOUT
+STRING: "printf"
+STRING: "Continue aftert\n"
+CALLOUT
+STRING: "printf"
+STRING: "true\n"
+IFID: A
 INT: 1
-ID: fib
-ID: n
+CALLOUT
+STRING: "printf"
+STRING: "if-then passed i: %d\n"
+ID: i
+IFID: A
+INT: 8
+CALLOUT
+STRING: "printf"
+STRING: "if-then-if-then passed i: %d\n"
+ID: i
+ELSECALLOUT
+STRING: "printf"
+STRING: "if-else random A: %d\n"
+ID: A
+ID: A
+ID: x
+ID: i
+ID: m
+ID: main
+ID: A
+INT: 3
+CALLOUT
+STRING: "printf"
+STRING: "A: %d\n"
+ID: A
+ID: E
+INT: 5
+ID: F
+INT: 6
+ID: G
+INT: 7
+ID: F
+ID: E
+ID: G
+ID: B
+INT: 1
+INT: 8
+ID: B
+INT: 2
+INT: 1
+INT: 9
+ID: A
+ID: A
+INT: 1
+INT: 5
+INT: 10
+INT: 20
+INT: 10
+INT: 5
+ID: B
+INT: 3
+ID: B
+INT: 1
+ID: test1
+INT: 10
+ID: test
+INT: 2
+INT: 3
+INT: 4
+INT: 3
+BOOLEAN: false
+INT: 7
+INT: 9
+CALLOUT
+STRING: "printf"
+STRING: "B[1+2]: %d\n"
+ID: B
+INT: 1
 INT: 2

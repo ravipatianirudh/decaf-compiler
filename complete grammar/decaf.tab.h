@@ -112,6 +112,7 @@ union YYSTYPE
 	ASTfieldDecl *fdNode;
 	ASTidList *idL;
 	ASTidDecl *idC;
+	ASTmethodList *mtL;
 	ASTmethod* mthd;
 	ASTmethodArgumentList* mthdArgList;
 	ASTmethodArgument* mthdArg;
@@ -125,7 +126,7 @@ union YYSTYPE
 	ASTcalloutArgument *callArgumentNode;
 	ASTexpression *eNode;
 
-#line 129 "decaf.tab.h" /* yacc.c:1909  */
+#line 130 "decaf.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

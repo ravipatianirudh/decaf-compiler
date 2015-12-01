@@ -31,7 +31,7 @@ extern FILE *flex_output;
 &&									|
 \|\|									{yylval.conditional_operator_val  = strdup(yytext);return CONDITIONAL_OP;}
 
-\=									|
+=									|
 \+=									|
 -=									{yylval.assignment_operator_val = strdup(yytext);return ASSIGNMENT_OP;}
 
@@ -39,7 +39,7 @@ class									{fputs("CLASS\n",flex_output);return CLASS;}
 callout									{fputs("CALLOUT\n",flex_output);return CALLOUT;}
 if									{fputs("IF",flex_output);return IF;}
 else									{fputs("ELSE",flex_output);return ELSE;}
-for									{fputs("FOR",flex_output);return FOR;}
+for									{fputs("FOR",flex_output);cout<<"FOR captured!\n";return FOR;}
 
 return									{return RETURN;}
 break									{fputs("BREAK",flex_output);return BREAK;}
@@ -57,7 +57,7 @@ false									{fputs("BOOLEAN: ",flex_output);fputs(strdup(yytext),flex_output);
 
 0x[0-9a-fA-F][0-9a-fA-F]*						{fputs("HEX: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.hex_literal = atoi(yytext);return HEX_LITERAL;}
 
-[a-zA-Z][0-9a-zA-Z]*							{fputs("ID: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.identifier_val = strdup(yytext);return IDENTIFIER;}
+[a-zA-Z][0-9a-zA-Z]*							{fputs("ID: ",flex_output);cout<<"id captured\n";;fputs(strdup(yytext),flex_output);fputs("\n",flex_output);yylval.identifier_val = strdup(yytext);return IDENTIFIER;}
 \"(\\.|[^\\"])*\" 							{yylval.string_literal = strdup(yytext);fputs("STRING: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output); return STRING_LITERAL;}
 
 "\'\\n\'"|"\'\\t\'"|"\'\\\\\'"|"\'\\\'\'"|"\'\\\"\'"|"\'"."\'"      	{  yylval.char_literal = strdup(yytext);fputs("CHAR: ",flex_output);fputs(strdup(yytext),flex_output);fputs("\n",flex_output);return CHAR_LITERAL; }

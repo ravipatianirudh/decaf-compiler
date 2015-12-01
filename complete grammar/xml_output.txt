@@ -1,24 +1,235 @@
-<Woohoo>
-    <field_declarations count="1">
-        <declaration name="a" type="integer" />
+<Program>
+    <field_declarations count="5">
+        <declaration name="A" type="integer" />
+        <declaration name="B" count="10" type="integer" />
+        <declaration name="C" type="boolean" />
+        <declaration name="D" count="10" type="boolean" />
+        <declaration name="E" type="integer" />
+        <declaration name="F" type="integer" />
+        <declaration name="G" type="integer" />
+        <declaration name="K" type="integer" />
     </field_declarations>
-    <statement_declarations count="1">
+    <statement_declarations count="3">
             <binary_expression type="is_equal">
-            <binary_expression type="or">
-            <binary_expression type="is_equal">
-            <location id="n" />
+            <location id="A" />
 <integer value="0"/>
             </binary_expression>
-            <location id="n" />
+    <statement_declarations count="2">
+        <callout function=""printf"">
+            "recur A: %d\n"
+            <location id="A" />
+        </callout>
+    </statement_declarations>
+    <statement_declarations count="2">
+        <callout function=""printf"">
+            "block A: %d\n"
+            <location id="A" />
+        </callout>
+    </statement_declarations>
+    </statement_declarations>
+    <field_declarations count="1">
+        <declaration name="n" type="integer" />
+        <declaration name="h" type="integer" />
+        <declaration name="A" type="integer" />
+        <declaration name="l" type="integer" />
+    </field_declarations>
+    <statement_declarations count="7">
+        <assignment>
+            <location id="A" />
+<integer value="9"/>
+        </assignment>
+<integer value="0"/>
+            <binary_expression type="less_equal">
+            <location id="l" />
+<integer value="6"/>
+            </binary_expression>
+    <statement_declarations count="8">
+        <callout function=""printf"">
+            "l: %d\n"
+            <location id="l" />
+        </callout>
+            <binary_expression type="is_equal">
+            <location id="l" />
+<integer value="5"/>
+            </binary_expression>
+    <statement_declarations count="2">
+        <callout function=""printf"">
+            "break l: %d\n"
+            <location id="l" />
+        </callout>
+    </statement_declarations>
+            <binary_expression type="is_equal">
+            <location id="l" />
+<integer value="4"/>
+            </binary_expression>
+    <statement_declarations count="3">
+        <callout function=""printf"">
+            "return before at l= %d\n"
+            <location id="l" />
+        </callout>
+        <callout function=""printf"">
+            "return after at l= %d\n"
+            <location id="l" />
+        </callout>
+    </statement_declarations>
+            <binary_expression type="is_equal">
+            <location id="l" />
+<integer value="3"/>
+            </binary_expression>
+    <statement_declarations count="2">
+        <callout function=""printf"">
+            "continue l: %d\n"
+            <location id="l" />
+        </callout>
+    </statement_declarations>
+            <binary_expression type="is_equal">
+            <binary_expression type="remainder">
+            <location id="l" />
+<integer value="2"/>
             </binary_expression>
 <integer value="1"/>
             </binary_expression>
-    <statement_declarations count="1">
-            <location id="n" />
+    <statement_declarations count="2">
+        <callout function=""printf"">
+            "false\n"
+        </callout>
     </statement_declarations>
-    <statement_declarations count="1">
-            <binary_expression type="addition">
+        <callout function=""printf"">
+            "Continue next\n"
+        </callout>
+        <callout function=""printf"">
+            "Continue aftert\n"
+        </callout>
+    </statement_declarations>
+        <callout function=""printf"">
+            "true\n"
+        </callout>
+            <binary_expression type="greater_than">
+            <location id="A" />
+<integer value="1"/>
             </binary_expression>
+    <statement_declarations count="2">
+        <callout function=""printf"">
+            "if-then passed i: %d\n"
+            <location id="i" />
+        </callout>
+            <binary_expression type="greater_than">
+            <location id="A" />
+<integer value="8"/>
+            </binary_expression>
+    <statement_declarations count="1">
+        <callout function=""printf"">
+            "if-then-if-then passed i: %d\n"
+            <location id="i" />
+        </callout>
     </statement_declarations>
     </statement_declarations>
-</Woohoo>
+    <statement_declarations count="1">
+        <callout function=""printf"">
+            "if-else random A: %d\n"
+            <location id="A" />
+        </callout>
+    </statement_declarations>
+        <assignment>
+            <location id="A" />
+            <location id="x" />
+        </assignment>
+        <assignment>
+            <location id="i" />
+            <location id="m" />
+        </assignment>
+    </statement_declarations>
+    <statement_declarations count="14">
+        <assignment>
+            <location id="A" />
+<integer value="3"/>
+        </assignment>
+        <callout function=""printf"">
+            "A: %d\n"
+            <location id="A" />
+        </callout>
+        <assignment>
+            <location id="E" />
+<integer value="5"/>
+        </assignment>
+        <assignment>
+            <location id="F" />
+<integer value="6"/>
+        </assignment>
+        <assignment>
+            <location id="G" />
+<integer value="7"/>
+        </assignment>
+        <assignment>
+            <location id="F" />
+            <binary_expression type="subtraction">
+            <location id="E" />
+            <location id="G" />
+            </binary_expression>
+        </assignment>
+        <assignment>
+            <location id="B" />
+            <position>
+<integer value="1"/>
+                </position>
+            </location>
+<integer value="8"/>
+        </assignment>
+        <assignment>
+            <location id="B" />
+            <position>
+            <binary_expression type="addition">
+<integer value="2"/>
+<integer value="1"/>
+            </binary_expression>
+                </position>
+            </location>
+<integer value="9"/>
+        </assignment>
+        <assignment>
+            <location id="A" />
+            <binary_expression type="subtraction">
+            <binary_expression type="addition">
+            <binary_expression type="addition">
+            <binary_expression type="subtraction">
+            <location id="A" />
+<integer value="1"/>
+            </binary_expression>
+<integer value="5"/>
+            </binary_expression>
+<integer value="10"/>
+            </binary_expression>
+            <binary_expression type="multiplication">
+            <binary_expression type="division">
+<integer value="20"/>
+<integer value="10"/>
+            </binary_expression>
+<integer value="5"/>
+            </binary_expression>
+            </binary_expression>
+        </assignment>
+        <assignment>
+            <location id="B" />
+            <position>
+<integer value="3"/>
+                </position>
+            </location>
+            <location id="B" />
+            <position>
+<integer value="1"/>
+                </position>
+            </location>
+        </assignment>
+        <callout function=""printf"">
+            "B[1+2]: %d\n"
+            <location id="B" />
+            <position>
+            <binary_expression type="addition">
+<integer value="1"/>
+<integer value="2"/>
+            </binary_expression>
+                </position>
+            </location>
+        </callout>
+    </statement_declarations>
+</Program>

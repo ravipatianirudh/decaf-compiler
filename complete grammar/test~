@@ -1,0 +1,23 @@
+class Program
+{
+	int A,B[10];
+	boolean C,D[10];
+	int E;
+	int F;
+	int G,K;
+
+	void test1(int A)
+	{
+		if(A==0)
+		{
+			callout("printf","recur A: %d\n",A);
+			return;
+		}
+		{
+			test1(A/2);
+			callout("printf","block A: %d\n",A);
+		}
+		return s;
+	}
+
+}

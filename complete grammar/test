@@ -1,13 +1,92 @@
-class Woohoo
+class Program
 {
-	int a;
-	int fib(int n){
-		if(n==0 || n == 1)
+	int A,B[10];
+	boolean C,D[10];
+	int E;
+	int F;
+	int G,K;
+
+	void test1(int A)
+	{
+		if(A==0)
 		{
-			return n;
-		}else
-		{
-			return (fib(n-1) + fib(n-2));
+			callout("printf","recur A: %d\n",A);
+			return;
 		}
+		{
+			test1(A/2);
+			callout("printf","block A: %d\n",A);
+		}
+		return;
+	}
+
+	void test(int x, int y, int z, boolean ha, int i, int m)
+	{
+
+		int n,h,A,l;
+		A=9;
+		for l=0, l<=6
+		{
+			callout("printf","l: %d\n",l);
+			if(l == 5)
+			{
+				break;
+				callout("printf","break l: %d\n",l);
+			}
+			if(l==4)
+			{
+				callout("printf","return before at l= %d\n",l);
+				return;
+				callout("printf","return after at l= %d\n",l);
+			}
+			if(l == 3)
+			{
+				callout("printf","continue l: %d\n",l);
+				continue;
+			}
+			if(l%2 == 1)
+			{
+				test1(l);
+				callout("printf","false\n");
+			}
+			callout("printf","Continue next\n");
+			continue;
+			callout("printf","Continue aftert\n");
+		}
+		callout("printf","true\n");
+
+		if ( A > 1 )
+		{ 
+			callout("printf","if-then passed i: %d\n",i);
+			if( A > 8 )
+			{
+				callout("printf","if-then-if-then passed i: %d\n",i);
+			}
+		} 
+		else
+		{
+			callout("printf","if-else random A: %d\n",A);
+		}
+		A=x;
+		i=m;
+		return;
+	}
+
+	void main() 
+	{
+		A=3;
+		callout("printf","A: %d\n",A);
+		E = 5;
+		F = 6;
+		G = 7;
+		F=E-G;
+		B[1]=8;
+		B[2+1]=9;
+		A = A -1 + 5 + 10 - 20 / 10 * 5;
+		B[3] = B[1];
+		test1(10);
+		test(2 + 3 , 4, 3, false, 7, 9);
+		callout("printf","B[1+2]: %d\n",B[1+2]);
+		return;
 	}
 }

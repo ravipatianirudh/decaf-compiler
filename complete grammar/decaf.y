@@ -64,6 +64,7 @@ class Visitor;
 	ASTfieldDecl *fdNode;
 	ASTidList *idL;
 	ASTidDecl *idC;
+	ASTmethodList *mtL;
 	ASTmethod* mthd;
 	ASTmethodArgumentList* mthdArgList;
 	ASTmethodArgument* mthdArg;
@@ -91,6 +92,7 @@ class Visitor;
 %type <callArgumentNode> c_arg
 %type <eLnode> expression_list
 %type <eNode> expression
+%type <mtL> method_list
 %type <mthd> method
 %type <mthdArgList> method_argument_list
 %type <mthdArg> method_argument
@@ -131,8 +133,12 @@ program:			CLASS IDENTIFIER START_BLOCK body CLOSE_BLOCK			{$$ = new ASTprogram(
 
 body:				field statement_list											{$$ = new ASTbody($1,$2);}
 					| field															{$$ = new ASTbody($1);}
-					| field method													{$$ = new ASTbody($1,$2);}
-					| field method statement_list									{$$ = new ASTbody($1,$2,$3);}
+					| field method_list												{$$ = new ASTbody($1,$2);}
+					| field method_list statement_list								{$$ = new ASTbody($1,$2,$3);}
+					;
+
+method_list:		method_list method												{$1->methods_list.push_back($2);$$ = $1;}
+					| method														{$$ = new ASTmethodList();$$->methods_list.push_back($1);}
 					;
 
 field:				field field_declaration 								{$1->fieldNodeList.push_back($2);$$ = $1;}
@@ -162,17 +168,18 @@ statement:			location ASSIGNMENT_OP expression SEMI_COLON															{$$ = ne
 					| CALLOUT OPEN_PARENTHESIS STRING_LITERAL COMMA callout_arguments CLOSE_PARENTHESIS SEMI_COLON			{$$ = new ASTstatement($3,$5);}
 					| IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block												{$$ = new ASTstatement($3,$5);}
 					| IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS block ELSE block										{$$ = new ASTstatement($3,$5,$7);}
-					| FOR IDENTIFIER '=' expression COMMA expression block													{$$ = new ASTstatement($4,$6,$7);}
+					| FOR IDENTIFIER ASSIGNMENT_OP expression COMMA expression block													{$$ = new ASTstatement($4,$6,$7);}
 					| RETURN expression SEMI_COLON																			{$$ = new ASTstatement($2);}
 					| BREAK SEMI_COLON																						{$$ = new ASTstatement(7);}
 					| CONTINUE SEMI_COLON																					{$$ = new ASTstatement(8);}
 					| block																									{$$ = new ASTstatement($1);}
-					| method_call SEMI_COLON																					{$$ = new ASTstatement($1);}
+					| method_call SEMI_COLON																				{$$ = new ASTstatement($1);}
+					| RETURN SEMI_COLON																						{$$ = new ASTstatement(11);}
 					;
 
 method_call:		IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS														{$$ = new ASTmethodCall($1);}
-								| IDENTIFIER OPEN_PARENTHESIS expression_list CLOSE_PARENTHESIS 					{$$ = new ASTmethodCall($1,$3);}
-								;
+					| IDENTIFIER OPEN_PARENTHESIS expression_list CLOSE_PARENTHESIS 									{$$ = new ASTmethodCall($1,$3);}
+					;
 
 
 method:						TYPE IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS block										{$$ = new ASTmethod($1,$2,$5);}
