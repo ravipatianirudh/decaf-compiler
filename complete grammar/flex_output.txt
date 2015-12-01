@@ -2,18 +2,18 @@ CLASS
 ID: Woohoo
 INT_DECLARATION
 ID: a
-INT: 5
-BOOLEAN_DECLARATION
-ID: b
-ID: c
-ID: d
-INT: 5
-ID: e
-ID: fibonacci
+INT_DECLARATION
+ID: fib
 INT_DECLARATION
 ID: n
-IFID: llol
-ID: ll
-ID: lol
-ID: asd
-ID: sad
+IFID: n
+INT: 0
+ID: n
+INT: 1
+ID: n
+ELSEID: fib
+ID: n
+INT: 1
+ID: fib
+ID: n
+INT: 2

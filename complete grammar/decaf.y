@@ -70,6 +70,7 @@ class Visitor;
 	ASTblock* blck;
 	ASTstatementList *sListNode;
 	ASTstatement *sNode;
+	ASTmethodCall *mcNode;
 	ASTexpressionList *eLnode;
 	ASTlocation *locNode;
 	ASTcalloutArgumentList *callArgListNode;
@@ -94,6 +95,7 @@ class Visitor;
 %type <mthdArgList> method_argument_list
 %type <mthdArg> method_argument
 %type <blck> block
+%type <mcNode> method_call
 
 %token <op_plus_val> OP_PLUS
 %token <identifier_val> IDENTIFIER
@@ -165,10 +167,12 @@ statement:			location ASSIGNMENT_OP expression SEMI_COLON															{$$ = ne
 					| BREAK SEMI_COLON																						{$$ = new ASTstatement(7);}
 					| CONTINUE SEMI_COLON																					{$$ = new ASTstatement(8);}
 					| block																									{$$ = new ASTstatement($1);}
-					| IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS	SEMI_COLON												{$$ = new ASTstatement($1);}
-					| IDENTIFIER OPEN_PARENTHESIS expression_list CLOSE_PARENTHESIS SEMI_COLON								{$$ = new ASTstatement($1,$3);}
+					| method_call SEMI_COLON																					{$$ = new ASTstatement($1);}
 					;
 
+method_call:		IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS														{$$ = new ASTmethodCall($1);}
+								| IDENTIFIER OPEN_PARENTHESIS expression_list CLOSE_PARENTHESIS 					{$$ = new ASTmethodCall($1,$3);}
+								;
 
 
 method:						TYPE IDENTIFIER OPEN_PARENTHESIS CLOSE_PARENTHESIS block										{$$ = new ASTmethod($1,$2,$5);}
@@ -199,19 +203,21 @@ c_arg:				expression															{$$ = new ASTcalloutArgument($1);}
 					;
 expression_list:	expression_list COMMA expression									{$1->expression_list.push_back($3);$$ = $1;}
 					| expression														{$$ = new ASTexpressionList();$$->expression_list.push_back($1);}
+					;
 
-expression:			location															{$$ = new ASTexpression($1);}
-					| DECIMAL_LITERAL													{$$ = new ASTexpression($1);}
-					| CHAR_LITERAL														{$$ = new ASTexpression($1);}
-					| BOOLEAN_LITERAL													{$$ = new ASTexpression($1);}
-					| NEGATION expression												{$$ = new ASTexpression($2,5);}
-					| OP_MINUS expression %prec UNARY_MINUS								{$$ = new ASTexpression($2,6);}
-					| expression OP_MINUS expression									{$$ = new ASTexpression($1,$3,7);}
-					| expression OP_PLUS expression										{$$ = new ASTexpression($1,$3,8);}
-					| expression ARITHMETIC_OP expression								{$$ = new ASTexpression($1,$3,9,$2);}
-					| expression RELATIONAL_OP expression								{$$ = new ASTexpression($1,$3,10,$2);}
-					| expression CONDITIONAL_OP expression								{$$ = new ASTexpression($1,$3,11,$2);cout<<$2;}
+expression:			location																						{$$ = new ASTexpression($1);}
+					| DECIMAL_LITERAL																					{$$ = new ASTexpression($1);}
+					| CHAR_LITERAL																						{$$ = new ASTexpression($1);}
+					| BOOLEAN_LITERAL																					{$$ = new ASTexpression($1);}
+					| NEGATION expression																			{$$ = new ASTexpression($2,5);}
+					| OP_MINUS expression %prec UNARY_MINUS										{$$ = new ASTexpression($2,6);}
+					| expression OP_MINUS expression													{$$ = new ASTexpression($1,$3,7);}
+					| expression OP_PLUS expression														{$$ = new ASTexpression($1,$3,8);}
+					| expression ARITHMETIC_OP expression											{$$ = new ASTexpression($1,$3,9,$2);}
+					| expression RELATIONAL_OP expression											{$$ = new ASTexpression($1,$3,10,$2);}
+					| expression CONDITIONAL_OP expression										{$$ = new ASTexpression($1,$3,11,$2);}
 					| OPEN_PARENTHESIS expression CLOSE_PARENTHESIS						{$$ = new ASTexpression($2,12);}
+					| method_call																							{$$ = new ASTexpression($1,13);}
 					;
 %%
 

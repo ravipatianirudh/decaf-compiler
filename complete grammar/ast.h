@@ -48,6 +48,7 @@ class ASTmethodArgument;
 class ASTblock;
 class ASTstatementList;
 class ASTstatement;
+class ASTmethodCall;
 class ASTexpressionList;
 class ASTlocation;
 class ASTcalloutArgumentList;
@@ -77,6 +78,7 @@ public:
 	virtual void visit(ASTmethodArgumentList *node) = 0;
 	virtual void visit(ASTmethodArgument *node) = 0;
 	virtual void visit(ASTblock *node) = 0;
+	virtual void visit(ASTmethodCall *node) = 0;
 };
 
 class AST{
@@ -366,6 +368,7 @@ public:
 class ASTstatement : public ASTstatementList{
 public:
 	// llvm::Value *retLLVMval;
+	ASTmethodCall *stat_mc;
 	ASTexpressionList *method_call_arguments;
 	ASTlocation *stat_locationNode;
 	ASTexpression *stat_expressionNode;
@@ -429,16 +432,9 @@ public:
 		this->statementIsMethodCall = false;
 	}
 
-	ASTstatement(char* s){
-		this->name_callout = s;
+	ASTstatement(ASTmethodCall *mc){
+		this->stat_mc = mc;
 		this->statementID = 10;
-		this->statementIsMethodCall = true;
-	}
-
-	ASTstatement(char* s,ASTexpressionList *e){
-		this->name_callout = s;
-		this->method_call_arguments = e;
-		this->statementID = 11;
 		this->statementIsMethodCall = true;
 	}
 
@@ -447,6 +443,30 @@ public:
 	}
 
 	// virtual llvm::Value* codeGen(CodeGenContext &context);
+};
+
+class ASTmethodCall : public ASTstatement
+{
+public:
+	char *call_id;
+	bool argAvail;
+	ASTexpressionList* call_expression_list;
+
+	ASTmethodCall(char* s){
+		this->call_id = s;
+		this->argAvail = false;
+	}
+
+	ASTmethodCall(char* s,ASTexpressionList* e){
+		this->call_id = s;
+		this->call_expression_list = e;
+		this->argAvail = true;
+	}
+
+	virtual void accept(Visitor &v){
+		v.visit(this);
+	}
+
 };
 
 class ASTexpressionList : public ASTstatement{
@@ -506,6 +526,7 @@ public:
 	int expressionID;
 	int binSignVal;
 
+	ASTmethodCall *expr_mc;
 	ASTlocation *loc_exp;
 
 	std::vector<ASTexpression*> expressionList;
@@ -570,6 +591,11 @@ public:
 		}else if(strcmp(sgn,"!=") == 0){
 			this->binSignVal = 11;
 		}
+	}
+	ASTexpression(ASTmethodCall* mc,int id){
+		this->expr_mc = mc;
+		this->expressionID = id;
+		this->isBinary = false;
 	}
 
 	virtual void accept(Visitor &v){
@@ -796,50 +822,40 @@ public:
 							cout<<"</block>\n";
 							break;
 			case 10:
-							cout<<"        <method_call = \""<<node->name_callout<<"\">"<<endl;
-							fputs("        <method_call=\"",xml_output);
-							fputs(node->name_callout,xml_output);
-							fputs("\">\n",xml_output);
-							cout<<"        </method_call>"<<endl;
-							fputs("        </method_call>\n",xml_output);
+							node->stat_mc->accept(*this);
 							break;
-			case 11:
-							cout<<"        <method_call = \""<<node->name_callout<<"\">"<<endl;
-							fputs("        <method_call=\"",xml_output);
-							fputs(node->name_callout,xml_output);
-							fputs("\">\n",xml_output);
-							cout<<"        <method_call_args>\n";
-							node->method_call_arguments->accept(*this);
-							cout<<"        </method_call>"<<endl;
-							fputs("        </method_call>\n",xml_output);
-							break;
+			// 				cout<<"        <method_call = \""<<node->name_callout<<"\">"<<endl;
+			// 				fputs("        <method_call=\"",xml_output);
+			// 				fputs(node->name_callout,xml_output);
+			// 				fputs("\">\n",xml_output);
+			// 				cout<<"        </method_call>"<<endl;
+			// 				fputs("        </method_call>\n",xml_output);
+			// 				break;
+			// case 11:
+			// 				cout<<"        <method_call = \""<<node->name_callout<<"\">"<<endl;
+			// 				fputs("        <method_call=\"",xml_output);
+			// 				fputs(node->name_callout,xml_output);
+			// 				fputs("\">\n",xml_output);
+			// 				cout<<"        <method_call_args>\n";
+			// 				node->method_call_arguments->accept(*this);
+			// 				cout<<"        </method_call>"<<endl;
+			// 				fputs("        </method_call>\n",xml_output);
+			// 				break;
 		}
-		// if(node->statementIsMethodCall == true){
-		// 	cout<<"        <method_call = \""<<node->name_callout<<"\">"<<endl;
-		// 	fputs("        <method_call=\"",xml_output);
-		// 	fputs(node->name_callout,xml_output);
-		// 	fputs("\">\n",xml_output);
-		// 	node->method_call_arguments->accept(*this);
-		// 	cout<<"        </method_call>"<<endl;
-		// 	fputs("        </method_call>\n",xml_output);
-		// }else if(node->statementIsLocationAssign == true){
-		// 	cout<<"        <assignment>"<<endl;
-		// 	fputs("        <assignment>\n",xml_output);
-		// 	node->stat_locationNode->accept(*this);
-		// 	node->stat_expressionNode->accept(*this);
-		// 	cout<<"        </assignment"<<endl;
-		// 	fputs("        </assignment>\n",xml_output);
-		// }
-		// else{
-		// 	cout<<"        <callout function=\""<<node->name_callout<<"\">"<<endl;
-		// 	fputs("        <callout function=\"",xml_output);
-		// 	fputs(node->name_callout,xml_output);
-		// 	fputs("\">\n",xml_output);
-		// 	node->statement_callout->accept(*this);
-		// 	cout<<"        </callout>"<<endl;
-		// 	fputs("        </callout>\n",xml_output);
-		// }
 	}
+
+	void visit(ASTmethodCall *node){
+		if(node->argAvail == true){
+			cout<<"       <method_call id = \""<<node->call_id<<"\" >\n";
+			cout<<"        <method_call arguments>\n";
+			node->call_expression_list->accept(*this);
+			cout<<"       </method_call>\n";
+		}else{
+			cout<<"       <method_call id = \""<<node->call_id<<"\" >\n";
+			cout<<"       </method_call>\n";
+		}
+	}
+
 	void visit(ASTlocation *node){
 		//cout<<"THIS IS THE LOCATION NODE\n";
 		if(node!=NULL)
@@ -943,18 +959,18 @@ public:
 			case 9:	cout<<"            <binary_expression type=\"";
 					fputs("            <binary_expression type=\"",xml_output);
 					switch(node->binSignVal){
-					case 1:
-					cout<<"multiplication\">"<<endl;
-					fputs("multiplication\">\n",xml_output);
-					break;
-					case 2:
-					cout<<"division\">"<<endl;
-					fputs("division\">\n",xml_output);
-					break;
-					case 3:
-					cout<<"remainder\">"<<endl;
-					fputs("remainder\">\n",xml_output);
-					break;
+						case 1:
+						cout<<"multiplication\">"<<endl;
+						fputs("multiplication\">\n",xml_output);
+						break;
+						case 2:
+						cout<<"division\">"<<endl;
+						fputs("division\">\n",xml_output);
+						break;
+						case 3:
+						cout<<"remainder\">"<<endl;
+						fputs("remainder\">\n",xml_output);
+						break;
 					}
 					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
 						(*it)->accept(*this);
@@ -966,22 +982,22 @@ public:
 					cout<<"            <binary_expression type=\"";
 					fputs("            <binary_expression type=\"",xml_output);
 					switch(node->binSignVal){
-					case 4:
-					cout<<"less_than\">"<<endl;
-					fputs("less_than\">\n",xml_output);
-					break;
-					case 5:
-					cout<<"greater_than\">"<<endl;
-					fputs("greater_than\">\n",xml_output);
-					break;
-					case 6:
-					cout<<"less_equal\">"<<endl;
-					fputs("less_equal\">\n",xml_output);
-					break;
-					case 7:
-					cout<<"greater_equal\">"<<endl;
-					fputs("greater_equal\">\n",xml_output);
-					break;
+						case 4:
+						cout<<"less_than\">"<<endl;
+						fputs("less_than\">\n",xml_output);
+						break;
+						case 5:
+						cout<<"greater_than\">"<<endl;
+						fputs("greater_than\">\n",xml_output);
+						break;
+						case 6:
+						cout<<"less_equal\">"<<endl;
+						fputs("less_equal\">\n",xml_output);
+						break;
+						case 7:
+						cout<<"greater_equal\">"<<endl;
+						fputs("greater_equal\">\n",xml_output);
+						break;
 					}
 					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
 						(*it)->accept(*this);
@@ -994,22 +1010,22 @@ public:
 					cout<<"            <binary_expression type=\"";
 					fputs("            <binary_expression type=\"",xml_output);
 					switch(node->binSignVal){
-					case 8:
-					cout<<"and\">"<<endl;
-					fputs("and\">\n",xml_output);
-					break;
-					case 9:
-					cout<<"or\">"<<endl;
-					fputs("or\">\n",xml_output);
-					break;
-					case 10:
-					cout<<"is_equal\">"<<endl;
-					fputs("is_equal\">\n",xml_output);
-					break;
-					case 11:
-					cout<<"is_not_equal\">"<<endl;
-					fputs("is_not_equal\">\n",xml_output);
-					break;
+						case 8:
+						cout<<"and\">"<<endl;
+						fputs("and\">\n",xml_output);
+						break;
+						case 9:
+						cout<<"or\">"<<endl;
+						fputs("or\">\n",xml_output);
+						break;
+						case 10:
+						cout<<"is_equal\">"<<endl;
+						fputs("is_equal\">\n",xml_output);
+						break;
+						case 11:
+						cout<<"is_not_equal\">"<<endl;
+						fputs("is_not_equal\">\n",xml_output);
+						break;
 					}
 					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
 						(*it)->accept(*this);
@@ -1017,11 +1033,14 @@ public:
 					cout<<"            </binary_expression>"<<endl;
 					fputs("            </binary_expression>\n",xml_output);
 					break;
-					case 12: 	//cout<<"EXPRESSION EXPRESSION \n";
-					 	for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
-							(*it)->accept(*this);
-						}
-						break;
+			case 12: 	//cout<<"EXPRESSION EXPRESSION \n";
+					for(vector<ASTexpression*>::iterator it = node->expressionList.begin(); it!= node->expressionList.end() ; it++){
+						(*it)->accept(*this);
+					}
+					break;
+			case 13:
+					node->expr_mc->accept(*this);
+					break;
 		}
 	}
 };

@@ -38,7 +38,8 @@ extern FILE *flex_output;
 class									{fputs("CLASS\n",flex_output);return CLASS;}
 callout									{fputs("CALLOUT\n",flex_output);return CALLOUT;}
 if									{fputs("IF",flex_output);return IF;}
-for									{fputs("FALSE",flex_output);return FOR;}
+else									{fputs("ELSE",flex_output);return ELSE;}
+for									{fputs("FOR",flex_output);return FOR;}
 
 return									{return RETURN;}
 break									{fputs("BREAK",flex_output);return BREAK;}
